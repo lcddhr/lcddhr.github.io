@@ -1,108 +1,233 @@
-
- <!DOCTYPE HTML>
-<html lang="zh-cn">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   
-    <title>浅析iOS高级编程-runtime | 小木头</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
-    
-    <meta name="author" content="小木头">
-    
-    <meta name="description" itemprop="description" content="简单来说, runtime是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法（methods）可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。">
-    
-    
-    
-    
-    <link rel="alternate" href="http://lcddhr.github.io/atom.xml" title="小木头" type="application/atom+xml">
-    
-    
-    <link rel="icon" href="/img/favicon.ico">
-    
-    
-    <link rel="apple-touch-icon" href="/img/pacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
-
-
-<script type="text/javascript">
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fed49efe52013a8cef1a99aa3a1f7aa8e' type='text/javascript'%3E%3C/script%3E"));
-</script>
-</script>
-
-
-
-
+  <title>浅析iOS高级编程-runtime | 小木头</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简单来说, runtime是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法（methods）可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅析iOS高级编程-runtime">
+<meta property="og:url" content="http://www.liuchendi.com/2014/08/26/iOS/3_runtime/index.html">
+<meta property="og:site_name" content="小木头">
+<meta property="og:description" content="简单来说, runtime是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法（methods）可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。">
+<meta property="og:image" content="http://iosddimage.qiniudn.com/3_runtime_NSObject.png">
+<meta property="og:image" content="http://iosddimage.qiniudn.com/3_runtime_runtime_head.png">
+<meta property="og:image" content="http://iosddimage.qiniudn.com/3_runtime_class.png">
+<meta property="og:image" content="http://iosddimage.qiniudn.com/3_runtime_message_forward.png">
+<meta property="og:updated_time" content="2015-11-10T06:46:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浅析iOS高级编程-runtime">
+<meta name="twitter:description" content="简单来说, runtime是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法（methods）可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。">
+  
+    <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
 </head>
-
-  <body>
-    <header>
-      <div>
-		
-			<div id="imglogo">
-				<a href="/"><img src="/img/xcode.png" alt="小木头" title="小木头"/></a>
-			</div>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
 			
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="小木头">小木头</a></h1>
-				<h2 class="blog-motto">心中无敌则无敌于天下</h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">首页</a></li>
-					
-						<li><a href="/archives">文章列表</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
-					
-					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
-						<label>Search</label>
-						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
-						<input type="hidden" name="q" value="site:www.liuchendi.com">
-					</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+			<img lazy-src="http://imgsrc.baidu.com/forum/w%3D580/sign=e70af9f2194c510faec4e21250592528/66ea0923dd54564ef216c303b0de9c82d0584fd2.jpg" class="js-avatar">
+			
+		</a>
 
-    </header>
-    <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/08/26/iOS/3_runtime/" title="浅析iOS高级编程-runtime" itemprop="url">浅析iOS高级编程-runtime</a>
-  </h1>
-  <p class="article-author">By
-    
-      <a href="http://www.liuchendi.com" title="小木头">小木头</a>
-    </p>
-  <p class="article-time">
-    <time datetime="2014-08-26T03:30:56.000Z" itemprop="datePublished">2014-08-26</time>
-    更新日期:<time datetime="2014-08-26T16:12:37.000Z" itemprop="dateModified">2014-08-27</time>
-    
-  </p>
-</header>
-	<div class="article-content">
+		<hgroup>
+		  <h1 class="header-author"><a href="/">小木头</a></h1>
+		</hgroup>
+
 		
+		<p class="header-subtitle">心中无敌则无敌于天下</p>
 		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目錄</strong>
+
 		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/about">关于我</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/lcddhr" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/329096966" title="weibo">weibo</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://xiaoxuetu.github.io/">小学徒的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">小木头   iOS开发者</div>
+				</section>
+				
+			</div>
 		</div>
-		
-		<p>##简介<br>简单来说, <code>runtime</code>是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法（methods）可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。</p>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">小木头</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://imgsrc.baidu.com/forum/w%3D580/sign=e70af9f2194c510faec4e21250592528/66ea0923dd54564ef216c303b0de9c82d0584fd2.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">小木头</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心中无敌则无敌于天下</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/about">关于我</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/lcddhr" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/329096966" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-iOS/3_runtime" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2014/08/26/iOS/3_runtime/" class="article-date">
+  	<time datetime="2014-08-26T03:30:56.000Z" itemprop="datePublished">2014-08-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      浅析iOS高级编程-runtime
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/runtime/">runtime</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/对象模型/">对象模型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/消息转发/">消息转发</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/运行时/">运行时</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <a id="more"></a>
+<p>##简介<br>简单来说, <code>runtime</code>是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法（methods）可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。</p>
 <p>Objective-C只是在C语言层面上加了些关键字和语法。真正让Objective-C如此强大的是它的运行时。它很小但却很强大。它的核心是消息分发。想要了解真正的runtime就必须先明白对象模型、消息的传递。</p>
 <p>##对象模型<br>NSObject类和Java中的Object类有点相似，是所有一切类的父类，也就是根类，打开 <code>NSObject.h</code>类可以发现</p>
 <p><img src="http://iosddimage.qiniudn.com/3_runtime_NSObject.png" alt="runtime_NSObject"></p>
@@ -182,287 +307,135 @@ NSLog(@<span class="string">"%@"</span>,[testString lowercaseString]);
 <p><img src="http://iosddimage.qiniudn.com/3_runtime_message_forward.png" alt="runtime_forward"></p>
 <p>##参考资料:</p>
 <p><a href="http://limboy.me/ios/2013/08/03/dynamic-tips-and-tricks-with-objective-c.html" target="_blank" rel="external">http://limboy.me/ios/2013/08/03/dynamic-tips-and-tricks-with-objective-c.html</a><br><a href="http://blog.devtang.com/blog/2013/10/15/objective-c-object-model/" target="_blank" rel="external">http://blog.devtang.com/blog/2013/10/15/objective-c-object-model/</a></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
 
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/runtime/">runtime</a><a href="/tags/对象模型/">对象模型</a><a href="/tags/消息转发/">消息转发</a>
+      
+    </div>
+    
   </div>
-
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/运行时/">运行时</a>
-</div>
-
-
-
-<div class="article-share" id="share">
-
-  <div data-url="http://www.liuchendi.com/2014/08/26/iOS/3_runtime/" data-title="浅析iOS高级编程-runtime | 小木头" data-tsina="null" class="share clearfix">
-  </div>
-
-</div>
-</footer>   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2014/08/29/iOS/4_framework/" title="SDK开发基础-Framework制作">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  SDK开发基础-Framework制作</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2014/08/24/iOS/1_NSTimer/"  title="那些年我们踩过的坑-NSTimer">
- <strong>NEXT:</strong><br/> 
- <span>那些年我们踩过的坑-NSTimer
-</span>
-</a>
-</div>
-
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2014/08/29/iOS/4_framework/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          SDK开发基础-Framework制作
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/08/24/iOS/1_NSTimer/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">那些年我们踩过的坑-NSTimer</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
 </nav>
 
-	
-<section class="comment">
-	<div class="ds-thread"></div>
-</section>
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目錄</strong>
   
-  </div>
+</article>
 
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
-<aside class="clearfix">
 
-  
-<div class="categorieslist">
-	<p class="asidetitle">分類</p>
-		<ul>
-		
-			<li><a href="/categories/Git/" title="Git">Git<sup>1</sup></a></li>
-		
-			<li><a href="/categories/iOS/" title="iOS">iOS<sup>6</sup></a></li>
-		
-			<li><a href="/categories/个人生活/" title="个人生活">个人生活<sup>1</sup></a></li>
-		
-			<li><a href="/categories/运行时/" title="运行时">运行时<sup>1</sup></a></li>
-		
-		</ul>
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
 </div>
 
 
-  
-<div class="tagslist">
-	<p class="asidetitle">標簽</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Git/" title="Git">Git<sup>1</sup></a></li>
-		
-			<li><a href="/tags/NSOperationQueue/" title="NSOperationQueue">NSOperationQueue<sup>1</sup></a></li>
-		
-			<li><a href="/tags/SDK开发/" title="SDK开发">SDK开发<sup>1</sup></a></li>
-		
-			<li><a href="/tags/dispatch-semaphore/" title="dispatch_semaphore">dispatch_semaphore<sup>1</sup></a></li>
-		
-			<li><a href="/tags/framework/" title="framework">framework<sup>1</sup></a></li>
-		
-			<li><a href="/tags/runtime/" title="runtime">runtime<sup>1</sup></a></li>
-		
-			<li><a href="/tags/对象模型/" title="对象模型">对象模型<sup>1</sup></a></li>
-		
-			<li><a href="/tags/消息转发/" title="消息转发">消息转发<sup>1</sup></a></li>
-		
-			<li><a href="/tags/适配/" title="适配">适配<sup>1</sup></a></li>
-		
-		</ul>
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS/3_runtime" data-title="浅析iOS高级编程-runtime" data-url="http://www.liuchendi.com/2014/08/26/iOS/3_runtime/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"liuchendi"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
 </div>
 
 
-  <div class="rsspart">
-	<a href="http://lcddhr.github.io/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
-</div>
 
-  
-  <div class="tagcloudlist">
-    <p class="asidetitle">標簽雲</p>
-    <div class="tagcloudlist clearfix">
-       <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 小木头
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
     </div>
   </div>
-
-
-</aside>
-</div>
-    </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 刘晨迪(网名:小木头)    iOS开发者 <br/>
-			业余时间玩玩Ruby和Linux</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/329096966" target="_blank" title="weibo"></a>
-		
-		
-		
-		<a href="https://github.com/lcddhr" target="_blank" title="github"></a>
-		
-		
-	</div>
-	<!--
-		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
-		
-		<a href="http://www.liuchendi.com" target="_blank" title="小木头">小木头</a>
-		
-		</p>
-		 -->
-</div>
 </footer>
-    <script src="/js/jquery-2.1.0.min.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else
-    {
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
     }
-  });
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
 });
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      h  = $('article h2')
-      ah = $('article h2'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  if(ah.length==0){
-    t.css('display','none');
-  }else{
-    c.click(function(){
-      ta.css('display', 'block').addClass('fadeIn');
-    });
-    o.click(function(){
-      ta.css('display', 'none');
-    });
-    $(window).scroll(function(){
-      ta.css("top",Math.max(140,320-$(this).scrollTop()));
-    });
-  };
-});
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
 
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina');
-  var html = [
-  '<a href="#" class="overlay" id="qrcode"></a>',
-  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
-  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-  $('.article-share-qrcode').click(function(){
-    var imgSrc = $('#qrcode-pic').attr('data-src');
-    $('#qrcode-pic').attr('src', imgSrc);
-    $('#qrcode-pic').load(function(){
-        $('.qrcode strong').text(' ');
-    });
-  });
-});     
-</script>
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"null"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-  </body>
+  </div>
+</body>
 </html>
