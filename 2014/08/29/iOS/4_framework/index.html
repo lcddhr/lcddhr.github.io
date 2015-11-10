@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://iosddimage.qiniudn.com/4_framework14.png">
 <meta property="og:image" content="http://iosddimage.qiniudn.com/4_framework15.png">
 <meta property="og:image" content="http://iosddimage.qiniudn.com/4_framework17.png">
-<meta property="og:updated_time" content="2014-08-29T15:09:00.000Z">
+<meta property="og:updated_time" content="2015-11-10T09:44:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SDK开发基础-Framework制作">
 <meta name="twitter:description" content="SDK开发离不开framework的制作,framework提供的接口可以隐藏实现，方便版本的管理，对于常用的一些复用代码，可以很方便的提取出来，移植到另外的项目，并且可以减少内存的使用，这对于快速开发一些项目有极大的帮助">
@@ -132,7 +132,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 10px;">Swift</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
 					</div>
 				</section>
 				
@@ -243,7 +243,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##前言<br>从事游戏SDK开发一个多月了，这一个多月过得也蛮快的，这一个多月的工作让自己对一些控件的使用更加熟练，感谢小松哥对我的关心和照顾，给了我充足的时间自由发挥，同时也给了自己更多的时间及时总结，还记得面试游戏公司的时候我其实心里没底，因为我没打算做游戏，实习一直都是做应用，甚至我连SDK是什么都不知道。入职的第一天把电脑上的开发环境配置好了，然后剩下时间熟悉了下代码，第二天就开始项目的开发了，哈哈，搞得我一头雾水，看见一个项目里面有三个子工程顿时傻眼了，有这样的开发模式么。。  后来发现其中两个是framework，一个是关于View的，另外一个是关于View逻辑的，好家伙，竟然有这样开发的，顿时吸引了我及大的兴趣，就这样，我踏上了游戏SDK的开发之旅，未来半年内可能会给好多游戏接入SDK，虽然不是什么高难度的工作，但自己还是会认认真真的把本职工作做好。好啦，接下来的时间就谈谈SDK最基础的工作，如何制作<code>framework</code>.</p>
+        <p>SDK开发离不开framework的制作,framework提供的接口可以隐藏实现，方便版本的管理，对于常用的一些复用代码，可以很方便的提取出来，移植到另外的项目，并且可以减少内存的使用，这对于快速开发一些项目有极大的帮助<br><a id="more"></a></p>
+<p>##前言<br>从事游戏SDK开发一个多月了，这一个多月过得也蛮快的，这一个多月的工作让自己对一些控件的使用更加熟练，感谢小松哥对我的关心和照顾，给了我充足的时间自由发挥，同时也给了自己更多的时间及时总结，还记得面试游戏公司的时候我其实心里没底，因为我没打算做游戏，实习一直都是做应用，甚至我连SDK是什么都不知道。入职的第一天把电脑上的开发环境配置好了，然后剩下时间熟悉了下代码，第二天就开始项目的开发了，哈哈，搞得我一头雾水，看见一个项目里面有三个子工程顿时傻眼了，有这样的开发模式么。。  后来发现其中两个是framework，一个是关于View的，另外一个是关于View逻辑的，好家伙，竟然有这样开发的，顿时吸引了我及大的兴趣，就这样，我踏上了游戏SDK的开发之旅，未来半年内可能会给好多游戏接入SDK，虽然不是什么高难度的工作，但自己还是会认认真真的把本职工作做好。好啦，接下来的时间就谈谈SDK最基础的工作，如何制作<code>framework</code>.</p>
 <p>##什么是framework<br><code>framework</code>从字面意思来看就是库的意思，没错，他的功能也就是存储共享一些可用资源,在系统需要的时候载入内存中，它的好处是多个应用程序可以同时使用同一个framework，而在内存中的拷贝只有一份。</p>
 <p>##优点<br>    （1） 可以将不同类型的资源放在一起，更加容易安装和定位。<br>    （2） 可以进行版本的管理，能够不断的向后兼容。<br>    （3） 内存中只有一份framework的拷贝，可以减少内存的使用。</p>
 <p>##缺点<br>    重新加入资源的时候（比如更换了图片）,需要重新Clean编译生成新的Framework，如果资源不多项目较小的话没什么感觉<br>    如果项目有点庞大的话，会出现一些莫名奇怪的错误，需要反反复复的Clean。（非常考验我们的耐心。。。）</p>

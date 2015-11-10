@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://www.liuchendi.com/2014/09/18/iOS/7_iOS_Fit_Collection/index.html">
 <meta property="og:site_name" content="小木头">
 <meta property="og:description" content="iOS8出来了,之前一直都是手写代码= =、,现在有点悲剧了,Autolayout也不太会用，只是熟悉了几天，现在又来了size classes.....不过还是得好好去学,所以就用一篇博客来记录适配过程中发生的一些问题">
-<meta property="og:updated_time" content="2015-11-10T09:00:35.000Z">
+<meta property="og:updated_time" content="2015-11-10T09:51:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS适配问题大收集">
 <meta name="twitter:description" content="iOS8出来了,之前一直都是手写代码= =、,现在有点悲剧了,Autolayout也不太会用，只是熟悉了几天，现在又来了size classes.....不过还是得好好去学,所以就用一篇博客来记录适配过程中发生的一些问题">
@@ -115,7 +115,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 10px;">Swift</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
 					</div>
 				</section>
 				
@@ -226,19 +226,18 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="Update:iOS9">Update:iOS9</h3><h4 id="编译问题（Bitcode)">编译问题（Bitcode)</h4><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxx does <span class="operator">not</span> contain bitcode. You must rebuild <span class="keyword">it</span> <span class="operator">with</span> bitcode enabled (Xcode setting ENABLE_BITCODE), obtain <span class="operator">an</span> updated library <span class="built_in">from</span> <span class="operator">the</span> vendor, <span class="operator">or</span> disable bitcode <span class="keyword">for</span> this target.</span><br></pre></td></tr></table></figure>
+        <p>记录不同版本的适配小技巧<br><a id="more"></a></p>
+<h1 id="Update:iOS9">Update:iOS9</h1><h4 id="编译问题（Bitcode)">编译问题（Bitcode)</h4><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxx does <span class="operator">not</span> contain bitcode. You must rebuild <span class="keyword">it</span> <span class="operator">with</span> bitcode enabled (Xcode setting ENABLE_BITCODE), obtain <span class="operator">an</span> updated library <span class="built_in">from</span> <span class="operator">the</span> vendor, <span class="operator">or</span> disable bitcode <span class="keyword">for</span> this target.</span><br></pre></td></tr></table></figure>
 <p>xcode7默认启用了Bitcode，暂时先关闭掉，因为大部分第三方库还未能支持。解决办法：<br>Build settings -&gt; Build Options -&gt; Enable Bitcode  设置为NO</p>
 <h4 id="Http请求失败">Http请求失败</h4><p>iOS9默认不支持HTTP请求，需要改用更安全的HTTPS。在info.plist源码里面添加下面代码</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">key</span>&gt;</span>NSAppTransportSecurity<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">key</span>&gt;</span>NSAllowsArbitraryLoads<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dict</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>###1、iOS6中UITextField中secureTextEntry的bug###</p>
-<p>今天把SDK去做iOS6的测试，结果反馈回来一大堆bug，其中一个就是在做UITextField<code>明暗文切换</code>的时候,明明在iOS7运行的好好的跑到iOS6就错了,而且功能都实现不了,后来在<a href="http://stackoverflow.com/questions/6710019/uitextfield-securetextentry-works-going-from-yes-to-no-but-changing-back-to-y" target="_blank" rel="external">这里</a>找到了答案</p>
+<h1 id="Update:iOS8">Update:iOS8</h1><h3 id="iOS6中UITextField中secureTextEntry的bug">iOS6中UITextField中secureTextEntry的bug</h3><p>今天把SDK去做iOS6的测试，结果反馈回来一大堆bug，其中一个就是在做UITextField<code>明暗文切换</code>的时候,明明在iOS7运行的好好的跑到iOS6就错了,而且功能都实现不了,后来在<a href="http://stackoverflow.com/questions/6710019/uitextfield-securetextentry-works-going-from-yes-to-no-but-changing-back-to-y" target="_blank" rel="external">这里</a>找到了答案</p>
 <pre><code><span class="constant">_passwordTextField.enabled</span> = <span class="literal">false</span>;<span class="comment">//iOS6.1Bug fix</span>
 <span class="constant">
 _passwordTextField.secureTextEntry</span> = YES;
 <span class="constant">
 _passwordTextField.enabled</span> = <span class="literal">true</span>;
-</code></pre><p>###2、UIWebView不能响应键盘###</p>
-<p>因为在SDK里面有一个自定义的window,然后APP也有一个主window,当把自定义的window发送了<code>makeKeyAndVisible</code>消息之后,webView在iOS上面竟然不能响应键盘事件了,因为我的webView是全屏的，所以即使键盘弹出来了也有有可能被弹出来的webView遮挡主，解决办法是：</p>
+</code></pre><h3 id="UIWebView不能响应键盘">UIWebView不能响应键盘</h3><p>因为在SDK里面有一个自定义的window,然后APP也有一个主window,当把自定义的window发送了<code>makeKeyAndVisible</code>消息之后,webView在iOS上面竟然不能响应键盘事件了,因为我的webView是全屏的，所以即使键盘弹出来了也有有可能被弹出来的webView遮挡主，解决办法是：</p>
 <pre><code>在webView打开绘制到界面上的时候主<span class="built_in">window</span>发送消息makeKeyAndVisible,
 
 关闭webView的时候再设置自定义的<span class="built_in">window</span>发送消息makeKeyAndVisible。

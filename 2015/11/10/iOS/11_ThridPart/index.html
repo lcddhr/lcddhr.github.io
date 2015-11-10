@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>常用的第三方库整理收集 | 小木头</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="收集了常见的APP所用到的第三方库，提高开发效率">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用的第三方库整理收集">
+<meta property="og:url" content="http://www.liuchendi.com/2015/11/10/iOS/11_ThridPart/index.html">
+<meta property="og:site_name" content="小木头">
+<meta property="og:description" content="收集了常见的APP所用到的第三方库，提高开发效率">
+<meta property="og:updated_time" content="2015-11-10T09:55:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常用的第三方库整理收集">
+<meta name="twitter:description" content="收集了常见的APP所用到的第三方库，提高开发效率">
+  
+    <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7i7ht3.com1.z0.glb.clouddn.com/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">小木头</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心中无敌则无敌于天下</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/about">关于我</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/lcddhr" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/329096966" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="http://lcddhr.github.io/atom.xml" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 10px;">Swift</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://xiaoxuetu.github.io/">小学徒的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">小木头   iOS开发者</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">小木头</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7i7ht3.com1.z0.glb.clouddn.com/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">小木头</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心中无敌则无敌于天下</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/about">关于我</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/lcddhr" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/329096966" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="http://lcddhr.github.io/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-iOS/11_ThridPart" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/10/iOS/11_ThridPart/" class="article-date">
+  	<time datetime="2015-11-10T09:55:46.000Z" itemprop="datePublished">2015-11-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      常用的第三方库整理收集
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/第三方库/">第三方库</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS/">iOS</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>收集了常见的APP所用到的第三方库，提高开发效率<br><a id="more"></a></p>
+<h2 id="弹出视图">弹出视图</h2><p>1、底部弹出栏，可以控制视图差 ：<a href="https://github.com/zoonooz/ZFDragableModalTransition" target="_blank" rel="external">ZFDragableModalTransition</a></p>
+<p>2、类似微信点击加号弹出的选项视图:<a href="https://github.com/kolyvan/kxmenu" target="_blank" rel="external">kxmenu</a></p>
+<p>3、底部弹出视图：<a href="https://github.com/carsonperrotti/CNPPopupController" target="_blank" rel="external">CNPPopupController</a></p>
+<p>4、类似QQ和微信，长按可以弹出黑色的选项视图<a href="https://github.com/questbeat/QBPopupMenu" target="_blank" rel="external">QBPopupMenu</a></p>
+<p>5、类似微博的菜单栏弹出:<a href="https://github.com/cyndibaby905/TumblrMenu" target="_blank" rel="external">TumblrMenu</a></p>
+<p>6、菜单栏上方弹出:<a href="https://github.com/lminhtm/LMDropdownView" target="_blank" rel="external">LMDropdownView</a></p>
+<p>7、底部弹出视图：<a href="https://github.com/lukegeiger/LGSemiModalNavController" target="_blank" rel="external">LGSemiModalNavController</a></p>
+<p>8、类似美团的下拉菜单选择:<a href="https://github.com/jsfu/JSDropDownMenu" target="_blank" rel="external">JSDropDownMenu</a></p>
+<h2 id="动画">动画</h2><p>1、卡片式交互 ：</p>
+<ul>
+<li><a href="https://github.com/modocache/MDCSwipeToChoose" target="_blank" rel="external">MDCSwipeToChoose</a></li>
+<li><a href="https://github.com/Yalantis/Koloda" target="_blank" rel="external">Koloda</a></li>
+</ul>
+<p>2、动画知识点学习：<a href="https://github.com/AttackOnDobby/iOS-Core-Animation-Advanced-Techniques" target="_blank" rel="external">iOS-Core-Animation-Advanced-Techniques</a></p>
+<p>3、Bubble效果:</p>
+<ul>
+<li><p><a href="https://github.com/andreamazz/BubbleTransition" target="_blank" rel="external">BubbleTransition</a></p>
+</li>
+<li><p><a href="https://github.com/jonathantribouharet/JTMaterialTransition" target="_blank" rel="external">JTMaterialTransition</a></p>
+</li>
+</ul>
+<p>4、具有视差弹出、push效果:<a href="https://github.com/Raizlabs/RZTransitions" target="_blank" rel="external">RZTransitions</a></p>
+<p>5、类似点赞的效果，闪烁一下:<a href="https://github.com/okmr-d/DOFavoriteButton" target="_blank" rel="external">DOFavoriteButton</a></p>
+<p>6、照片放大动画：<a href="https://github.com/recruit-mp/RMPZoomTransitionAnimator" target="_blank" rel="external">RMPZoomTransitionAnimator</a></p>
+<p>7、水波动画:<a href="https://github.com/antiguab/BAFluidView" target="_blank" rel="external">BAFluidView</a></p>
+<p>8、弹出框，可以输入一些文字发送，类似发微博:<a href="https://github.com/romaonthego/REComposeViewController" target="_blank" rel="external">REComposeViewController</a></p>
+<p>9、精美的按钮动画：<a href="https://github.com/AlexeyBelezeko/TBIconTransitionKit" target="_blank" rel="external">TBIconTransitionKit</a></p>
+<p>10、Label文字动画:<a href="https://github.com/overboming/ZCAnimatedLabel" target="_blank" rel="external">ZCAnimatedLabel</a></p>
+<p>11、动画库集合:<a href="https://github.com/sxyx2008/awesome-ios-animation" target="_blank" rel="external">awesome-ios-animation</a></p>
+<p>12、简单的视图动画:<a href="https://github.com/daltoniam/DCAnimationKit" target="_blank" rel="external">DCAnimationKit</a></p>
+<p>13 、TableView移动动画<a href="https://github.com/okla/QuickRearrangeTableView" target="_blank" rel="external">QuickRearrangeTableView</a></p>
+<p>14、slideIn动画:<a href="https://github.com/JV17/JVMenuPopover" target="_blank" rel="external">JVMenuPopover</a></p>
+<p>15、按钮动画带有波纹效果:<a href="https://github.com/SatanWoo/WZFlashButton" target="_blank" rel="external">WZFlashButton</a></p>
+<p>16、点赞动画:<a href="https://github.com/K-cat/CatZanButton" target="_blank" rel="external">CatZanButton</a></p>
+<h2 id="布局">布局</h2><p>1、选项卡：</p>
+<ul>
+<li><a href="https://github.com/uacaps/PageMenu" target="_blank" rel="external">PageMenu</a></li>
+<li>类似Twitter选项栏:<a href="https://github.com/StefanLage/SLPagingView" target="_blank" rel="external">SLPagingView</a></li>
+<li><a href="https://github.com/kitasuke/PagingMenuController" target="_blank" rel="external">PagingMenuController</a></li>
+<li><a href="https://github.com/HAHAKea/HACursor" target="_blank" rel="external">HACursor</a></li>
+<li><a href="https://github.com/y-hryk/YSLContainerViewController" target="_blank" rel="external">YSLContainerViewController</a></li>
+<li><a href="https://github.com/IOStao/ZTPageController" target="_blank" rel="external">ZTPageController</a></li>
+</ul>
+<p>2、collection布局</p>
+<ul>
+<li><a href="https://github.com/gringoireDM/FBLikeLayout" target="_blank" rel="external">FBLikeLayout</a></li>
+<li><a href="https://github.com/openboy2012/DDCollectionViewFlowLayout" target="_blank" rel="external">DDCollectionViewFlowLayout</a></li>
+</ul>
+<p>3、测拉菜单</p>
+<ul>
+<li><a href="https://github.com/WXGBridgeQ/WXGSlideMenuDemo" target="_blank" rel="external">WXGSlideMenuDemo</a></li>
+</ul>
+<p>4、树形菜单</p>
+<ul>
+<li><a href="https://github.com/yixiangboy/TreeTableView" target="_blank" rel="external">TreeTableView</a></li>
+</ul>
+<p>5、滑动返回</p>
+<ul>
+<li><a href="https://github.com/singro/SCNavigation" target="_blank" rel="external">SCNavigation</a></li>
+</ul>
+<h2 id="照片浏览器和选择">照片浏览器和选择</h2><ul>
+<li><p><a href="https://github.com/ideaismobile/IDMPhotoBrowser" target="_blank" rel="external">IDMPhotoBrowser</a></p>
+</li>
+<li><p><a href="https://github.com/chiunam/CTAssetsPickerController" target="_blank" rel="external">CTAssetsPickerController</a></p>
+</li>
+<li><p>提供多选照片:<a href="https://github.com/questbeat/QBImagePicker" target="_blank" rel="external">QBImagePicker</a></p>
+</li>
+<li><p><a href="https://github.com/nsdictionary/CorePhotoBroswerVC" target="_blank" rel="external">CorePhotoBroswerVC</a></p>
+</li>
+<li><p><a href="https://github.com/mikaoj/BSImagePicker" target="_blank" rel="external">BSImagePicker</a></p>
+</li>
+<li><p><a href="https://github.com/johnil/JFImagePickerController" target="_blank" rel="external">JFImagePickerController</a></p>
+</li>
+<li><p><a href="https://github.com/MakeZL/ZLPhotoLib" target="_blank" rel="external">ZLPhotoLib</a></p>
+</li>
+<li><p><a href="https://github.com/SpringOx/AGImagePickerController" target="_blank" rel="external">AGImagePickerController</a></p>
+</li>
+</ul>
+<h2 id="HUD">HUD</h2><ul>
+<li><p><a href="https://github.com/oarrabi/OAStackView" target="_blank" rel="external">OAStackView</a></p>
+</li>
+<li><p>精美的HUD动画：<a href="https://github.com/ninjaprox/NVActivityIndicatorView" target="_blank" rel="external">NVActivityIndicatorView</a></p>
+</li>
+<li><p>等待加载的精美过度界面:<a href="https://github.com/NghiaTranUIT/FeSpinner" target="_blank" rel="external">FeSpinner</a></p>
+</li>
+<li><p>加载图片:<a href="https://github.com/rounak/RJImageLoader" target="_blank" rel="external">RJImageLoader</a></p>
+</li>
+<li><p><a href="https://github.com/TaimurAyaz/TAOverlay" target="_blank" rel="external">TAOverlay</a></p>
+</li>
+<li><p><a href="https://github.com/relatedcode/ProgressHUD" target="_blank" rel="external">ProgressHUD</a></p>
+</li>
+<li><p><a href="https://github.com/gontovnik/DGActivityIndicatorView" target="_blank" rel="external">DGActivityIndicatorView</a></p>
+</li>
+<li><p><a href="https://github.com/devxoul/JLToast" target="_blank" rel="external">JLToast</a></p>
+</li>
+<li><p><a href="https://github.com/devSC/WSProgressHUD" target="_blank" rel="external">WSProgressHUD</a></p>
+</li>
+</ul>
+<h2 id="图片编辑器">图片编辑器</h2><ul>
+<li><a href="https://github.com/yackle/CLImageEditor" target="_blank" rel="external">CLImageEditor</a></li>
+</ul>
+<h2 id="AlertView">AlertView</h2><ul>
+<li><p><a href="https://github.com/mtonio91/AMSmoothAlert" target="_blank" rel="external">AMSmoothAlert</a></p>
+</li>
+<li><p><a href="https://github.com/ChrisXu1221/CXCardView" target="_blank" rel="external">CXCardView</a></p>
+</li>
+<li><p><a href="https://github.com/mayuur/MJAlertView" target="_blank" rel="external">MJAlertView</a></p>
+</li>
+<li><p><a href="https://github.com/Friend-LGA/LGAlertView" target="_blank" rel="external">LGAlertView</a></p>
+</li>
+</ul>
+<h2 id="ActionSheet">ActionSheet</h2><ul>
+<li><p><a href="https://github.com/leverdeterre/JMActionSheetDescription" target="_blank" rel="external">JMActionSheetDescription</a></p>
+</li>
+<li><p><a href="https://github.com/zhangyu9050/UUPhotoActionSheet" target="_blank" rel="external">UUPhotoActionSheet</a></p>
+</li>
+<li><p><a href="https://github.com/GeekZP/ZPActionSheet" target="_blank" rel="external">ZPActionSheet</a></p>
+</li>
+</ul>
+<h2 id="相机">相机</h2><ul>
+<li><a href="https://github.com/danielebogo/DBCamera" target="_blank" rel="external">DBCamera</a></li>
+</ul>
+<h2 id="图文混排">图文混排</h2><ul>
+<li><a href="https://github.com/kishikawakatsumi/SECoreTextView" target="_blank" rel="external">SECoreTextView</a></li>
+<li><a href="https://github.com/molon/MLEmojiLabel" target="_blank" rel="external">MLEmojiLabel</a></li>
+<li><a href="https://github.com/12207480/TYAttributedLabel" target="_blank" rel="external">TYAttributedLabel</a></li>
+<li><a href="https://github.com/molon/MLLabel" target="_blank" rel="external">MLLabel</a></li>
+</ul>
+<h2 id="手势密码">手势密码</h2><ul>
+<li><a href="https://github.com/nsdictionary/CoreLock" target="_blank" rel="external">CoreLock</a></li>
+</ul>
+<h2 id="图片循环播放器">图片循环播放器</h2><ul>
+<li><a href="https://github.com/gsdios/SDCycleScrollView" target="_blank" rel="external">SDCycleScrollView</a></li>
+<li><a href="https://github.com/TanguyAladenise/TAPageControl" target="_blank" rel="external">TAPageControl</a></li>
+<li><a href="https://github.com/ZYCoderIOS/ZYAdView" target="_blank" rel="external">ZYAdView</a></li>
+</ul>
+<h2 id="Scrollview">Scrollview</h2><ul>
+<li><p>功能栏滚动隐藏:<a href="https://github.com/pixyzehn/MediumScrollFullScreen" target="_blank" rel="external">MediumScrollFullScreen</a></p>
+</li>
+<li><p>精美的scrollview动画:<a href="https://github.com/starchand/MBTwitterScroll" target="_blank" rel="external">MBTwitterScroll</a></p>
+</li>
+<li><p>欢迎界面<a href="https://github.com/lukegeiger/LGSublimationView" target="_blank" rel="external">LGSublimationView</a></p>
+</li>
+</ul>
+<h2 id="tableView">tableView</h2><ul>
+<li>滚动的时候cell有视差:<a href="https://github.com/adad184/MMParallaxCell" target="_blank" rel="external">MMParallaxCell</a></li>
+<li>滑动具有菜单栏的cell:<a href="https://github.com/joseria/JASwipeCell" target="_blank" rel="external">JASwipeCell</a></li>
+</ul>
+<h2 id="类似谷歌UI的一些素材">类似谷歌UI的一些素材</h2><ul>
+<li><a href="https://github.com/fpt-software/Material-Controls-For-iOS" target="_blank" rel="external">Material-Controls-For-iOS</a></li>
+</ul>
+<h2 id="表格视图">表格视图</h2><ul>
+<li><a href="https://github.com/ZhipingYang/UUChartView" target="_blank" rel="external">UUChartView</a></li>
+</ul>
+<h2 id="UIPageViewController">UIPageViewController</h2><ul>
+<li>可以滑动的页面视图：<a href="https://github.com/an0/WLPageViewController" target="_blank" rel="external">WLPageViewController</a></li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/11/10/iOS/12_Swift_1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Swift语法知识点笔记
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/11/10/iOS/9_Refactoring/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">谈谈iOS重构</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS/11_ThridPart" data-title="常用的第三方库整理收集" data-url="http://www.liuchendi.com/2015/11/10/iOS/11_ThridPart/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"liuchendi"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 小木头
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
