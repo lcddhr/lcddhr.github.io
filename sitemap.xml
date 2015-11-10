@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.liuchendi.com/2015/11/10/iOS/13_cocospodLib/</loc>
+    <lastmod>2015-11-10T11:59:25.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.liuchendi.com/about/index.html</loc>
+    <lastmod>2015-11-10T10:54:47.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://www.liuchendi.com/2015/11/10/iOS/12_Swift_1/</loc>
     <lastmod>2015-11-10T10:03:51.000Z</lastmod>
   </url>
@@ -64,11 +74,6 @@
   <url>
     <loc>http://www.liuchendi.com/2015/11/10/iOS/2_dispatch_semaphore%E5%92%8CNSOperationQueue%E5%B9%B6%E5%8F%91/</loc>
     <lastmod>2015-11-10T06:50:45.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://www.liuchendi.com/about/index.html</loc>
-    <lastmod>2014-08-25T13:57:49.000Z</lastmod>
   </url>
   
   <url>
