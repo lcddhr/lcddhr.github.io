@@ -501,18 +501,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>###1、iOS6中UITextField中secureTextEntry的bug<br>今天把SDK去做iOS6的测试，结果反馈回来一大堆bug，其中一个就是在做UITextField<code>明暗文切换</code>的时候,明明在iOS7运行的好好的跑到iOS6就错了,而且功能都实现不了,后来在<a href="http://stackoverflow.com/questions/6710019/uitextfield-securetextentry-works-going-from-yes-to-no-but-changing-back-to-y" target="_blank" rel="external">这里</a>找到了答案</p>
+        <h3 id="Update:iOS9">Update:iOS9</h3><h4 id="编译问题（Bitcode)">编译问题（Bitcode)</h4><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxx does <span class="operator">not</span> contain bitcode. You must rebuild <span class="keyword">it</span> <span class="operator">with</span> bitcode enabled (Xcode setting ENABLE_BITCODE), obtain <span class="operator">an</span> updated library <span class="built_in">from</span> <span class="operator">the</span> vendor, <span class="operator">or</span> disable bitcode <span class="keyword">for</span> this target.</span><br></pre></td></tr></table></figure>
+<p>xcode7默认启用了Bitcode，暂时先关闭掉，因为大部分第三方库还未能支持。解决办法：<br>Build settings -&gt; Build Options -&gt; Enable Bitcode  设置为NO</p>
+<h4 id="Http请求失败">Http请求失败</h4><p>iOS9默认不支持HTTP请求，需要改用更安全的HTTPS。在info.plist源码里面添加下面代码</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">key</span>&gt;</span>NSAppTransportSecurity<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">key</span>&gt;</span>NSAllowsArbitraryLoads<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dict</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>###1、iOS6中UITextField中secureTextEntry的bug###</p>
+<p>今天把SDK去做iOS6的测试，结果反馈回来一大堆bug，其中一个就是在做UITextField<code>明暗文切换</code>的时候,明明在iOS7运行的好好的跑到iOS6就错了,而且功能都实现不了,后来在<a href="http://stackoverflow.com/questions/6710019/uitextfield-securetextentry-works-going-from-yes-to-no-but-changing-back-to-y" target="_blank" rel="external">这里</a>找到了答案</p>
 <pre><code><span class="constant">_passwordTextField.enabled</span> = <span class="literal">false</span>;<span class="comment">//iOS6.1Bug fix</span>
 <span class="constant">
 _passwordTextField.secureTextEntry</span> = YES;
 <span class="constant">
 _passwordTextField.enabled</span> = <span class="literal">true</span>;
-</code></pre><p>###2、UIWebView不能响应键盘<br>因为在SDK里面有一个自定义的window,然后APP也有一个主window,当把自定义的window发送了<code>makeKeyAndVisible</code>消息之后,webView在iOS上面竟然不能响应键盘事件了,因为我的webView是全屏的，所以即使键盘弹出来了也有有可能被弹出来的webView遮挡主，解决办法是：</p>
+</code></pre><p>###2、UIWebView不能响应键盘###</p>
+<p>因为在SDK里面有一个自定义的window,然后APP也有一个主window,当把自定义的window发送了<code>makeKeyAndVisible</code>消息之后,webView在iOS上面竟然不能响应键盘事件了,因为我的webView是全屏的，所以即使键盘弹出来了也有有可能被弹出来的webView遮挡主，解决办法是：</p>
 <pre><code>在webView打开绘制到界面上的时候主<span class="built_in">window</span>发送消息makeKeyAndVisible,
 
 关闭webView的时候再设置自定义的<span class="built_in">window</span>发送消息makeKeyAndVisible。
-</code></pre><p>###3、UITableView分割线不能靠边的问题<br>    从ios7开始有个属性 separatorInset，一般你需要设置这个值为UIEdgeInsetsZero,否则，每个分割线的起点会从文字区域开始，左边会留白</p>
-<pre><code><span class="built_in">UITableViewCell</span>的默认背景是白色的
+</code></pre><p>###3、UITableView分割线不能靠边的问题###</p>
+<pre><code>从ios7开始有个属性 separatorInset，一般你需要设置这个值为<span class="built_in">UIEdgeInsetsZero</span>,否则，每个分割线的起点会从文字区域开始，左边会留白
+
+<span class="built_in">UITableViewCell</span>的默认背景是白色的
 </code></pre>
       
     </div>
