@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://www.liuchendi.com/2014/09/18/iOS/7_iOS_Fit_Collection/index.html">
 <meta property="og:site_name" content="小木头">
 <meta property="og:description" content="iOS8出来了,之前一直都是手写代码= =、,现在有点悲剧了,Autolayout也不太会用，只是熟悉了几天，现在又来了size classes.....不过还是得好好去学,所以就用一篇博客来记录适配过程中发生的一些问题">
-<meta property="og:updated_time" content="2015-11-10T09:51:04.000Z">
+<meta property="og:updated_time" content="2015-11-30T05:56:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS适配问题大收集">
 <meta name="twitter:description" content="iOS8出来了,之前一直都是手写代码= =、,现在有点悲剧了,Autolayout也不太会用，只是熟悉了几天，现在又来了size classes.....不过还是得好好去学,所以就用一篇博客来记录适配过程中发生的一些问题">
@@ -245,7 +245,49 @@ _passwordTextField.enabled</span> = <span class="literal">true</span>;
 <pre><code>从ios7开始有个属性 separatorInset，一般你需要设置这个值为<span class="built_in">UIEdgeInsetsZero</span>,否则，每个分割线的起点会从文字区域开始，左边会留白
 
 <span class="built_in">UITableViewCell</span>的默认背景是白色的
-</code></pre>
+</code></pre><p>###4、获取视频的分辨率</p>
+<pre><code>        <span class="type">ALAssetsLibrary</span> *assetsLibrary;
+<span class="type">NSMutableArray</span> *groupArray;
+assetsLibrary = [[<span class="type">ALAssetsLibrary</span> alloc] init];
+groupArray=[[<span class="type">NSMutableArray</span> alloc] initWithCapacity:<span class="number">1</span>];
+[assetsLibrary enumerateGroupsWithTypes:<span class="type">ALAssetsGroupAll</span> usingBlock:^(<span class="type">ALAssetsGroup</span> *group, <span class="type">BOOL</span> *stop) {
+    <span class="keyword">if</span> (group) {
+        [groupArray addObject:group];
+        <span class="type">NSLog</span>(@<span class="string">"%@"</span>,group);
+
+        [group enumerateAssetsUsingBlock:^(<span class="type">ALAsset</span> *<span class="literal">result</span>, <span class="type">NSUInteger</span> index, <span class="type">BOOL</span> *stop) {
+            <span class="keyword">if</span> (<span class="literal">result</span>) {
+
+                <span class="type">NSLog</span>(@<span class="string">"%@"</span>,<span class="literal">result</span>);
+
+                <span class="type">NSString</span> *<span class="keyword">type</span>=[<span class="literal">result</span> valueForProperty:<span class="type">ALAssetPropertyType</span>];
+
+                <span class="keyword">if</span> ([<span class="keyword">type</span> isEqualToString:<span class="type">ALAssetTypeVideo</span>]) {
+
+                     <span class="type">NSLog</span>(@<span class="string">"找到了视频"</span>);
+
+                    <span class="type">ALAssetRepresentation</span>* representation = [<span class="literal">result</span> defaultRepresentation];
+                    <span class="type">AVURLAsset</span>* videoAsset = [[<span class="type">AVURLAsset</span> alloc]initWithURL:[representation url] options:<span class="keyword">nil</span>];
+                    <span class="type">NSArray</span>* allVideoTracks = [videoAsset tracksWithMediaType:<span class="type">AVMediaTypeVideo</span>];
+                    <span class="keyword">if</span> ([allVideoTracks count] &gt; <span class="number">0</span>) {
+                        <span class="type">AVAssetTrack</span>* track = [[videoAsset tracksWithMediaType:<span class="type">AVMediaTypeVideo</span>]objectAtIndex:<span class="number">0</span>];
+                        <span class="type">CGSize</span> size = [track naturalSize];
+
+                        <span class="type">NSLog</span>(@<span class="string">"视频尺寸:%@"</span>,<span class="type">NSStringFromCGSize</span>(size));
+
+//                            <span class="type">CGSize</span> dimensions = <span class="type">CGSizeApplyAffineTransform</span>(track.naturalSize, track.preferredTransform);
+//                            <span class="type">NSLog</span>(@<span class="string">"%f,%f"</span>,fabsf(dimensions.width),fabsf(dimensions.height));
+                        }
+                    }
+                }
+            }];
+        }
+    } failureBlock:^(<span class="type">NSError</span> *error) {
+        <span class="type">NSLog</span>(@<span class="string">"Group not found!\n"</span>);
+    }];
+</code></pre><p>##设置字体间隔</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">NSMutableAttributedString</span> *attributedString = [[<span class="built_in">NSMutableAttributedString</span> alloc]initWithString:<span class="keyword">self</span><span class="variable">.title</span>];</span><br><span class="line">  <span class="comment">//设置字体间隔</span></span><br><span class="line">  <span class="keyword">long</span> number = <span class="number">5</span>;</span><br><span class="line">  <span class="built_in">CFNumberRef</span> num = <span class="built_in">CFNumberCreate</span>(k<span class="built_in">CFAllocatorDefault</span>,k<span class="built_in">CFNumberSInt8Type</span>,&amp;number);</span><br><span class="line">  [attributedString addAttribute:(<span class="keyword">id</span>)kCTKernAttributeName value:(__bridge <span class="keyword">id</span>)num range:<span class="built_in">NSMakeRange</span>(<span class="number">0</span>,[attributedString length])];</span><br><span class="line">  <span class="built_in">CFRelease</span>(num);</span><br></pre></td></tr></table></figure>
+
       
     </div>
     
