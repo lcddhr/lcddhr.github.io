@@ -1,0 +1,1033 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[小木头]]></title>
+  <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://www.liuchendi.com/"/>
+  <updated>2015-12-03T09:14:50.000Z</updated>
+  <id>http://www.liuchendi.com/</id>
+  
+  <author>
+    <name><![CDATA[小木头]]></name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[记一次关于对象占用内存的讨论]]></title>
+    <link href="http://www.liuchendi.com/2015/12/03/iOS/14_object_memory_topic/"/>
+    <id>http://www.liuchendi.com/2015/12/03/iOS/14_object_memory_topic/</id>
+    <published>2015-12-03T09:14:50.000Z</published>
+    <updated>2015-12-03T09:14:50.000Z</updated>
+    <content type="html"><![CDATA[<p>内存大小是由类的成员变量决定的吗？<br><a id="more"></a></p>
+<p>昨天群里有人发出了一个内容是关于类对象的<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/1_topic.jpg" alt="1_topic.jpg"></p>
+<p>带着怀疑的态度,写了一段测试的代码</p>
+<p><code>Car.h</code></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">   </span><br><span class="line">   <span class="class"><span class="keyword">@interface</span> <span class="title">Car</span> : <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">	<span class="built_in">NSString</span> *make;</span><br><span class="line">      	<span class="built_in">NSString</span> *model;</span><br><span class="line">      	 <span class="built_in">NSArray</span> *array;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>定义了一个含有3个变量的<code>Car</code>:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line">Car *car = [[Car alloc] init];</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">NSLog</span>(<span class="string">@"object pointer: %ld\n"</span>,<span class="keyword">sizeof</span>(car));</span><br><span class="line">  <span class="built_in">NSLog</span>(<span class="string">@"Object size: %zd"</span>,malloc_size((__bridge <span class="keyword">const</span> <span class="keyword">void</span> *)(car)));</span><br><span class="line">  <span class="built_in">NSLog</span>(<span class="string">@"InstanceSize Size: %zd"</span>, malloc_good_size(class_getInstanceSize([car class])));</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//增加一个test字符串变量</span></span><br><span class="line">  Class CarClass = objc_allocateClassPair([Car class], <span class="string">"CarClass"</span>, <span class="number">0</span>);</span><br><span class="line">  <span class="keyword">if</span> (class_addIvar(CarClass, <span class="string">"test"</span>, <span class="keyword">sizeof</span>(<span class="built_in">NSString</span> *), <span class="number">0</span>, <span class="string">"@"</span>)) &#123;</span><br><span class="line">      <span class="built_in">NSLog</span>(<span class="string">@"add ivar success"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  objc_registerClassPair(CarClass);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">id</span> carObject = [[CarClass alloc] init];</span><br><span class="line">  [carObject setValue:<span class="string">@"HelloWorld"</span> forKey:<span class="string">@"test"</span>];</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">NSLog</span>(<span class="string">@"Object size: %zd"</span>,malloc_size((__bridge <span class="keyword">const</span> <span class="keyword">void</span> *)(carObject)));</span><br><span class="line">  <span class="built_in">NSLog</span>(<span class="string">@"InstanceSize Size: %zd"</span>, malloc_good_size(class_getInstanceSize([carObject class])));</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">NSLog</span>(<span class="string">@"test :%@"</span>,[carObject valueForKey:<span class="string">@"test"</span>]);</span><br></pre></td></tr></table></figure>
+<p>模拟器iphone6测试结果是:<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/2_Answer.png" alt="2_Answer.png"></p>
+<p>这里应该是没有问题了吧，增加了一个字符串变量，size多了16，然后把结果发上群，这句话应该是正确的。</p>
+<p>第二天早上，@诗意的栖居 发过来一段ivar的解释说明，对象之间不共用的只有<code>ivars</code>,具体一点就是同一个类的不同对象，实例变量会不同，有可能会在初始化过程中添加一些变量呀、类呀等，因为runtime的特性可以允许这么做。</p>
+<p>关于ivars可以参考之前写过的一篇文章<a href="http://www.liuchendi.com/2014/08/26/iOS/3_runtime/">《浅析iOS高级编程-runtime》</a>，里面有介绍ivars就是实例的参数列表</p>
+<hr>
+<h3 id="问题来了，为什么添加多一个变量,size会增加16？为啥不是8或者是其他8的倍数？">问题来了，为什么添加多一个变量,size会增加16？为啥不是8或者是其他8的倍数？</h3><p>我把car里面的三个实例变量给去掉，重新打印一次<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/3_Answer.png" alt="3_Answer.png"></p>
+<p>没有添加成员变量和添加一个test成员变量后的size都是16，为什么？这不是和昨天测试的结果不一样吗？</p>
+<p>在<code>64-bit</code>情况下,每个对象含有一个<code>isa</code>,占用8个字节（参考<a href="http://bbs.itheima.com/thread-137894-1-1.html" target="_blank" rel="external">http://bbs.itheima.com/thread-137894-1-1.html</a>）</p>
+<p>那还有8个字节去哪了？一个对象是8个字节，添加一个变量之后还是16？为什么会这样子？一头雾水。</p>
+<p>那我换<code>32-bit</code>的情况测一次，情况也类似，只不过在32-bit情况下面一个指针是4个字节</p>
+<p>把Car里面声明一个变量<code>make</code>,重新打印一下</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Car</span> : <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">  <span class="built_in">NSString</span> *make;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>结果是：<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/4_Answer.png" alt="4_Answer.png"></p>
+<p>根据这个规律，猜测现在增加的size是根据16的倍数开辟的，</p>
+<p>为啥不是8呢？如果是8的话，runtime每增加一个变量，就得去访问内存，重新分配新的地址，这会有额外开销。</p>
+<p>那为啥不是24、32呢？这样假设用不到这么多内存的话，生成的对象会造成极大的浪费。</p>
+<p>所以选择了一个折中的方案</p>
+<p>这结论暂时只是猜测，暂时还没找到有说服力的资料。</p>
+<p>不过开辟的内存还是得根据成员变量来决定的、只不过昨天测的方式是错的</p>
+<hr>
+<h3 id="问题又来了，Car继承了NSObject、那NSObject里面没有生成成员变量么，这些内存怎么没有加上？">问题又来了，Car继承了NSObject、那NSObject里面没有生成成员变量么，这些内存怎么没有加上？</h3><p>看一下<code>NSObject.h</code></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSObject</span> &lt;<span class="title">NSObject</span>&gt; </span>&#123;</span><br><span class="line">   Class isa  OBJC_ISA_<span class="built_in">AVAILABILITY</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)load;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)initialize;</span><br><span class="line">- (instancetype)init</span><br><span class="line"><span class="preprocessor">#if NS_ENFORCE_NSOBJECT_DESIGNATED_INITIALIZER</span></span><br><span class="line">    <span class="built_in">NS_DESIGNATED_INITIALIZER</span></span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line">    ;</span><br><span class="line"></span><br><span class="line">+ (instancetype)new OBJC_SWIFT_UN<span class="built_in">AVAILABLE</span>(<span class="string">"use object initializers instead"</span>);</span><br><span class="line">+ (instancetype)allocWithZone:(<span class="keyword">struct</span> _<span class="built_in">NSZone</span> *)zone OBJC_SWIFT_UN<span class="built_in">AVAILABLE</span>(<span class="string">"use object initializers instead"</span>);</span><br><span class="line">+ (instancetype)alloc OBJC_SWIFT_UN<span class="built_in">AVAILABLE</span>(<span class="string">"use object initializers instead"</span>);</span><br><span class="line">- (<span class="keyword">void</span>)dealloc OBJC_SWIFT_UN<span class="built_in">AVAILABLE</span>(<span class="string">"use 'deinit' to define a de-initializer"</span>);</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)finalize;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>)<span class="keyword">copy</span>;</span><br><span class="line">- (<span class="keyword">id</span>)mutableCopy;</span><br><span class="line"></span><br><span class="line">.............</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">BOOL</span>)isSubclassOfClass:(Class)aClass;</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">BOOL</span>)resolveClassMethod:(SEL)sel __OSX_<span class="built_in">AVAILABLE_STARTING</span>(__MAC_10_5, __IPHONE_2_0);</span><br><span class="line">+ (<span class="built_in">BOOL</span>)resolveInstanceMethod:(SEL)sel __OSX_<span class="built_in">AVAILABLE_STARTING</span>(__MAC_10_5, __IPHONE_2_0);</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">NSUInteger</span>)hash;</span><br><span class="line">+ (Class)superclass;</span><br><span class="line">+ (Class)class OBJC_SWIFT_UN<span class="built_in">AVAILABLE</span>(<span class="string">"use 'aClass.self' instead"</span>);</span><br><span class="line">+ (<span class="built_in">NSString</span> *)description;</span><br><span class="line">+ (<span class="built_in">NSString</span> *)debugDescription;</span><br></pre></td></tr></table></figure>
+<p>发现头文件里确实没有实例变量的声明、只有一个isa指针、协议里面有一个<code>hash</code>声明成<code>readOnly</code>。</p>
+<p>根据上面对象中的前8字节就是isa指针的说明，看这张图，发现父类的Ivar实例是在跟在子类后面的<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/5_isa顺序.jpg" alt="5_isa顺序.jpg"></p>
+<p>（来自<a href="http://bbs.itheima.com/thread-137894-1-1.html" target="_blank" rel="external">http://bbs.itheima.com/thread-137894-1-1.html</a>）</p>
+<p>那系统生成的ivar跑去哪里了？</p>
+<p>所以这还得从@property说起，先来看看这里的说明：<a href="http://stackoverflow.com/questions/16772424/objective-c-readonly-properties-not-synthesized-with-underscore-ivar" target="_blank" rel="external">http://stackoverflow.com/questions/16772424/objective-c-readonly-properties-not-synthesized-with-underscore-ivar</a></p>
+<p>发现如果声明成readonly属性，重写了getter方法的话，是不会生成ivar的</p>
+<p>测试一下</p>
+<p><code>Car.h</code></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="variable">@interface</span> <span class="attribute">Car </span>: NSObject &#123;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">@property</span> (nonatomic, copy, readonly) NSString *test;</span><br><span class="line"></span><br><span class="line"><span class="variable">@end</span></span><br></pre></td></tr></table></figure>
+<p>结果报错了</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/6_readonly.png" alt="6_readonly.png"></p>
+<p>同理rewrite声明的属性、如果重写了setter和getter，也是不会生成ivar的</p>
+<p>所以上面的例子说明NSObject在其内部实现的时候，都没有生成ivar。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>内存大小是由类的成员变量决定的吗？<br>]]>
+    
+    </summary>
+    
+      <category term="对象、runtime" scheme="http://www.liuchendi.com/tags/%E5%AF%B9%E8%B1%A1%E3%80%81runtime/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[制作cocospod库的过程总结]]></title>
+    <link href="http://www.liuchendi.com/2015/11/10/iOS/13_cocospodLib/"/>
+    <id>http://www.liuchendi.com/2015/11/10/iOS/13_cocospodLib/</id>
+    <published>2015-11-10T11:59:25.000Z</published>
+    <updated>2015-11-10T11:59:25.000Z</updated>
+    <content type="html"><![CDATA[<p>制作cocospod库需要注意的地方<br><a id="more"></a></p>
+<h2 id="1、打tag">1、打tag</h2><pre><code>git tag <span class="string">'v1.0.0'</span>
+
+git <span class="keyword">push</span> --tags
+
+git <span class="keyword">push</span> origin master
+</code></pre><h2 id="2、生成podspec文件">2、生成podspec文件</h2><p>pod spec create <a href="https://github.com/xx" target="_blank" rel="external">https://github.com/xx</a></p>
+<ul>
+<li><p>注意需要配置的地方是，这三个一定要写清楚，不然会报错</p>
+<ul>
+<li>s.source:需要制作成库的文件,后面跟的是版本号</li>
+<li>s.framework: 需要连接的framework</li>
+<li>s.platform:版本</li>
+</ul>
+</li>
+</ul>
+<h2 id="3、把文件发送到仓库">3、把文件发送到仓库</h2><pre><code>git add <span class="keyword">Test</span>.podspec
+
+git commit -am "add <span class="keyword">Test</span>.podspec <span class="keyword">file</span>”
+
+git push -<span class="keyword">u</span> origin master
+</code></pre><h2 id="4、如果需要发送的Cocospod库">4、如果需要发送的Cocospod库</h2><pre><code><span class="label">pod</span> trunk <span class="keyword">push </span>
+</code></pre><p>这个命令会检查本地的<code>podspec</code>文件是否有错，没错的话会上传这个文件到<code>trunk</code>,然后将文件转换成json文件。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>制作cocospod库需要注意的地方<br>]]>
+    
+    </summary>
+    
+      <category term="cocospod" scheme="http://www.liuchendi.com/tags/cocospod/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Swift语法知识点笔记]]></title>
+    <link href="http://www.liuchendi.com/2015/11/10/iOS/12_Swift_1/"/>
+    <id>http://www.liuchendi.com/2015/11/10/iOS/12_Swift_1/</id>
+    <published>2015-11-10T10:03:51.000Z</published>
+    <updated>2015-11-10T10:03:51.000Z</updated>
+    <content type="html"><![CDATA[<p>记录学习Swift语法知识点<br><a id="more"></a></p>
+<h2 id="常量和变量">常量和变量</h2><p>常量的值一旦确定就不能修改。</p>
+<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> helloWorld = <span class="string">"Hello world"</span></span><br><span class="line"></span><br><span class="line">helloWorld = <span class="string">"h"</span> <span class="comment">//编译报错</span></span><br></pre></td></tr></table></figure>
+<h2 id="类型安全和类型检查">类型安全和类型检查</h2><p>类型安全：就是可以清楚知道代码要处理的值的类型</p>
+<p>类型检查：编译时进行类型检查，尽早发现错误</p>
+<p>类型推断：自动推断出表达式的类型</p>
+<h2 id="数值型字面量">数值型字面量</h2><p>点字面量还有一个可选的指数（exponent），在十进制浮点数中通过大写或者小写的<code>e</code>来指定，在十六进制浮点数中通过大写或者小写的<code>p</code>来指定。</p>
+<h2 id="类型别名">类型别名</h2><p>typealias</p>
+<h2 id="布尔类型">布尔类型</h2><p>true和false</p>
+<h2 id="元组">元组</h2><p>定义：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">let</span> http404Error = (<span class="number">404</span>, <span class="string">"Not Found"</span>)</span><br></pre></td></tr></table></figure>
+<p>分解的时候可以用下划线<code>_</code>代替忽略部分</p>
+<p>可以通过下标来访问元组的元素</p>
+<p>可以给元组里面的元素命名</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let httpCode = (<span class="tag">code</span>:<span class="number">200</span>,description:<span class="string">"ok"</span>)</span><br><span class="line"><span class="function"><span class="title">println</span><span class="params">(<span class="string">"this is \(httpCode.code)"</span>)</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="可选类型optionals">可选类型optionals</h2><p><code>？</code>表示可选类型，代表可能有值，也可能什么都没有</p>
+<p><code>??</code> 空合运算符(a ?? b)将对可选类型a进行空判断</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> defaultColorName = <span class="string">"red"</span></span><br><span class="line"><span class="keyword">var</span> userDefinedColorName:<span class="built_in">String</span>?   <span class="comment">//默认值为nil</span></span><br><span class="line"><span class="keyword">var</span> colorNameToUse = userDefinedColorName ?? defaultColorName</span><br><span class="line"><span class="comment">//userDefinedColorName的值为空 ，所以colorNameToUse的值为`red`</span></span><br></pre></td></tr></table></figure>
+<p><code>!</code> 确定可选类型包含值后，可以在可选的名字后面加一个<code>！</code>来获取这个值  (强制解析)</p>
+<p><code>nil</code> 你可以给可选变量赋值为nil来表示它没有值：</p>
+<ul>
+<li>注意：nil不能用于非可选的常量和变量。如果你的代码中有常量或者变量需要处理值缺失的情况，请把它们声明成对应的可选类型。</li>
+</ul>
+<h2 id="区间运算符">区间运算符</h2><p>闭区间运算符 :<code>a...b</code><br>半开区间 : <code>a..&lt;b</code></p>
+<h2 id="字符串">字符串</h2><p>Swift 的String类型是值类型。 如果您创建了一个新的字符串，那么当其进行常量、变量赋值操作或在函数/方法中传递时，会进行值拷贝。</p>
+<p>而cocoa中的NSString不同，当您在 Cocoa 中创建了一个NSString实例，并将其传递给一个函数/方法，或者赋值给一个变量，您传递或赋值的是该NSString实例的一个引用，除非您特别要求进行值拷贝，否则字符串不会生成新的副本来进行赋值操作。</p>
+<h2 id="控制流">控制流</h2><p><code>where</code>可以在switch里面的case分支中判断额外的条件</p>
+<p><code>fallthrough</code>可以在switch里面的分支中贯穿</p>
+<h2 id="函数">函数</h2><p><code>#</code>外部参数名，不用定义两次，根据局部参数名字自动生成</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">add</span><span class="params">(#num1:Int ,#num2:Int)</span></span> -&gt; <span class="type">Int</span>&#123;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">return</span> num1 + num2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">add(num1: <span class="number">1</span>, num2: <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>函数定义的时候参数可以带有默认值，调用的时候可以忽略这个参数，如果默认参数被赋值，则使用最新的</p>
+<p><code>...</code>可变参数</p>
+<p><code>函数参数</code>默认是常量，如果想在函数里面修改这些常量，可以在函数定义的时候加上<code>var</code>关键字，从而避免了在函数内部重新定义变量。</p>
+<p><code>函数类型</code> ，可以定义一个类型为函数的常量或者变量，把函数赋值给它。</p>
+<ul>
+<li>函数类型可以作为参数、返回值</li>
+</ul>
+<h2 id="闭包">闭包</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">	（parameters） -&gt; <span class="built_in">return</span>Type <span class="keyword">in</span> </span><br><span class="line">		statements</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">//普通写法</span><br><span class="line"><span class="keyword">reversed </span>= sorted(names, &#123; (<span class="literal">s1</span>: <span class="keyword">String, </span><span class="literal">s2</span>: <span class="keyword">String) </span>-&gt; <span class="keyword">Bool </span>in return <span class="literal">s1</span> &gt; <span class="literal">s2</span> &#125; )</span><br><span class="line"></span><br><span class="line">//类型推断</span><br><span class="line"><span class="keyword">reversed </span>= sorted(names, &#123; <span class="literal">s1</span>, <span class="literal">s2</span> in return <span class="literal">s1</span> &gt; <span class="literal">s2</span> &#125; )</span><br><span class="line"></span><br><span class="line">//单表达式闭包隐式返回</span><br><span class="line"><span class="keyword">reversed </span>= sorted(names, &#123; <span class="literal">s1</span>, <span class="literal">s2</span> in <span class="literal">s1</span> &gt; <span class="literal">s2</span> &#125; )</span><br></pre></td></tr></table></figure>
+<p>运算符函数</p>
+<p>尾随闭包</p>
+<p>捕获值</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">func makeIncrementor<span class="function"><span class="params">(forIncrement amount: Int)</span> -&gt;</span> <span class="function"><span class="params">()</span> -&gt;</span> Int &#123;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">var</span> runningTotal = <span class="number">0</span></span><br><span class="line">   </span><br><span class="line">   func incrementor<span class="function"><span class="params">()</span> -&gt;</span> Int &#123;</span><br><span class="line">       </span><br><span class="line">       runningTotal += amount</span><br><span class="line">       <span class="keyword">return</span> runningTotal;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> incrementor;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">因为没有修改amount变量的值，所以incrementor捕获了变量的一个副本，该副本随着incrementor一同被存储</span><br></pre></td></tr></table></figure>
+<h2 id="枚举">枚举</h2><p>rawValue获取枚举的原始值</p>
+<h2 id="集合类型的赋值和拷贝">集合类型的赋值和拷贝</h2><p>OC中NSString,NSArray,NSDictionary均以类形式出现，发生赋值或者传入函数时，不发生拷贝，而是传递实例的引用</p>
+<p>Swift<code>字符串String</code>,<code>数组Array</code>,<code>字典Directionary</code>类型均已结构体的形式实现。他们在传入或者赋值时候会发生拷贝行为</p>
+<h2 id="结构体">结构体</h2><p>创建了一个结构体的实例并且赋值给一个常量之后，无法修改任何属性。因为结构体属于值类型，当值类型的实例声明为常量的时候，它的所有属性也就成了常量</p>
+<h2 id="属性">属性</h2><p><code>lazy</code> 延迟存储属性</p>
+<p><code>setter</code>声明中可以使用默认名称newValue</p>
+<p>只读属性总是返回一个值，可以去掉<code>get</code>关键字和花括号</p>
+<p><code>属性观察器</code> </p>
+<ul>
+<li><code>willSet</code>在    设置新的值之前调用</li>
+<li><code>didSet</code> 在新的值被设置后立即调用</li>
+</ul>
+<h2 id="方法">方法</h2><p>结构体和枚举能够定义方法，OC中，类是唯一能定义方法的类型。</p>
+<p>在实例方法中修改值类型，用<code>mutating</code>,然后方法就可以从方法内部改变它的属性</p>
+<ul>
+<li>注意：不能在结构体类型常量上调用变异方法，因为常量的属性不能被改变，即使想改变的是常量的变量属性</li>
+</ul>
+<p>类型方法：</p>
+<ul>
+<li>声明类的类型方法，在方法前加上关键字<code>class</code></li>
+<li>声明结构体和枚举的类型方法，在方法前加上关键字<code>static</code></li>
+</ul>
+<p>下标脚本语法</p>
+<ul>
+<li><p><code>subscript</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">TimesTable</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">  		<span class="keyword">let</span> multiplier: <span class="type">Int</span></span><br><span class="line">    <span class="keyword">subscript</span>(index: <span class="type">Int</span>) -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> multiplier * index</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> threeTimesTable = <span class="type">TimesTable</span>(multiplier: <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(threeTimesTable[<span class="number">6</span>])</span>"</span>)  <span class="comment">// 3 * 6 = 18</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>重写方法</p>
+<ul>
+<li><code>override</code></li>
+</ul>
+<p>禁止重写 : <code>final</code></p>
+<ul>
+<li>也可以在关键字class前添加final特性,标记整个类都是final的，这样的类是不可被继承的</li>
+</ul>
+<h2 id="构造过程">构造过程</h2><ul>
+<li>init()</li>
+<li>如果定义了一个自定义的构造器，则无法访问默认的构造器</li>
+<li><p>子类不会默认继承父类的构造器，防止一个父类简单的构造器被一个更专业的子类继承，并错误的用来创建子类的实例。</p>
+</li>
+<li><p>指定构造器和便利构造器<code>convenience</code></p>
+</li>
+</ul>
+<h2 id="析构过程">析构过程</h2><ul>
+<li><code>deinit</code>每个类最多只能有一个析构函数，析构函数不能带任何参数，</li>
+<li>不能自己调用析构函数</li>
+<li>子类继承父类的析构函数，并且在子类析构函数实现的最后，父类的析构函数被自动调用。</li>
+</ul>
+<h2 id="ARC">ARC</h2><ul>
+<li>打破循环引用，用weak</li>
+<li>无主引用<code>unowned</code> ，无主引用是非可选类型，不需要在使用它的时候将它展开,可以被直接访问。<br> 不过ARC无法在实例被销毁后将无主引用设为nil，因为非可选类型的变量不允许被设为nil.</li>
+</ul>
+<h2 id="类型转换">类型转换</h2><ul>
+<li>可以判断实例的类型，也可以将实例看做是父类或者子类的实例</li>
+<li><p><code>is</code>和<code>as</code></p>
+<ul>
+<li><code>is</code> 来检查一个实例而是否属于特定的子类型。</li>
+<li><code>as</code> 向下转到它的子类型，向下转型可能会失败，所以类型操作符有两种不同形式。可选的<code>as?</code>和强制的<code>as</code></li>
+</ul>
+</li>
+<li><p>Any和AnyObject的转换</p>
+<ul>
+<li><code>AnyObject</code>可以代表任何class类型的实例</li>
+<li><code>Any</code>可以表示任何类型，除了方法类型</li>
+</ul>
+</li>
+</ul>
+<h2 id="扩展">扩展</h2><p><code>extend</code>扩展就是向一个已有的类、结构体或枚举类型添加新功能。</p>
+<ul>
+<li>添加计算型属性和计算静态属性</li>
+<li>定义实例方法和类型方法</li>
+<li>提供新的构造器</li>
+<li>定义下标</li>
+<li>定义和使用新的嵌套类型</li>
+<li><p>使一个已有的类型符合某个协议</p>
+</li>
+<li><p>扩展能向类中添加新的便利构造器，但是不能向类中添加新的指定构造器或析构函数</p>
+</li>
+</ul>
+<h2 id="协议">协议</h2><ul>
+<li>如果一个类在含有父类的同时使用了协议，应当把父类放在所有协议之前</li>
+<li>用<code>类</code>实现协议忠的mutating方法时，不用写mutating关键字；用<code>结构体</code>,<code>枚举</code>实现协议中的mutating方法时，必须写mutating关键字</li>
+<li><p>对构造器的规定</p>
+<ul>
+<li>协议里面不需要写花括号和构造器实体，实现里面要写required</li>
+</ul>
+</li>
+</ul>
+<pre><code>                protocol FullyNamed {
+
+<span class="label">                    init(someParameter:</span> Int)
+                }
+
+<span class="label">                class Persons:</span> FullyNamed {
+
+<span class="label">                    required init(someParameter:</span> Int) {
+
+                    }
+                }
+
+
+*    使用required修饰符可以保证：所有遵循该协议的子类，同样能为够沼气提供一个显示的实现或继承实现。
+
+*    如果一个子类重写了父类指定的够沼气，并且这个够沼气遵循了协议的规定，那么这个构造器的实现需要被同时标识<span class="escape">`r</span>equired<span class="escape">` </span>和<span class="escape">`o</span>verride<span class="escape">`修</span>饰符
+
+* 类专属协议，在协议的继承列表中，通过添加<span class="escape">`c</span>lass<span class="escape">` </span>   关键字，限制协议只能是配到类，该<span class="escape">`c</span>lass<span class="escape">`关</span>键字必须是第一个出现在继承列表中的
+*    协议合成<span class="escape">`&lt;</span>&gt;<span class="escape">`
+</span>
+*    检验协议的一致性
+
+    *    <span class="escape">`i</span>s<span class="escape">`操</span>作符用来检查实例是否遵循了某个协议
+    *    <span class="escape">`a</span>s?<span class="escape">`返</span>回一个可选值，当是咧遵循协议时，返回该协议的类型，否则返回nil
+    *     <span class="escape">`a</span>s<span class="escape">`墙</span>纸向下转型
+
+* 对可选协议的规定 <span class="escape">`@</span>optional`
+</code></pre><h2 id="泛型">泛型</h2><p><code>Equatable</code>协议：要求任何遵循类型实现等式符(==)和不等符(!=)对任何两个该类型进行比较。所有的Swift标准类型自动支持Equatable协议</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">findIndex</span><span class="generics">&lt;T: Equatable&gt;</span><span class="params">(array: [T], valueToFind: T)</span></span> -&gt; <span class="type">Int</span>? &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (index,value) <span class="keyword">in</span> <span class="built_in">enumerate</span>(array) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> value == valueToFind &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> index</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="权限控制">权限控制</h2><p><code>Public</code> 可以访问自己模块或应用中源文件里的任何实体，别人也可以访问引入该模块中源文件里的所有实体</p>
+<p><code>Internal</code>可以访问自己模块或应用中源文件的实体，但是别人不能访问</p>
+<p><code>Private</code>只能当前源文件中使用的实体，称为私有实体</p>
+<p><code>使用原则</code>：访问级别不能高于它的参数、返回类型的级别。如果定义为public而参数或者返回类型定义为internal或private，就有可能出现函数可以被任何人访问，但是它的参数和返回类型不可以。</p>
+<p><code>默认访问级别：</code>internal</p>
+<p>元组类型的访问级别遵循最低访问级别</p>
+<p>枚举中的成员的访问级别继承自枚举，不能为枚举成员指定访问级别</p>
+<p>子类的访问级别不能高于父类的访问级别。</p>
+<p>常量、变量、属性、下标不恩呢刚拥有比他们的类型更高的访问级别。</p>
+<p>Getter和Setter</p>
+<ul>
+<li>setter的访问级别可以低于对应的getter的访问级别，这样就可以控制变量、属性、或下标索引的读写权限</li>
+</ul>
+<p>协议继承：新协议拥有的访问级别最高也只能和被继承协议的访问级别相同。</p>
+<p>协议一致性：类可以采用比本身访问级别低的协议。比如定义了一个Public级别的类，可以采用一个internal级别的协议，并且只能在定义该协议的模块忠使用。</p>
+<p>如果采用了低级别的协议，那么这个类也遵循协议的级别。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>记录学习Swift语法知识点<br>]]>
+    
+    </summary>
+    
+      <category term="Swift" scheme="http://www.liuchendi.com/tags/Swift/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[常用的第三方库整理收集]]></title>
+    <link href="http://www.liuchendi.com/2015/11/10/iOS/11_ThridPart/"/>
+    <id>http://www.liuchendi.com/2015/11/10/iOS/11_ThridPart/</id>
+    <published>2015-11-10T09:55:46.000Z</published>
+    <updated>2015-11-10T09:55:46.000Z</updated>
+    <content type="html"><![CDATA[<p>收集了常见的APP所用到的第三方库，提高开发效率<br><a id="more"></a></p>
+<h2 id="弹出视图">弹出视图</h2><p>1、底部弹出栏，可以控制视图差 ：<a href="https://github.com/zoonooz/ZFDragableModalTransition" target="_blank" rel="external">ZFDragableModalTransition</a></p>
+<p>2、类似微信点击加号弹出的选项视图:<a href="https://github.com/kolyvan/kxmenu" target="_blank" rel="external">kxmenu</a></p>
+<p>3、底部弹出视图：<a href="https://github.com/carsonperrotti/CNPPopupController" target="_blank" rel="external">CNPPopupController</a></p>
+<p>4、类似QQ和微信，长按可以弹出黑色的选项视图<a href="https://github.com/questbeat/QBPopupMenu" target="_blank" rel="external">QBPopupMenu</a></p>
+<p>5、类似微博的菜单栏弹出:<a href="https://github.com/cyndibaby905/TumblrMenu" target="_blank" rel="external">TumblrMenu</a></p>
+<p>6、菜单栏上方弹出:<a href="https://github.com/lminhtm/LMDropdownView" target="_blank" rel="external">LMDropdownView</a></p>
+<p>7、底部弹出视图：<a href="https://github.com/lukegeiger/LGSemiModalNavController" target="_blank" rel="external">LGSemiModalNavController</a></p>
+<p>8、类似美团的下拉菜单选择:<a href="https://github.com/jsfu/JSDropDownMenu" target="_blank" rel="external">JSDropDownMenu</a></p>
+<h2 id="动画">动画</h2><p>1、卡片式交互 ：</p>
+<ul>
+<li><a href="https://github.com/modocache/MDCSwipeToChoose" target="_blank" rel="external">MDCSwipeToChoose</a></li>
+<li><a href="https://github.com/Yalantis/Koloda" target="_blank" rel="external">Koloda</a></li>
+</ul>
+<p>2、动画知识点学习：<a href="https://github.com/AttackOnDobby/iOS-Core-Animation-Advanced-Techniques" target="_blank" rel="external">iOS-Core-Animation-Advanced-Techniques</a></p>
+<p>3、Bubble效果:</p>
+<ul>
+<li><p><a href="https://github.com/andreamazz/BubbleTransition" target="_blank" rel="external">BubbleTransition</a></p>
+</li>
+<li><p><a href="https://github.com/jonathantribouharet/JTMaterialTransition" target="_blank" rel="external">JTMaterialTransition</a></p>
+</li>
+</ul>
+<p>4、具有视差弹出、push效果:<a href="https://github.com/Raizlabs/RZTransitions" target="_blank" rel="external">RZTransitions</a></p>
+<p>5、类似点赞的效果，闪烁一下:<a href="https://github.com/okmr-d/DOFavoriteButton" target="_blank" rel="external">DOFavoriteButton</a></p>
+<p>6、照片放大动画：<a href="https://github.com/recruit-mp/RMPZoomTransitionAnimator" target="_blank" rel="external">RMPZoomTransitionAnimator</a></p>
+<p>7、水波动画:<a href="https://github.com/antiguab/BAFluidView" target="_blank" rel="external">BAFluidView</a></p>
+<p>8、弹出框，可以输入一些文字发送，类似发微博:<a href="https://github.com/romaonthego/REComposeViewController" target="_blank" rel="external">REComposeViewController</a></p>
+<p>9、精美的按钮动画：<a href="https://github.com/AlexeyBelezeko/TBIconTransitionKit" target="_blank" rel="external">TBIconTransitionKit</a></p>
+<p>10、Label文字动画:<a href="https://github.com/overboming/ZCAnimatedLabel" target="_blank" rel="external">ZCAnimatedLabel</a></p>
+<p>11、动画库集合:<a href="https://github.com/sxyx2008/awesome-ios-animation" target="_blank" rel="external">awesome-ios-animation</a></p>
+<p>12、简单的视图动画:<a href="https://github.com/daltoniam/DCAnimationKit" target="_blank" rel="external">DCAnimationKit</a></p>
+<p>13 、TableView移动动画<a href="https://github.com/okla/QuickRearrangeTableView" target="_blank" rel="external">QuickRearrangeTableView</a></p>
+<p>14、slideIn动画:<a href="https://github.com/JV17/JVMenuPopover" target="_blank" rel="external">JVMenuPopover</a></p>
+<p>15、按钮动画带有波纹效果:<a href="https://github.com/SatanWoo/WZFlashButton" target="_blank" rel="external">WZFlashButton</a></p>
+<p>16、点赞动画:<a href="https://github.com/K-cat/CatZanButton" target="_blank" rel="external">CatZanButton</a></p>
+<h2 id="布局">布局</h2><p>1、选项卡：</p>
+<ul>
+<li><a href="https://github.com/uacaps/PageMenu" target="_blank" rel="external">PageMenu</a></li>
+<li>类似Twitter选项栏:<a href="https://github.com/StefanLage/SLPagingView" target="_blank" rel="external">SLPagingView</a></li>
+<li><a href="https://github.com/kitasuke/PagingMenuController" target="_blank" rel="external">PagingMenuController</a></li>
+<li><a href="https://github.com/HAHAKea/HACursor" target="_blank" rel="external">HACursor</a></li>
+<li><a href="https://github.com/y-hryk/YSLContainerViewController" target="_blank" rel="external">YSLContainerViewController</a></li>
+<li><a href="https://github.com/IOStao/ZTPageController" target="_blank" rel="external">ZTPageController</a></li>
+</ul>
+<p>2、collection布局</p>
+<ul>
+<li><a href="https://github.com/gringoireDM/FBLikeLayout" target="_blank" rel="external">FBLikeLayout</a></li>
+<li><a href="https://github.com/openboy2012/DDCollectionViewFlowLayout" target="_blank" rel="external">DDCollectionViewFlowLayout</a></li>
+</ul>
+<p>3、测拉菜单</p>
+<ul>
+<li><a href="https://github.com/WXGBridgeQ/WXGSlideMenuDemo" target="_blank" rel="external">WXGSlideMenuDemo</a></li>
+</ul>
+<p>4、树形菜单</p>
+<ul>
+<li><a href="https://github.com/yixiangboy/TreeTableView" target="_blank" rel="external">TreeTableView</a></li>
+</ul>
+<p>5、滑动返回</p>
+<ul>
+<li><a href="https://github.com/singro/SCNavigation" target="_blank" rel="external">SCNavigation</a></li>
+</ul>
+<h2 id="照片浏览器和选择">照片浏览器和选择</h2><ul>
+<li><p><a href="https://github.com/ideaismobile/IDMPhotoBrowser" target="_blank" rel="external">IDMPhotoBrowser</a></p>
+</li>
+<li><p><a href="https://github.com/chiunam/CTAssetsPickerController" target="_blank" rel="external">CTAssetsPickerController</a></p>
+</li>
+<li><p>提供多选照片:<a href="https://github.com/questbeat/QBImagePicker" target="_blank" rel="external">QBImagePicker</a></p>
+</li>
+<li><p><a href="https://github.com/nsdictionary/CorePhotoBroswerVC" target="_blank" rel="external">CorePhotoBroswerVC</a></p>
+</li>
+<li><p><a href="https://github.com/mikaoj/BSImagePicker" target="_blank" rel="external">BSImagePicker</a></p>
+</li>
+<li><p><a href="https://github.com/johnil/JFImagePickerController" target="_blank" rel="external">JFImagePickerController</a></p>
+</li>
+<li><p><a href="https://github.com/MakeZL/ZLPhotoLib" target="_blank" rel="external">ZLPhotoLib</a></p>
+</li>
+<li><p><a href="https://github.com/SpringOx/AGImagePickerController" target="_blank" rel="external">AGImagePickerController</a></p>
+</li>
+</ul>
+<h2 id="HUD">HUD</h2><ul>
+<li><p><a href="https://github.com/oarrabi/OAStackView" target="_blank" rel="external">OAStackView</a></p>
+</li>
+<li><p>精美的HUD动画：<a href="https://github.com/ninjaprox/NVActivityIndicatorView" target="_blank" rel="external">NVActivityIndicatorView</a></p>
+</li>
+<li><p>等待加载的精美过度界面:<a href="https://github.com/NghiaTranUIT/FeSpinner" target="_blank" rel="external">FeSpinner</a></p>
+</li>
+<li><p>加载图片:<a href="https://github.com/rounak/RJImageLoader" target="_blank" rel="external">RJImageLoader</a></p>
+</li>
+<li><p><a href="https://github.com/TaimurAyaz/TAOverlay" target="_blank" rel="external">TAOverlay</a></p>
+</li>
+<li><p><a href="https://github.com/relatedcode/ProgressHUD" target="_blank" rel="external">ProgressHUD</a></p>
+</li>
+<li><p><a href="https://github.com/gontovnik/DGActivityIndicatorView" target="_blank" rel="external">DGActivityIndicatorView</a></p>
+</li>
+<li><p><a href="https://github.com/devxoul/JLToast" target="_blank" rel="external">JLToast</a></p>
+</li>
+<li><p><a href="https://github.com/devSC/WSProgressHUD" target="_blank" rel="external">WSProgressHUD</a></p>
+</li>
+</ul>
+<h2 id="图片编辑器">图片编辑器</h2><ul>
+<li><a href="https://github.com/yackle/CLImageEditor" target="_blank" rel="external">CLImageEditor</a></li>
+</ul>
+<h2 id="AlertView">AlertView</h2><ul>
+<li><p><a href="https://github.com/mtonio91/AMSmoothAlert" target="_blank" rel="external">AMSmoothAlert</a></p>
+</li>
+<li><p><a href="https://github.com/ChrisXu1221/CXCardView" target="_blank" rel="external">CXCardView</a></p>
+</li>
+<li><p><a href="https://github.com/mayuur/MJAlertView" target="_blank" rel="external">MJAlertView</a></p>
+</li>
+<li><p><a href="https://github.com/Friend-LGA/LGAlertView" target="_blank" rel="external">LGAlertView</a></p>
+</li>
+</ul>
+<h2 id="ActionSheet">ActionSheet</h2><ul>
+<li><p><a href="https://github.com/leverdeterre/JMActionSheetDescription" target="_blank" rel="external">JMActionSheetDescription</a></p>
+</li>
+<li><p><a href="https://github.com/zhangyu9050/UUPhotoActionSheet" target="_blank" rel="external">UUPhotoActionSheet</a></p>
+</li>
+<li><p><a href="https://github.com/GeekZP/ZPActionSheet" target="_blank" rel="external">ZPActionSheet</a></p>
+</li>
+</ul>
+<h2 id="相机">相机</h2><ul>
+<li><a href="https://github.com/danielebogo/DBCamera" target="_blank" rel="external">DBCamera</a></li>
+</ul>
+<h2 id="图文混排">图文混排</h2><ul>
+<li><a href="https://github.com/kishikawakatsumi/SECoreTextView" target="_blank" rel="external">SECoreTextView</a></li>
+<li><a href="https://github.com/molon/MLEmojiLabel" target="_blank" rel="external">MLEmojiLabel</a></li>
+<li><a href="https://github.com/12207480/TYAttributedLabel" target="_blank" rel="external">TYAttributedLabel</a></li>
+<li><a href="https://github.com/molon/MLLabel" target="_blank" rel="external">MLLabel</a></li>
+</ul>
+<h2 id="手势密码">手势密码</h2><ul>
+<li><a href="https://github.com/nsdictionary/CoreLock" target="_blank" rel="external">CoreLock</a></li>
+</ul>
+<h2 id="图片循环播放器">图片循环播放器</h2><ul>
+<li><a href="https://github.com/gsdios/SDCycleScrollView" target="_blank" rel="external">SDCycleScrollView</a></li>
+<li><a href="https://github.com/TanguyAladenise/TAPageControl" target="_blank" rel="external">TAPageControl</a></li>
+<li><a href="https://github.com/ZYCoderIOS/ZYAdView" target="_blank" rel="external">ZYAdView</a></li>
+</ul>
+<h2 id="Scrollview">Scrollview</h2><ul>
+<li><p>功能栏滚动隐藏:<a href="https://github.com/pixyzehn/MediumScrollFullScreen" target="_blank" rel="external">MediumScrollFullScreen</a></p>
+</li>
+<li><p>精美的scrollview动画:<a href="https://github.com/starchand/MBTwitterScroll" target="_blank" rel="external">MBTwitterScroll</a></p>
+</li>
+<li><p>欢迎界面<a href="https://github.com/lukegeiger/LGSublimationView" target="_blank" rel="external">LGSublimationView</a></p>
+</li>
+</ul>
+<h2 id="tableView">tableView</h2><ul>
+<li>滚动的时候cell有视差:<a href="https://github.com/adad184/MMParallaxCell" target="_blank" rel="external">MMParallaxCell</a></li>
+<li>滑动具有菜单栏的cell:<a href="https://github.com/joseria/JASwipeCell" target="_blank" rel="external">JASwipeCell</a></li>
+</ul>
+<h2 id="类似谷歌UI的一些素材">类似谷歌UI的一些素材</h2><ul>
+<li><a href="https://github.com/fpt-software/Material-Controls-For-iOS" target="_blank" rel="external">Material-Controls-For-iOS</a></li>
+</ul>
+<h2 id="表格视图">表格视图</h2><ul>
+<li><a href="https://github.com/ZhipingYang/UUChartView" target="_blank" rel="external">UUChartView</a></li>
+</ul>
+<h2 id="UIPageViewController">UIPageViewController</h2><ul>
+<li>可以滑动的页面视图：<a href="https://github.com/an0/WLPageViewController" target="_blank" rel="external">WLPageViewController</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>收集了常见的APP所用到的第三方库，提高开发效率<br>]]>
+    
+    </summary>
+    
+      <category term="第三方库" scheme="http://www.liuchendi.com/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[谈谈iOS重构]]></title>
+    <link href="http://www.liuchendi.com/2015/11/10/iOS/9_Refactoring/"/>
+    <id>http://www.liuchendi.com/2015/11/10/iOS/9_Refactoring/</id>
+    <published>2015-11-10T08:22:18.000Z</published>
+    <updated>2015-11-10T08:22:18.000Z</updated>
+    <content type="html"><![CDATA[<p>重构是一个比较难的哲学问题,到底项目该不该重构<br><a id="more"></a></p>
+<p>花了一天半的时间，把公司旧版本的代码重构了，想吐槽一句，一个类里面有3600+行代码改起来真头大，本以为500行已经很多了，问了一下安卓开发那边，他们也有一个类里面有3000多行代码，我勒个去。。</p>
+<p>重构无非就是分离可复用的代码，按照职责分离不同的逻辑，就拿这个项目来说，MVC就不用说了，是程序员都知道，存储、网络处理都是需要分离的，但是这里又可以再细分一下，综合考虑项目的难以程度，如果是简单的小项目，这样分职责完全没问题，但是如果大项目的话还是会让MVC当中的<code>C控制器</code>非常庞大，不利于后期的维护和升级。那到底该如何重构，怎么样的做法才是正确的做法，其实我也不知道，只有最合适的做法，并没有最好的做法，每一种做法都有利弊，职责过度分离的话会导致可读性差，所以重构应该把握一个度，这个度取决于你对程序开发的理解。。。。</p>
+<h3 id="重构成本">重构成本</h3><p>重构是需要一定成本的，虽然代码凌乱不堪，但是可以运行，能够满足现在的功能需要。重构一不小心修改错了就会让原本完好的产品遍体鳞伤，因为往往凌乱的代码出错了修改bug的时间可能会比你重构的时间多更多，所以重构之前，掂量掂量自己的代码值不值得重构.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1</span>)重构后的开发成本</span><br><span class="line">(<span class="number">2</span>)重构后修改bug成本</span><br><span class="line">(<span class="number">3</span>)重构能否让整体架构有性能上的提升</span><br></pre></td></tr></table></figure>
+<p>就拿项目来说，从昨天上午计划重构方案到重构完成，并且修改完bug,最终实现与原来版本无差异化，总共整整用了2天的时间。我认为这两天的时间对于后面的开发效率带来指数级的提升，虽然当前耽误了两天的时间，但这却能让后面的开发时间大大减少，所以在<code>开发时间成本</code>整体上来说是有利的。</p>
+<p>对于<code>重构后修改bug成本</code>我也心中有数，因为三个月的时间已经对这些3000多行代码有了一定的了解，即使出错了我也能够快速定位代码。</p>
+<p>至于<code>性能</code>来说，没有太大的提高，解决了一些内存泄露的问题，遗留了解一些可以读写优化的问题，这些在后面的开发会慢慢完善.</p>
+<p>###重构目的<br>没有目的的重构不是好重构，没有做到心中有数的重构也不是好重构。</p>
+<p>如果只是想快速的完成产品功能并且上线的话，这种情况下是以完成功能和上线为目的，所以重构并不是主要的。在这里可能有人会反问，代码没架构好，产品后期升级和维护是噩梦。上面也说过，<code>重构应该把握一个度</code>,在产品开发前期重构不是主要的不代表不重构，小部分重构还是需要的，比如写完两天的代码可以花上一个小时review一下，抽离复用的代码，但不要花太多时间重构，没必要也不值得，开发前期的目的就是上线产品。</p>
+<p>对于大型的项目来说，可能每秒的请求都是几十万几百万的，<code>重构与开发同等重要</code>，因为大型项目对性能的要求比较高，如果没有一个好的架构，严重影响程序的运行速度，这样的产品迟早完蛋，到后期就会变得臃肿不堪.</p>
+<p>###如何重构<br>首先，要对程序的一般架构烂熟于心，尤其是MVC，这是基本。还有就是分离存储和网络请求的逻辑。</p>
+<p>对于一些常用的控件尽量分离复用，设置开关函数，适当的时候开启，不要的时候关闭，有必要的话还可以<code>延迟加载</code></p>
+<p>对于一些高频率控件，比如风格统一的按钮，尽量使用<code>工厂方法</code>创建，尽量达到牵一发动全身的效果</p>
+<p>有效利用常量。例如：<code>宏定义</code>、<code>枚举</code> 尽量用这些常量表示一些状态。接下来会总结一些常用的一些宏。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>重构是一个比较难的哲学问题,到底项目该不该重构<br>]]>
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[dispatch_semaphore和NSOperationQueue并发]]></title>
+    <link href="http://www.liuchendi.com/2015/11/10/iOS/2_dispatch_semaphore%E5%92%8CNSOperationQueue%E5%B9%B6%E5%8F%91/"/>
+    <id>http://www.liuchendi.com/2015/11/10/iOS/2_dispatch_semaphore和NSOperationQueue并发/</id>
+    <published>2015-11-10T06:50:45.000Z</published>
+    <updated>2015-11-10T06:50:45.000Z</updated>
+    <content type="html"><![CDATA[<pre><code>并发：同一个时间内运行多个任务。又叫共行性，是指处理多个同时性活动的能力。
+并行：是指两个并发的任务同时发生。
+</code></pre><p>并发不一定并行，并发不一定要同时发生。</p>
+<a id="more"></a>
+<p>举个例子：</p>
+<p>有两个快递分别要送到目的地，有以下两种方案：</p>
+<p>（1）一个快递员分别把两个快递送到对应的目的地。（并发）</p>
+<p>（2）两个快递员同时送一个快递到目的地。（并行）</p>
+<p>在iOS中，经常可以看见有这样的需求，就是一个方法要等另外一个方法执行完毕再做相对应的处理，比如说一些网络请求，需要根据上一个请求的返回值做相对应的处理再执行第二个请求，所以我们不能让两个请求同时去请求网络。下面就记录以下通过GCD和NSOperationQueue来控制并发。</p>
+<p>##dispatch_semaphore</p>
+<p>信号量是一个整型值并且具有初始计数值，信号量通常支持两个操作：通知和等待。当信号被通知的时候计数值会增加，当信号量在线程上等待的时候，必要的情况下线程会被阻塞掉，直至信号被通知时计数值大于0，然后线程会减少这个计数继续工作。</p>
+<p>GCD中又3个信号量有关的操作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dispatch_semaphore_create　　　　信号量创</span><br><span class="line">dispatch_semaphore_signal　　　　发送通知</span><br><span class="line">dispatch_semaphore_<span class="built_in">wait</span>　　　　　信号量等待</span><br></pre></td></tr></table></figure>
+<pre><code>__block <span class="keyword">dispatch_semaphore_t</span> sem = dispatch_semaphore_create(<span class="number">0</span>);
+<span class="keyword">dispatch_queue_t</span> <span class="built_in">queue</span> = dispatch_queue_create(<span class="string">"testBlock"</span>, <span class="literal">NULL</span>);
+dispatch_async(<span class="built_in">queue</span>, ^{      
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">100</span>; i++) {
+        NSLog(@<span class="string">"i的值是:%d"</span>,i);
+    }
+    dispatch_semaphore_signal(sem);
+});   
+dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j ++) {
+    NSLog(@<span class="string">"j的值是:%d"</span>,j);
+}  
+</code></pre><p>运行结果是:</p>
+<p><img src="http://iosddimage.qiniudn.com/2_dispatch_semaphore.png" alt="samphore result"> </p>
+<p>##NSOperationQueue<br>在不添加依赖的情况下：</p>
+<pre><code>NSOperationQueue *<span class="built_in">queue</span> = [[NSOperationQueue alloc] init];
+<span class="built_in">queue</span>.maxConcurrentOperationCount = <span class="number">10</span>;
+
+NSBlockOperation *operation1 = [NSBlockOperation blockOperationWithBlock:^{
+
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) {
+
+        NSLog(@<span class="string">"执行并发队列1:%d"</span>,i);
+    }
+}];
+
+NSBlockOperation *operation2 = [NSBlockOperation blockOperationWithBlock:^(){
+
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1500</span>; i++) {
+
+        NSLog(@<span class="string">"执行并发队列2:%d"</span>,i);
+    }
+}];
+
+
+[<span class="built_in">queue</span> addOperation:operation1];
+[<span class="built_in">queue</span> addOperation:operation2];
+</code></pre><p>运行结果是：</p>
+<p><img src="http://iosddimage.qiniudn.com/2_NSOperationQueue_result.png" alt="no dependence result"><br>添加依赖控制后：</p>
+<pre><code>NSOperationQueue *<span class="built_in">queue</span> = [[NSOperationQueue alloc] init];
+<span class="built_in">queue</span>.maxConcurrentOperationCount = <span class="number">10</span>;
+
+NSBlockOperation *operation1 = [NSBlockOperation blockOperationWithBlock:^{
+
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) {
+
+        NSLog(@<span class="string">"执行并发队列1:%d"</span>,i);
+    }
+}];
+
+NSBlockOperation *operation2 = [NSBlockOperation blockOperationWithBlock:^(){
+
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1500</span>; i++) {
+
+        NSLog(@<span class="string">"执行并发队列2:%d"</span>,i);
+    }
+}];
+
+
+
+[operation1 addDependency:operation2];   <span class="comment">//添加依赖，operation1要依赖operation2才能继续执行</span>
+
+[<span class="built_in">queue</span> addOperation:operation1];
+[<span class="built_in">queue</span> addOperation:operation2];
+</code></pre><p>运行结果是:<br><img src="http://iosddimage.qiniudn.com/2_NSOperationQueue_result1.png" alt="add dependence"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<pre><code>并发：同一个时间内运行多个任务。又叫共行性，是指处理多个同时性活动的能力。
+并行：是指两个并发的任务同时发生。
+</code></pre><p>并发不一定并行，并发不一定要同时发生。</p>]]>
+    
+    </summary>
+    
+      <category term="NSOperationQueue" scheme="http://www.liuchendi.com/tags/NSOperationQueue/"/>
+    
+      <category term="dispatch_semaphore" scheme="http://www.liuchendi.com/tags/dispatch-semaphore/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Git的用法总结]]></title>
+    <link href="http://www.liuchendi.com/2015/03/16/iOS/10_Git%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93/"/>
+    <id>http://www.liuchendi.com/2015/03/16/iOS/10_Git用法总结/</id>
+    <published>2015-03-16T03:30:56.000Z</published>
+    <updated>2015-11-10T09:46:07.000Z</updated>
+    <content type="html"><![CDATA[<p>git简单命令记录<br><a id="more"></a></p>
+<p>##初始化<br>git init 初始化一个仓库</p>
+<p>git add 添加一个文件到仓库里面</p>
+<p>git commit -m “commit a file”   提交文件</p>
+<p>git status 查看文件的状态</p>
+<p>git diff  查看文件修改的不同</p>
+<p> git log 查看提交的日志  //只能查看3次的日志</p>
+<p>##版本回退</p>
+<p>用<code>HEAD</code>表示当前版本，上一个版本是<code>HEAD^</code> ，上上一个版本是<code>HEAD^^</code></p>
+<p>git reset –hard HEAD^   //回退到上一个版本</p>
+<p>git reflog  //记录使用命令</p>
+<p>##工作区和版本库</p>
+<p>git add是把工作区的文件添加到版本库的暂存区</p>
+<p>git commit再把暂存区的文件提交到分支</p>
+<p>创建版本库的时候，git为我们自动创建了一个master分区</p>
+<p>Untracked files:未提交的文件，新的</p>
+<p>##工作区和版本库最新版本区别</p>
+<p>##撤销修改<br>git checkout – file      <code>--</code>很重要表示撤回,丢弃工作区的修改 没有的话则表示创建一个新的分支</p>
+<p>git reset HEAD file  可以把暂存区的修改撤销掉（unstage），重新放回工作区：:</p>
+<p>##删除<br>git rm        从版本库里面删除</p>
+<p>##切换分支<br>git checkout命令加上-b参数表示创建并切换，</p>
+<p>git branch命令会列出所有分支，当前分支前面会标一个*号</p>
+<p>git merge命令用于合并指定分支到当前分支</p>
+<p>git log –graph –pretty=oneline –abbrev-commit 查看分支合并情况</p>
+<p>git branch -d 删除分支</p>
+<p>git stash 存储当前现场</p>
+<p>git stash list 查看当前的现场</p>
+<p>git stash apply恢复现场但是恢复后，stash内容并不删除，你需要用git stash drop来删除；</p>
+<p>另一种方式是用git stash pop，恢复的同时把stash内容也删了：</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[简单来说, 就是一个分布式版本控制系统]]>
+    
+    </summary>
+    
+      <category term="Git" scheme="http://www.liuchendi.com/tags/Git/"/>
+    
+      <category term="Git" scheme="http://www.liuchendi.com/categories/Git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[UIBezierPath贝塞尔曲线]]></title>
+    <link href="http://www.liuchendi.com/2014/09/19/iOS/8_UIBezierPath/"/>
+    <id>http://www.liuchendi.com/2014/09/19/iOS/8_UIBezierPath/</id>
+    <published>2014-09-19T12:30:56.000Z</published>
+    <updated>2015-11-10T09:45:40.000Z</updated>
+    <content type="html"><![CDATA[<p>这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。<br><a id="more"></a></p>
+<p>##简介<br>引用<a href="http://baike.baidu.com/view/60154.htm?fr=aladdin" target="_blank" rel="external">百度百科</a>的一句话:</p>
+<pre><code>贝赛尔曲线的每一个顶点都有两个控制点，用于控制在该顶点两侧的曲线的弧度。
+曲线的定义有四个点：起始点、终止点（也称锚点）以及两个相互分离的中间点。
+滑动两个中间点，贝塞尔曲线的形状会发生变化。
+</code></pre><p>下面的图片是曲线的其中一种：</p>
+<p><img src="http://iosddimage.qiniudn.com/7_UIBezierPath.jpg" alt="UIBezierPath.png"></p>
+<p>今天主要是总结iOS当中贝塞尔曲线的使用,所以就不详细介绍这漂亮的曲线了，如果想深入了解的，可以参考<a href="http://zh.wikipedia.org/wiki/%E8%B2%9D%E8%8C%B2%E6%9B%B2%E7%B7%9A#.E4.BA.8C.E6.AC.A1.E6.96.B9.E8.B2.9D.E8.8C.B2.E6.9B.B2.E7.B7.9A" target="_blank" rel="external">wiki</a></p>
+<p>##UIBezierPath</p>
+<p><code>UIBezierPath</code>对象是CGPathRef数据类型的封装，可以方便的让我们画出<code>矩形</code>、<code>椭圆</code>或者<code>直线和曲线的组合</code>形状</p>
+<p>最基本的使用方法是</p>
+<pre><code><span class="comment">//设置描绘的起点</span>
+- (<span class="typename">void</span>)<span class="string">moveToPoint:</span>(CGPoint)point; 
+
+<span class="comment">//画直线</span>
+- (<span class="typename">void</span>)<span class="string">addLineToPoint:</span>(CGPoint)point; 
+
+<span class="comment">//画曲线，分别对应终点和两个控制点</span>
+- (<span class="typename">void</span>)<span class="string">addCurveToPoint:</span>(CGPoint)endPoint <span class="string">controlPoint1:</span>(CGPoint)controlPoint1 <span class="string">controlPoint2:</span>(CGPoint)controlPoint2;
+
+<span class="comment">//画圆弧</span>
+- (<span class="typename">void</span>)<span class="string">addArcWithCenter:</span>(CGPoint)center <span class="string">radius:</span>(CGFloat)radius <span class="string">startAngle:</span>(CGFloat)startAngle <span class="string">endAngle:</span>(CGFloat)endAngle <span class="string">clockwise:</span>(BOOL)clockwise
+</code></pre><p>画一个圆形</p>
+<pre><code>UIBezierPath *path = [[UIBezierPath alloc] init];
+[path moveToPoint:CGPointMake(<span class="number">175</span>, <span class="number">100</span>)];
+[path addArcWithCenter:CGPointMake(<span class="number">150</span>, <span class="number">100</span>) radius:<span class="number">25</span> startAngle:<span class="number">0</span> endAngle:<span class="number">2</span>*M_PI clockwise:YES];
+</code></pre><p><img src="http://iosddimage.qiniudn.com/8_%E5%9C%86%E5%BD%A2.png" alt="圆形"></p>
+<p>剩余的明天上班后再回来总结</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。<br>]]>
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[iOS适配问题大收集]]></title>
+    <link href="http://www.liuchendi.com/2014/09/18/iOS/7_iOS_Fit_Collection/"/>
+    <id>http://www.liuchendi.com/2014/09/18/iOS/7_iOS_Fit_Collection/</id>
+    <published>2014-09-18T12:18:56.000Z</published>
+    <updated>2015-12-02T01:30:10.000Z</updated>
+    <content type="html"><![CDATA[<p>记录不同版本的适配小技巧<br><a id="more"></a></p>
+<h1 id="Update:iOS9">Update:iOS9</h1><h4 id="编译问题（Bitcode)">编译问题（Bitcode)</h4><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxx does <span class="operator">not</span> contain bitcode. You must rebuild <span class="keyword">it</span> <span class="operator">with</span> bitcode enabled (Xcode setting ENABLE_BITCODE), obtain <span class="operator">an</span> updated library <span class="built_in">from</span> <span class="operator">the</span> vendor, <span class="operator">or</span> disable bitcode <span class="keyword">for</span> this target.</span><br></pre></td></tr></table></figure>
+<p>xcode7默认启用了Bitcode，暂时先关闭掉，因为大部分第三方库还未能支持。解决办法：<br>Build settings -&gt; Build Options -&gt; Enable Bitcode  设置为NO</p>
+<h4 id="Http请求失败">Http请求失败</h4><p>iOS9默认不支持HTTP请求，需要改用更安全的HTTPS。在info.plist源码里面添加下面代码</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">key</span>&gt;</span>NSAppTransportSecurity<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">key</span>&gt;</span>NSAllowsArbitraryLoads<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dict</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="Update:iOS8">Update:iOS8</h1><h3 id="iOS6中UITextField中secureTextEntry的bug">iOS6中UITextField中secureTextEntry的bug</h3><p>今天把SDK去做iOS6的测试，结果反馈回来一大堆bug，其中一个就是在做UITextField<code>明暗文切换</code>的时候,明明在iOS7运行的好好的跑到iOS6就错了,而且功能都实现不了,后来在<a href="http://stackoverflow.com/questions/6710019/uitextfield-securetextentry-works-going-from-yes-to-no-but-changing-back-to-y" target="_blank" rel="external">这里</a>找到了答案</p>
+<pre><code><span class="constant">_passwordTextField.enabled</span> = <span class="literal">false</span>;<span class="comment">//iOS6.1Bug fix</span>
+<span class="constant">
+_passwordTextField.secureTextEntry</span> = YES;
+<span class="constant">
+_passwordTextField.enabled</span> = <span class="literal">true</span>;
+</code></pre><h3 id="UIWebView不能响应键盘">UIWebView不能响应键盘</h3><p>因为在SDK里面有一个自定义的window,然后APP也有一个主window,当把自定义的window发送了<code>makeKeyAndVisible</code>消息之后,webView在iOS上面竟然不能响应键盘事件了,因为我的webView是全屏的，所以即使键盘弹出来了也有有可能被弹出来的webView遮挡主，解决办法是：</p>
+<pre><code>在webView打开绘制到界面上的时候主<span class="built_in">window</span>发送消息makeKeyAndVisible,
+
+关闭webView的时候再设置自定义的<span class="built_in">window</span>发送消息makeKeyAndVisible。
+</code></pre><p>###3、UITableView分割线不能靠边的问题###</p>
+<pre><code>从ios7开始有个属性 separatorInset，一般你需要设置这个值为<span class="built_in">UIEdgeInsetsZero</span>,否则，每个分割线的起点会从文字区域开始，左边会留白
+
+<span class="built_in">UITableViewCell</span>的默认背景是白色的
+</code></pre><p>###4、获取视频的分辨率</p>
+<pre><code>        <span class="type">ALAssetsLibrary</span> *assetsLibrary;
+<span class="type">NSMutableArray</span> *groupArray;
+assetsLibrary = [[<span class="type">ALAssetsLibrary</span> alloc] init];
+groupArray=[[<span class="type">NSMutableArray</span> alloc] initWithCapacity:<span class="number">1</span>];
+[assetsLibrary enumerateGroupsWithTypes:<span class="type">ALAssetsGroupAll</span> usingBlock:^(<span class="type">ALAssetsGroup</span> *group, <span class="type">BOOL</span> *stop) {
+    <span class="keyword">if</span> (group) {
+        [groupArray addObject:group];
+        <span class="type">NSLog</span>(@<span class="string">"%@"</span>,group);
+
+        [group enumerateAssetsUsingBlock:^(<span class="type">ALAsset</span> *<span class="literal">result</span>, <span class="type">NSUInteger</span> index, <span class="type">BOOL</span> *stop) {
+            <span class="keyword">if</span> (<span class="literal">result</span>) {
+
+                <span class="type">NSLog</span>(@<span class="string">"%@"</span>,<span class="literal">result</span>);
+
+                <span class="type">NSString</span> *<span class="keyword">type</span>=[<span class="literal">result</span> valueForProperty:<span class="type">ALAssetPropertyType</span>];
+
+                <span class="keyword">if</span> ([<span class="keyword">type</span> isEqualToString:<span class="type">ALAssetTypeVideo</span>]) {
+
+                     <span class="type">NSLog</span>(@<span class="string">"找到了视频"</span>);
+
+                    <span class="type">ALAssetRepresentation</span>* representation = [<span class="literal">result</span> defaultRepresentation];
+                    <span class="type">AVURLAsset</span>* videoAsset = [[<span class="type">AVURLAsset</span> alloc]initWithURL:[representation url] options:<span class="keyword">nil</span>];
+                    <span class="type">NSArray</span>* allVideoTracks = [videoAsset tracksWithMediaType:<span class="type">AVMediaTypeVideo</span>];
+                    <span class="keyword">if</span> ([allVideoTracks count] &gt; <span class="number">0</span>) {
+                        <span class="type">AVAssetTrack</span>* track = [[videoAsset tracksWithMediaType:<span class="type">AVMediaTypeVideo</span>]objectAtIndex:<span class="number">0</span>];
+                        <span class="type">CGSize</span> size = [track naturalSize];
+
+                        <span class="type">NSLog</span>(@<span class="string">"视频尺寸:%@"</span>,<span class="type">NSStringFromCGSize</span>(size));
+
+//                            <span class="type">CGSize</span> dimensions = <span class="type">CGSizeApplyAffineTransform</span>(track.naturalSize, track.preferredTransform);
+//                            <span class="type">NSLog</span>(@<span class="string">"%f,%f"</span>,fabsf(dimensions.width),fabsf(dimensions.height));
+                        }
+                    }
+                }
+            }];
+        }
+    } failureBlock:^(<span class="type">NSError</span> *error) {
+        <span class="type">NSLog</span>(@<span class="string">"Group not found!\n"</span>);
+    }];
+</code></pre><p>##设置字体间隔</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">NSMutableAttributedString</span> *attributedString = [[<span class="built_in">NSMutableAttributedString</span> alloc]initWithString:<span class="keyword">self</span><span class="variable">.title</span>];</span><br><span class="line">  <span class="comment">//设置字体间隔</span></span><br><span class="line">  <span class="keyword">long</span> number = <span class="number">5</span>;</span><br><span class="line">  <span class="built_in">CFNumberRef</span> num = <span class="built_in">CFNumberCreate</span>(k<span class="built_in">CFAllocatorDefault</span>,k<span class="built_in">CFNumberSInt8Type</span>,&amp;number);</span><br><span class="line">  [attributedString addAttribute:(<span class="keyword">id</span>)kCTKernAttributeName value:(__bridge <span class="keyword">id</span>)num range:<span class="built_in">NSMakeRange</span>(<span class="number">0</span>,[attributedString length])];</span><br><span class="line">  <span class="built_in">CFRelease</span>(num);</span><br></pre></td></tr></table></figure>
+<h2 id="阻断事件的传递">阻断事件的传递</h2><p><code>endIgnoringInteractionEvents</code></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[iOS8出来了,之前一直都是手写代码= =、,现在有点悲剧了,Autolayout也不太会用，只是熟悉了几天，现在又来了size classes.....不过还是得好好去学,所以就用一篇博客来记录适配过程中发生的一些问题]]>
+    
+    </summary>
+    
+      <category term="适配" scheme="http://www.liuchendi.com/tags/%E9%80%82%E9%85%8D/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[毕业后的第一个生日]]></title>
+    <link href="http://www.liuchendi.com/2014/09/11/iOS/6_first_Birthday/"/>
+    <id>http://www.liuchendi.com/2014/09/11/iOS/6_first_Birthday/</id>
+    <published>2014-09-11T02:30:56.000Z</published>
+    <updated>2015-11-10T09:42:52.000Z</updated>
+    <content type="html"><![CDATA[<p>毕业后的第一个生日,心里总想说点什么，来记录一下生活中的点点滴滴。<br><a id="more"></a></p>
+<p>##生日##<br>貌似自己印象中的生日总是没有多大的感觉,与平常的生活差不多,每到生日的时候都不会忘记给老妈打一个电话唠叨几句，其实我心里在想的是感谢老妈的养育之恩，觉得生日最要感谢的人时我的母亲（听起来有点清高，但我心里的确是这么想的，勿见怪O(∩_∩)。。。）.也没多少人记得我生日,我也很少跟他们谈及,让我意外的是高中的橙子舍长却还及得我的生日，让我有点喜出望外，一句简单的祝福扫清了一天工作的疲惫，谢谢舍长。</p>
+<p>##毕业后的工作##<br>毕业两个多月了,开始还是处于选择工作的迷茫期，对于自己快要毕业了还要换工作是非常不好的现象,但是心里想去大公司工作的欲望从未停止过,无论如何自己也得想办法去大公司呆个几年，因为自己想要学习一些大公司文化的熏陶以及日常流程化的工作，而不是呆在小公司里自己的摸爬滚打。。。</p>
+<p>毕业前在光点呆了3个月,X支付呆了2个月左右,五个多月的实习让自己的技术有了一定的成长。大多数情况多事自己的摸爬滚打,乐驼项目,x支付项目,茂名OA项目,虽然自己最后没有完整的参与下来,但一些开发技巧以及控件的掌握已经上升了一个等次，并且有了一些自己的小开发架构，现在回过头去砍这些代码总觉得为啥自己当初会写下这么烂的代码，哈哈。失败也好，总是有收获的。以至于到现在的XX游戏公司能够快速适应环境，很庆幸自己能够在毕业前进入一家游戏公司，虽然目前还是做SDK的开发，但是最近开始接触<code>Unity3D</code>让自己兴奋了一把。</p>
+<p>为什么自己要换两次工作？首先,人往高处走，当一个地方满足不了你的成长的时候，又或者这个地方总是做着意义不大的工作，纯粹是帮人完成任务，当做廉价劳动力的时候，没有理由让我不换工作。</p>
+<p>现在的工作情况: 也有重复的工作，代码不规范的情况，还有更多的挑战（Unity3D、新应用的开发）</p>
+<p>##生活<br>最大的感触就是，赚钱真的不容易，要在大城市里面靠自己打拼换取一个属于自己的落脚点有点像天方夜谭。。。但人总是要积极乐观向上，机会很多，说不定沉淀久了哪一天就爆发了，所以保持一个乐观的心态工作，多学习，多思考总是错不了的。</p>
+<p>开始正真意义上的断奶生活，靠自己的努力挣钱花的理所当然，只不过有时候物质欲望过于强烈，不过还不至于月光,零花钱还是有滴。</p>
+<p>下班后喜欢在旁边小区广场上跑步锻炼身体，回来泡上一杯柠檬蜂蜜茶，还有时间的话就看看书写写博客之类的，感觉这样也还不错，至少为了上班我不会在去熬夜了。</p>
+<p>好久没去踩车了,领着这么丁点工资想换个小轮都不够呀，说好去云南丽江的到现在都还没有去，算是大学生活里面最遗憾的一件事吧。</p>
+<p>小侄女也去东莞了，不能再像以前一样随意玩、随意吃了，身边的朋友也茫茫碌碌的，虽然好朋友也没有几个，但是都联系也渐渐少了起来，都开始为了事业奋斗。</p>
+<p>##情感<br>老爸8月31号为了坐飞机来了广州，带了老妈烧得一手好菜，还有两瓶家乡的酒，我看着老爸辛苦的样子，有种说不出来的感觉，现在总是会多去体谅一下父母，想有自己的一些行动去为他们做些什么，第一个月发工资后，我了解到老爸在家会失眠睡不着，我也就买了一个电热浴足盆给他。这让我想起了今年过年我拿着实习工资给老爸买了一台小米2S手机，现在的我总想可以让老爸老妈的生活变得更好，他们为我付出了这么多，自己也要懂得感恩。</p>
+<p>和小魂淡谈恋爱差不多两年了,毕业就分手貌似在当今大学生里已经见怪不怪了，虽然她比我小两届，我也有过担心，但是现在我们的关系还是算比较稳定的，希望能够一直好好地走下去。</p>
+<p>##最后<br>希望自己在第一年的工作中好好学习，踏踏实实的工作、以负责任的态度做好每一件事。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>毕业后的第一个生日,心里总想说点什么，来记录一下生活中的点点滴滴。<br>]]>
+    
+    </summary>
+    
+      <category term="个人生活" scheme="http://www.liuchendi.com/categories/%E4%B8%AA%E4%BA%BA%E7%94%9F%E6%B4%BB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[load和initialize区别]]></title>
+    <link href="http://www.liuchendi.com/2014/09/10/iOS/5_load_initialize/"/>
+    <id>http://www.liuchendi.com/2014/09/10/iOS/5_load_initialize/</id>
+    <published>2014-09-10T14:30:56.000Z</published>
+    <updated>2015-11-10T09:44:35.000Z</updated>
+    <content type="html"><![CDATA[<p>这两个方法基本上没怎么接触过,平时也很少用到，但是今晚我就非常好奇为什么会用不到，所以顺便就记录下来了，说不定以后用得上<br><a id="more"></a></p>
+<h1 id="load">load</h1><p>先看一下苹果官方文档的解释</p>
+<blockquote>
+<p>Invoked whenever a class or category is added to the Objective-C runtime;<br>implement this method to perform class-specific behavior upon loading.</p>
+</blockquote>
+<p>这个方法在类被添加进来的时候就会调用，也就是说程序在开始加载期间，这个方法就被调用.</p>
+<h1 id="initialize">initialize</h1><blockquote>
+<p>Initializes the class before it receives its first message.<br>The runtime sends <code>initialize</code> to each class in a program just before the class, or any class that<br>inherits from it, is sent its first message from within the program. The runtime sends the<br><code>initialize</code> message to classes in a thread-safe manner. Superclasses receive this message before<br>their subclasses. The superclass implementation may be called multiple times if subclasses do not<br>implement <code>initialize—the</code> runtime will call the inherited implementation—or if subclasses<br>explicitly call <code>[super initialize]</code></p>
+</blockquote>
+<p>这个方法会在类的第一个方法调用前被调用。首先会先调用父类的<code>initialize</code>方法，如果子类没有实现<code>initialize</code>方法,那么父类会多次触发这个方法,为了避免这种情况的发生，可以在实现的方法里面添加一个判断：</p>
+<pre><code>+ (<span class="keyword">void</span>)initialize {
+    <span class="keyword">if</span> (<span class="keyword">self</span> == [ClassName <span class="keyword">self</span>]) {
+     <span class="comment">// ... do the initialization ...</span>
+    }
+}
+</code></pre><h1 id="选择使用的时机">选择使用的时机</h1><p>当类的加载是耗时或者需要消耗比较多的内存的时候,尽量不要在<code>load</code>方法里面做这些耗时的工作,因为这样只会增加App的启动时间,降低用户的体验。<br><code>initialize</code>其实可以被认为是延迟加载的方法，类加载的时候并不会执行这个方法，只有当类实例化的时候，或者类的第一个方法被调用的时候才会执行这个方法</p>
+<h1 id="category中的load和initialize">category中的load和initialize</h1><p>在category中<code>load</code>方法会等到实现类加载完自身的<code>load</code>方法后再执行category的<code>load</code>方法.</p>
+<p><code>initialize</code>则调用最后一个被加载完成的类的<code>initialize</code>的方法.</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>这两个方法基本上没怎么接触过,平时也很少用到，但是今晚我就非常好奇为什么会用不到，所以顺便就记录下来了，说不定以后用得上<br>]]>
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[SDK开发基础-Framework制作]]></title>
+    <link href="http://www.liuchendi.com/2014/08/29/iOS/4_framework/"/>
+    <id>http://www.liuchendi.com/2014/08/29/iOS/4_framework/</id>
+    <published>2014-08-29T14:30:56.000Z</published>
+    <updated>2015-11-10T09:44:20.000Z</updated>
+    <content type="html"><![CDATA[<p>SDK开发离不开framework的制作,framework提供的接口可以隐藏实现，方便版本的管理，对于常用的一些复用代码，可以很方便的提取出来，移植到另外的项目，并且可以减少内存的使用，这对于快速开发一些项目有极大的帮助<br><a id="more"></a></p>
+<p>##前言<br>从事游戏SDK开发一个多月了，这一个多月过得也蛮快的，这一个多月的工作让自己对一些控件的使用更加熟练，感谢小松哥对我的关心和照顾，给了我充足的时间自由发挥，同时也给了自己更多的时间及时总结，还记得面试游戏公司的时候我其实心里没底，因为我没打算做游戏，实习一直都是做应用，甚至我连SDK是什么都不知道。入职的第一天把电脑上的开发环境配置好了，然后剩下时间熟悉了下代码，第二天就开始项目的开发了，哈哈，搞得我一头雾水，看见一个项目里面有三个子工程顿时傻眼了，有这样的开发模式么。。  后来发现其中两个是framework，一个是关于View的，另外一个是关于View逻辑的，好家伙，竟然有这样开发的，顿时吸引了我及大的兴趣，就这样，我踏上了游戏SDK的开发之旅，未来半年内可能会给好多游戏接入SDK，虽然不是什么高难度的工作，但自己还是会认认真真的把本职工作做好。好啦，接下来的时间就谈谈SDK最基础的工作，如何制作<code>framework</code>.</p>
+<p>##什么是framework<br><code>framework</code>从字面意思来看就是库的意思，没错，他的功能也就是存储共享一些可用资源,在系统需要的时候载入内存中，它的好处是多个应用程序可以同时使用同一个framework，而在内存中的拷贝只有一份。</p>
+<p>##优点<br>    （1） 可以将不同类型的资源放在一起，更加容易安装和定位。<br>    （2） 可以进行版本的管理，能够不断的向后兼容。<br>    （3） 内存中只有一份framework的拷贝，可以减少内存的使用。</p>
+<p>##缺点<br>    重新加入资源的时候（比如更换了图片）,需要重新Clean编译生成新的Framework，如果资源不多项目较小的话没什么感觉<br>    如果项目有点庞大的话，会出现一些莫名奇怪的错误，需要反反复复的Clean。（非常考验我们的耐心。。。）</p>
+<p>##制作流程(举例)<br>1、首先我们先建立一个工程：<br><img src="http://iosddimage.qiniudn.com/4_framework1.png" alt="4_framework_1"></p>
+<p>2、接着删除不必要的系统自带的Framework,清空后的界面如下:<br><img src="http://iosddimage.qiniudn.com/4_framework2.png" alt="4_framework_2"></p>
+<p>3、删除系统自带的bundle,点击<code>Edit Scheme</code><br><img src="http://iosddimage.qiniudn.com/4_framework3.png" alt="4_framework_3"></p>
+<p>4、打开<code>Manage Schemes</code><br><img src="http://iosddimage.qiniudn.com/4_framework4.png" alt="4_framework_4"></p>
+<p>5、删除系统自带的Schemes<br><img src="http://iosddimage.qiniudn.com/4_framework5.png" alt="4_framework_5"></p>
+<p>6、新建一个<code>Bundle</code>,名称叫DDiOSLibrary<br><img src="http://iosddimage.qiniudn.com/4_framework6.png" alt="4_framework_6"></p>
+<p>7、打开<code>TARGETS</code>的设置（build setting）,把Base SDK调成7.1<br><img src="http://iosddimage.qiniudn.com/4_framework7.png" alt="4_framework_7"></p>
+<p>8、找到<code>Deployment</code>,把<code>OS X Deployment Target</code> 设置成默认的<br><img src="http://iosddimage.qiniudn.com/4_framework8.png" alt="4_framework_8"></p>
+<p>9、把<code>Dead Code Stripping</code>设置成NO,<code>MACH -O Type</code>设置成Relocatable Object File<br><img src="http://iosddimage.qiniudn.com/4_framework16.png" alt="4_framework_16"></p>
+<p>10、把打包的类型修改成framework<br><img src="http://iosddimage.qiniudn.com/4_framework9.png" alt="4_framework_9"></p>
+<p>11、在<code>plist</code>文件里面，修改Bundle creator OS Type code 修改成<code>FMWK</code>(framework的缩写)<br><img src="http://iosddimage.qiniudn.com/4_framework10.png" alt="4_framework_10"></p>
+<p>12、最后记得注释掉预编译的头文件<br><img src="http://iosddimage.qiniudn.com/4_framework11.png" alt="4_framework_11"></p>
+<p>13、接下来我们就可以添加自己写的接口文件了,这里建立了一个<code>DDNSStringUtil</code>文件,里面提供了一个类方法输出“hello”<br>记得在创建文件的时候要在Targets前打上勾<br><img src="http://iosddimage.qiniudn.com/4_framework12.png" alt="4_framework_12"></p>
+<p>14、把这个头文件暴露出来，因为我们只管调用接口，不用关心接口的实现<br><img src="http://iosddimage.qiniudn.com/4_framework13.png" alt="4_framework_13"></p>
+<p>15、把文件移动到Public部分<br><img src="http://iosddimage.qiniudn.com/4_framework14.png" alt="4_framework_14"></p>
+<p>16、编译运行生成framework<br><img src="http://iosddimage.qiniudn.com/4_framework15.png" alt="4_framework_15"></p>
+<p>17、最后把这个重新生成的Framework重新引入到另外一个项目中，然后调用这个接口可以看见以下输出<br><img src="http://iosddimage.qiniudn.com/4_framework17.png" alt="4_framework_17"></p>
+<p>##可能会出现的错误<br>    can’t link with bundle (MH_BUNDLE) only dylibs (MH_DYLIB) file….</p>
+<pre><code>出现这个问题可能是上面没有把Dead Code Stripping设置成NO,MACH -O <span class="keyword">Type</span>设置成Relocatable <span class="keyword">Object</span> <span class="keyword">File</span>
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<p>SDK开发离不开framework的制作,framework提供的接口可以隐藏实现，方便版本的管理，对于常用的一些复用代码，可以很方便的提取出来，移植到另外的项目，并且可以减少内存的使用，这对于快速开发一些项目有极大的帮助<br>]]>
+    
+    </summary>
+    
+      <category term="SDK开发" scheme="http://www.liuchendi.com/tags/SDK%E5%BC%80%E5%8F%91/"/>
+    
+      <category term="framework" scheme="http://www.liuchendi.com/tags/framework/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[浅析iOS高级编程-runtime]]></title>
+    <link href="http://www.liuchendi.com/2014/08/26/iOS/3_runtime/"/>
+    <id>http://www.liuchendi.com/2014/08/26/iOS/3_runtime/</id>
+    <published>2014-08-26T03:30:56.000Z</published>
+    <updated>2015-11-10T08:13:33.000Z</updated>
+    <content type="html"><![CDATA[<p>简单来说, runtime是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法(methods)可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。<br><a id="more"></a></p>
+<h2 id="简介">简介</h2><p>简单来说, <code>runtime</code>是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法（methods）可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。</p>
+<p>Objective-C只是在C语言层面上加了些关键字和语法。真正让Objective-C如此强大的是它的运行时。它很小但却很强大。它的核心是消息分发。想要了解真正的runtime就必须先明白对象模型、消息的传递。</p>
+<h2 id="对象模型">对象模型</h2><p>NSObject类和Java中的Object类有点相似，是所有一切类的父类，也就是根类，打开 <code>NSObject.h</code>类可以发现</p>
+<p><img src="http://iosddimage.qiniudn.com/3_runtime_NSObject.png" alt="runtime_NSObject"></p>
+<p>在来看看<code>runtime.h</code>的组成,就会发现都有<code>isa</code>指针，这是个什么东东？</p>
+<p><img src="http://iosddimage.qiniudn.com/3_runtime_runtime_head.png" alt="runtime_runtime_head"></p>
+<p>根据上面两个类,可以发现一些信息:</p>
+<pre><code><span class="attribute">isa指针</span>: <span class="string">每个对象都是类的实例,isa指针指向这个实例所属的类,每个类也是一个对象,类也有isa指针 </span>
+
+<span class="http"><span class="attribute">super_class</span>: <span class="string">父类</span>
+
+<span class="http"><span class="attribute">name</span>: <span class="string">类的名字</span>
+
+<span class="http"><span class="attribute">info</span>: <span class="string">类的一些信息</span>
+
+<span class="http"><span class="attribute">instance_size</span>: <span class="string">实例的大小</span>
+
+<span class="undefined">objc_ivar_list：实例的参数列表
+
+objc_method_list：实例的方法列表
+
+objc_cache：方法的缓存
+
+objc_protocol_list：协议方法列表</span></span></span></span></span>
+</code></pre><p>接着我们来看一张图片：<a href="http://www.sealiesoftware.com/blog/class%20diagram.pdf" target="_blank" rel="external">类的模型</a></p>
+<p><img src="http://iosddimage.qiniudn.com/3_runtime_class.png" alt="runtime_class"></p>
+<p>从这张图片中,我们可以发现有以下的信息：</p>
+<pre><code>（<span class="number">1</span>）类也是一个对象，这个对象是另外一个类的实例，这个类是meta(元类)
+
+ (<span class="number">2</span>) 每个meta类也是一个对象，分别指向根meta类。
+
+（<span class="number">3</span>）根元类的isa指针指向自己，形成了一个闭环。
+
+（<span class="number">4</span>）在继承关系中，由于类方法的定义是保存在元类(metaclass)中，而方法调用的规则是，
+     如果该类没有一个方法的实现，则向它的父类继续查找。所以，为了保证父类的类方法
+     可以在子类中可以被调用，所以子类的元类会继承父类的元类，换而言之，类对象和元
+     类对象有着同样的继承关系。
+</code></pre><h3 id="消息(Message)">消息(Message)</h3><p>执行一个方法，有些语言、编译器会执行一些额外的优化和错误检查，因为调用的关系很直接也很明显。但是对于消息分发来说，就不一定了。在发消息前不必知道某个对象是否能处理消息，你把消息发给它，它可能会处理，也可能会交给其他的objec 处理。一个消息不用对应一个方法、一个对象也可能实现一个方法来处理多条消息。</p>
+<p>在objcetive中，消息是通过<code>objc_msgSend()</code>这个runtime函数实现的。编译器把消息的分发转变成<code>objc_msgSend</code>执行。</p>
+<p>下面看一下这段代码：</p>
+<pre><code><span class="property">id</span> returnValue = [someobject messagename:parameter];
+</code></pre><p>其中someObject是接收者(receiver),messagename叫做Selector，Selector和参数合起来叫做消息.</p>
+<pre><code><span class="function"><span class="title">objc_msgSend</span><span class="params">(id self, sel cmd,...)</span></span>
+</code></pre><p>第一个参数代表接收者，第二个参数是Selector，后面的参数就是消息中得参数，位置顺序不变。所以根据上面的原型，我们可以把函数改写成这样：</p>
+<pre><code>id returnValue = objc_msgsend<span class="list">(<span class="keyword">someobject</span>,@selector<span class="list">(<span class="keyword">messagename</span>:)</span>,parameter)</span><span class="comment">;</span>
+</code></pre><p><code>objc_msgsend</code>函数会根据接受者和<code>selector</code>的类型调用适当的方法。会在接收者所属的类里面搜寻<code>方法列表(list of method)</code>.如果能找到与selector名称相符合的方法，就跳转至实现代码。如果找不到的话，就会向上查找，等找到合适的方法后跳转。如果还是找不到得话就会执行“消息转发”的操作。</p>
+<p>按照这个思路，调用一个方法需要很多步骤。但是objc_msgsend会将结果缓存到<code>快速映射表(fast map)</code>里面，每个类都有一个这样的缓存，若是稍后还向该类发送相同的消息的话，执行起来就很快了。</p>
+<h3 id="Method_Swizzling">Method Swizzling</h3><p>Method Swizzling 可以交换两个方法的实现。为什么会有这样的功能呢？首先看看扩展类的两种途径，第一种是子类化，重写父类的方法，然后调用父类的实现。但是使用子类的过程中，如果返回的时父类的类型的话怎么办？可以使用Category,添加一个扩展方法，这个方法如果没有和系统调用的方法重名的话一般情况下是没有问题的，但是如果重写了系统的方法的话，那么就永远不能调用这个方法了。所以Method Swizzling这个方法能解决这些问题，技能扩展类，又还能调用原来类的实现，通常情况下先建立一个与系统对应的扩展类，然后通过method_exchangeImplementations方法交换它们的实现。</p>
+<p>例如有一个NSString的Category</p>
+<pre><code><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">Addition</span>)</span>
+- (<span class="built_in">NSString</span> *)test_myLowerString;
+<span class="keyword">@end</span>
+
+<span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">Addition</span>)</span>
+
+- (<span class="built_in">NSString</span> *)test_myLowerString
+{
+   <span class="built_in">NSString</span> *lowercase = [<span class="keyword">self</span> test_myLowerString];
+   <span class="built_in">NSLog</span>(<span class="string">@"%@ =&gt;%@"</span>,<span class="keyword">self</span>,lowercase);
+   <span class="keyword">return</span> lowercase;
+}
+
+<span class="keyword">@end</span>
+</code></pre><p>如果我们想把这个类与系统的<code>lowercase</code>替换该如何做呢？</p>
+<pre><code>NSString *testString = @<span class="string">"TEST"</span>;
+NSLog(@<span class="string">"%@,"</span>,[testString lowercaseString]);
+
+<span class="function"><span class="keyword">Method</span> <span class="title">originMethod</span> =</span> class_getInstanceMethod([NSString <span class="class"><span class="keyword">class</span>], @<span class="title">selector</span>(<span class="title">lowercaseString</span>));</span>
+<span class="function"><span class="keyword">Method</span> <span class="title">swapMethod</span> =</span> class_getInstanceMethod([NSString <span class="class"><span class="keyword">class</span>], @<span class="title">selector</span>(<span class="title">test_myLowerString</span>));</span>
+method_exchangeImplementations(originMethod, swapMethod);
+NSLog(@<span class="string">"%@"</span>,[testString lowercaseString]);
+</code></pre><p>查看打印的结果,可以发现系统的方法与我们写的category交换了,有点意思O(∩_∩)O哈哈~</p>
+<pre><code><span class="keyword">test</span>,
+<span class="keyword">TEST</span> =&gt;<span class="keyword">test</span>
+<span class="keyword">test</span>
+</code></pre><p>所以我们改写了系统的lowercaseString方法，每当我们调用扩展的test_myLowerString方法时候，其实是调用系统的lowercaseString方法，这种做法一般情况用在调试系统，不过最好不建议改写系统的一些方法，可能会带来不可调试的后果，所以使用前需慎重。</p>
+<h2 id="动态方法处理和消息转发">动态方法处理和消息转发</h2><p>上面谈了<code>Method Swizzling</code>，是对消息处理的一种，接下来再谈另外一种方法的处理,如下图，是自己总结的一个思维导图：</p>
+<p><img src="http://iosddimage.qiniudn.com/3_runtime_message_forward.png" alt="runtime_forward"></p>
+<h2 id="参考资料:">参考资料:</h2><p><a href="http://limboy.me/ios/2013/08/03/dynamic-tips-and-tricks-with-objective-c.html" target="_blank" rel="external">http://limboy.me/ios/2013/08/03/dynamic-tips-and-tricks-with-objective-c.html</a><br><a href="http://blog.devtang.com/blog/2013/10/15/objective-c-object-model/" target="_blank" rel="external">http://blog.devtang.com/blog/2013/10/15/objective-c-object-model/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>简单来说, runtime是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法(methods)可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。<br>]]>
+    
+    </summary>
+    
+      <category term="runtime" scheme="http://www.liuchendi.com/tags/runtime/"/>
+    
+      <category term="对象模型" scheme="http://www.liuchendi.com/tags/%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/"/>
+    
+      <category term="消息转发" scheme="http://www.liuchendi.com/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/"/>
+    
+      <category term="运行时" scheme="http://www.liuchendi.com/categories/%E8%BF%90%E8%A1%8C%E6%97%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[那些年我们踩过的坑-NSTimer]]></title>
+    <link href="http://www.liuchendi.com/2014/08/24/iOS/1_NSTimer/"/>
+    <id>http://www.liuchendi.com/2014/08/24/iOS/1_NSTimer/</id>
+    <published>2014-08-24T03:18:56.000Z</published>
+    <updated>2015-11-10T09:45:37.000Z</updated>
+    <content type="html"><![CDATA[<p>昨天下午工作的时候遇见一个这样的需求，网络请求失败后把请求数据保存到本地，并自动重发3次，时间间隔是10秒，如果3次后还失败的话，下一次启动这个接口的时候，把新数据和保存在本地的数据都要发送，刚开始以为没多少难度，不就是网络请求发送数据嘛，首先脑子里的第一反应就是用定时器，初始化定时器，然后触发相应的方法，设置请求的次数标志，超过3次停止定时器。事实却证明我还没有理解定时器……<br><a id="more"></a></p>
+<p>由于是老接口，不能修改，因为产品已经上线，修改会涉及到太多业务，所以只能客户端想办法处理。这样导致的问题就是新数据不能和旧数据一起整合在一起发送，得分两次发送。好吧，那就上吧，我就信心满满的上了。</p>
+<p>初始化定时器，遍历本地的数据，分别对应创建一个定时器使用下面的方法，加载到定时器数组<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(id)userInfo repeats:(BOOL)yesOrNo;</span><br></pre></td></tr></table></figure></p>
+<p>然后fire执行。OK,搞定。</p>
+<p>bi..bi…bi…bi….bi…..bi……</p>
+<p>擦，定时器全乱了，10s内定时器没啥问题，10s后所以定时器都交替进行。。。这不是坑爹么。。。。</p>
+<p>吸了口气，喝了一杯水，扫了一眼定时器的代码，灵光一闪，会不会是fire用错了，初始化的时候不要立即执行，等初始化完毕的时候在从数组里面拿出定时器，请求成功或者失败三次后再拿出第二个定时器请求。哈哈哈哈哈哈，应该不会错了，就这么办。</p>
+<p>bi….bi…..bi…..bi….bi……..</p>
+<p>我了个去，稍微好一点了，20秒内的数据是正常的，后面的定时器又交替进行。。。。泥煤呀，甘都得。。。不过已经有进步了，至少20秒是正确的吧，再改改代码应该就可以了，所以立马想一下定时器的执行流程，后来发现会不会是多个定时器和一个定时器的运行是有区别的？因为自己之前基本上都是创建一个定时器就可以了，fire、invalidate使用。没办法,上SOF看看吧。后来才知道原来这两个方法初始化的定时器即使不用fire也会对应的NSTimeInterval后执行,fire只是让他们立即执行，把启动的时间提前到当前，就像一个演唱会本来打算10分钟后开始的，现在因为主唱提前10分钟到了会场，看见粉丝这么热情，提前开始了。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+ (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo;</span><br><span class="line">+ (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(id)userInfo repeats:(BOOL)yesOrNo;</span><br></pre></td></tr></table></figure></p>
+<p>可是问题又来了，那既然这样没办法控制定时器的执行，我这个功能岂不是没法做了，有没有什么办法可以控制定时器么，想执行的时候就执行，不想执行的时候就丢掉它。。。。</p>
+<p>查找资料的过程中还发现了几个初始化定时器的方法：两个类方法，一个实例方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo;</span><br><span class="line">+ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(id)userInfo repeats:(BOOL)yesOrNo;</span><br><span class="line">- (id)initWithFireDate:(NSDate *)date interval:(NSTimeInterval)ti target:(id)t selector:(SEL)s userInfo:(id)ui repeats:(BOOL)rep;</span><br></pre></td></tr></table></figure></p>
+<p>这和上面的初始化方法有什么区别么，接着发现这两个类方法和实例方法是要手动添加到NSRunLoop代码执行的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[NSRunLoop currentRunLoop]addTimer:timer <span class="keyword">for</span>Mode:NSDefaultRunLoopMode];</span><br></pre></td></tr></table></figure>
+<p>哈哈哈，这不就是我想要的东东嘛(ˇˍˇ），yo yo check now!</p>
+<p>修改定时器的方法，手动添加NSRunLoop执行，然后网络请求不变。。。。OK,搞定。。</p>
+<p>bi..bi…..bi….bi……</p>
+<p>无压力了。。。。测试一个for循环1000次,没发生什么错误。。。</p>
+<p>好吧，来个总结。一直都习惯用最上面的两个方法初始化定时器，然后fire，并且fire的作用只是把定时器的时间提前了，这个是之前使用的时候没有去考虑的。。这种东东在一个定时器下面不会有什么问题，但是多个定时器的话基本上就悲剧。。不过在同一个地方使用多个定时器这样的设计方法我暂时也不知道合理不合理，可能也会有意想不到的的错误，比如内存暴涨，性能受影响之类的，这个暂时没有去考虑，如果你有更好的解决方法，可以交流交流。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>昨天下午工作的时候遇见一个这样的需求，网络请求失败后把请求数据保存到本地，并自动重发3次，时间间隔是10秒，如果3次后还失败的话，下一次启动这个接口的时候，把新数据和保存在本地的数据都要发送，刚开始以为没多少难度，不就是网络请求发送数据嘛，首先脑子里的第一反应就是用定时器，初始化定时器，然后触发相应的方法，设置请求的次数标志，超过3次停止定时器。事实却证明我还没有理解定时器……<br>]]>
+    
+    </summary>
+    
+  </entry>
+  
+</feed>
