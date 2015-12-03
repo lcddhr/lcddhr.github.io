@@ -3,18 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>load和initialize区别 | 小木头</title>
+  <title>Tag: 开源框架 | 小木头</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这两个方法基本上没怎么接触过,平时也很少用到，但是今晚我就非常好奇为什么会用不到，所以顺便就记录下来了，说不定以后用得上">
-<meta property="og:type" content="article">
-<meta property="og:title" content="load和initialize区别">
-<meta property="og:url" content="http://www.liuchendi.com/2014/09/10/iOS/5_load_initialize/index.html">
+  <meta name="description" content="hexo搭建的博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="小木头">
+<meta property="og:url" content="http://www.liuchendi.com/tags/开源框架/index.html">
 <meta property="og:site_name" content="小木头">
-<meta property="og:description" content="这两个方法基本上没怎么接触过,平时也很少用到，但是今晚我就非常好奇为什么会用不到，所以顺便就记录下来了，说不定以后用得上">
-<meta property="og:updated_time" content="2015-11-10T09:44:35.000Z">
+<meta property="og:description" content="hexo搭建的博客">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="load和initialize区别">
-<meta name="twitter:description" content="这两个方法基本上没怎么接触过,平时也很少用到，但是今晚我就非常好奇为什么会用不到，所以顺便就记录下来了，说不定以后用得上">
+<meta name="twitter:title" content="小木头">
+<meta name="twitter:description" content="hexo搭建的博客">
   
     <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
   
@@ -185,129 +184,57 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-iOS/5_load_initialize" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap">
   
-    <div class="article-meta">
-      <a href="/2014/09/10/iOS/5_load_initialize/" class="article-date">
-  	<time datetime="2014-09-10T14:30:56.000Z" itemprop="datePublished">2014-09-10</time>
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2015" class="archive-year">2015</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2015/12/03/iOS/15_my_opensource/" class="archive-article-date">
+  	<time datetime="2015-12-03T09:26:19.000Z" itemprop="datePublished">12月 3</time>
 </a>
-    </div>
+        </div>
+    	 
   
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      load和initialize区别
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2015/12/03/iOS/15_my_opensource/">自己写的开源框架</a>
     </h1>
   
 
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-        
+        <div class="article-info info-on-right">
+          
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开源框架/">开源框架</a></li></ul>
+	</div>
+
+          
 	<div class="article-category tagcloud">
 	<a class="article-category-link" href="/categories/iOS/">iOS</a>
 	</div>
 
 
+        </div>
         <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这两个方法基本上没怎么接触过,平时也很少用到，但是今晚我就非常好奇为什么会用不到，所以顺便就记录下来了，说不定以后用得上<br><a id="more"></a></p>
-<h1 id="load">load</h1><p>先看一下苹果官方文档的解释</p>
-<blockquote>
-<p>Invoked whenever a class or category is added to the Objective-C runtime;<br>implement this method to perform class-specific behavior upon loading.</p>
-</blockquote>
-<p>这个方法在类被添加进来的时候就会调用，也就是说程序在开始加载期间，这个方法就被调用.</p>
-<h1 id="initialize">initialize</h1><blockquote>
-<p>Initializes the class before it receives its first message.<br>The runtime sends <code>initialize</code> to each class in a program just before the class, or any class that<br>inherits from it, is sent its first message from within the program. The runtime sends the<br><code>initialize</code> message to classes in a thread-safe manner. Superclasses receive this message before<br>their subclasses. The superclass implementation may be called multiple times if subclasses do not<br>implement <code>initialize—the</code> runtime will call the inherited implementation—or if subclasses<br>explicitly call <code>[super initialize]</code></p>
-</blockquote>
-<p>这个方法会在类的第一个方法调用前被调用。首先会先调用父类的<code>initialize</code>方法，如果子类没有实现<code>initialize</code>方法,那么父类会多次触发这个方法,为了避免这种情况的发生，可以在实现的方法里面添加一个判断：</p>
-<pre><code>+ (<span class="keyword">void</span>)initialize {
-    <span class="keyword">if</span> (<span class="keyword">self</span> == [ClassName <span class="keyword">self</span>]) {
-     <span class="comment">// ... do the initialization ...</span>
-    }
-}
-</code></pre><h1 id="选择使用的时机">选择使用的时机</h1><p>当类的加载是耗时或者需要消耗比较多的内存的时候,尽量不要在<code>load</code>方法里面做这些耗时的工作,因为这样只会增加App的启动时间,降低用户的体验。<br><code>initialize</code>其实可以被认为是延迟加载的方法，类加载的时候并不会执行这个方法，只有当类实例化的时候，或者类的第一个方法被调用的时候才会执行这个方法</p>
-<h1 id="category中的load和initialize">category中的load和initialize</h1><p>在category中<code>load</code>方法会等到实现类加载完自身的<code>load</code>方法后再执行category的<code>load</code>方法.</p>
-<p><code>initialize</code>则调用最后一个被加载完成的类的<code>initialize</code>的方法.</p>
-
-      
-    </div>
-    
+    </header>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2014/09/11/iOS/6_first_Birthday/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          毕业后的第一个生日
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2014/08/29/iOS/4_framework/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">SDK开发基础-Framework制作</div>
-      <strong class="article-nav-caption">></strong>
-    </a>
-  
-</nav>
-
-  
 </article>
+  
+  
+    </div></section>
+  
 
-
-<div class="share">
-	<!-- JiaThis Button BEGIN -->
-	<div class="jiathis_style">
-		<span class="jiathis_txt">分享到：</span>
-		<a class="jiathis_button_tsina"></a>
-		<a class="jiathis_button_cqq"></a>
-		<a class="jiathis_button_douban"></a>
-		<a class="jiathis_button_weixin"></a>
-		<a class="jiathis_button_tumblr"></a>
-		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	</div>
-	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
-	<!-- JiaThis Button END -->
-</div>
-
-
-
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="iOS/5_load_initialize" data-title="load和initialize区别" data-url="http://www.liuchendi.com/2014/09/10/iOS/5_load_initialize/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"liuchendi"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
-
-
-
+    
 
 </div>
       <footer id="footer">
@@ -333,9 +260,9 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: true
 	}

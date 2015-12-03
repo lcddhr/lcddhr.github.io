@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2015-12-03T09:14:50.000Z</updated>
+  <updated>2015-12-03T09:26:19.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -15,11 +15,35 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[自己写的开源框架]]></title>
+    <link href="http://www.liuchendi.com/2015/12/03/iOS/15_my_opensource/"/>
+    <id>http://www.liuchendi.com/2015/12/03/iOS/15_my_opensource/</id>
+    <published>2015-12-03T09:26:19.000Z</published>
+    <updated>2015-12-03T09:26:19.000Z</updated>
+    <content type="html"><![CDATA[<p>记录自己写的第三方开源框架<br><a id="more"></a></p>
+<p>1、二维码扫描(防微信)。<a href="https://github.com/lcddhr/QRWeiXinDemo" target="_blank" rel="external">https://github.com/lcddhr/QRWeiXinDemo</a></p>
+<p>2、防闲鱼App。<br><a href="https://github.com/lcddhr/FleaMarket" target="_blank" rel="external">https://github.com/lcddhr/FleaMarket</a></p>
+<p>3、键盘表情。<a href="https://github.com/lcddhr/DDEmotionView" target="_blank" rel="external">https://github.com/lcddhr/DDEmotionView</a> </p>
+<p>4、图片加载动画。<a href="https://github.com/lcddhr/DDRevelImage" target="_blank" rel="external">https://github.com/lcddhr/DDRevelImage</a>  </p>
+<p>5、Masonry的例子。<a href="https://github.com/lcddhr/DDMasonryTest" target="_blank" rel="external">https://github.com/lcddhr/DDMasonryTest</a>  </p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>记录自己写的第三方开源框架<br>]]>
+    
+    </summary>
+    
+      <category term="开源框架" scheme="http://www.liuchendi.com/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[记一次关于对象占用内存的讨论]]></title>
     <link href="http://www.liuchendi.com/2015/12/03/iOS/14_object_memory_topic/"/>
     <id>http://www.liuchendi.com/2015/12/03/iOS/14_object_memory_topic/</id>
-    <published>2015-12-03T09:14:50.000Z</published>
-    <updated>2015-12-03T09:14:50.000Z</updated>
+    <published>2015-12-03T09:17:08.000Z</published>
+    <updated>2015-12-03T09:17:08.000Z</updated>
     <content type="html"><![CDATA[<p>内存大小是由类的成员变量决定的吗？<br><a id="more"></a></p>
 <p>昨天群里有人发出了一个内容是关于类对象的<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/1_topic.jpg" alt="1_topic.jpg"></p>
 <p>带着怀疑的态度,写了一段测试的代码</p>
@@ -31,8 +55,7 @@
 <p>这里应该是没有问题了吧，增加了一个字符串变量，size多了16，然后把结果发上群，这句话应该是正确的。</p>
 <p>第二天早上，@诗意的栖居 发过来一段ivar的解释说明，对象之间不共用的只有<code>ivars</code>,具体一点就是同一个类的不同对象，实例变量会不同，有可能会在初始化过程中添加一些变量呀、类呀等，因为runtime的特性可以允许这么做。</p>
 <p>关于ivars可以参考之前写过的一篇文章<a href="http://www.liuchendi.com/2014/08/26/iOS/3_runtime/">《浅析iOS高级编程-runtime》</a>，里面有介绍ivars就是实例的参数列表</p>
-<hr>
-<h3 id="问题来了，为什么添加多一个变量,size会增加16？为啥不是8或者是其他8的倍数？">问题来了，为什么添加多一个变量,size会增加16？为啥不是8或者是其他8的倍数？</h3><p>我把car里面的三个实例变量给去掉，重新打印一次<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/3_Answer.png" alt="3_Answer.png"></p>
+<h2 id="问题来了，为什么添加多一个变量,size会增加16？为啥不是8或者是其他8的倍数？">问题来了，为什么添加多一个变量,size会增加16？为啥不是8或者是其他8的倍数？</h2><p>我把car里面的三个实例变量给去掉，重新打印一次<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/3_Answer.png" alt="3_Answer.png"></p>
 <p>没有添加成员变量和添加一个test成员变量后的size都是16，为什么？这不是和昨天测试的结果不一样吗？</p>
 <p>在<code>64-bit</code>情况下,每个对象含有一个<code>isa</code>,占用8个字节（参考<a href="http://bbs.itheima.com/thread-137894-1-1.html" target="_blank" rel="external">http://bbs.itheima.com/thread-137894-1-1.html</a>）</p>
 <p>那还有8个字节去哪了？一个对象是8个字节，添加一个变量之后还是16？为什么会这样子？一头雾水。</p>
@@ -46,8 +69,7 @@
 <p>所以选择了一个折中的方案</p>
 <p>这结论暂时只是猜测，暂时还没找到有说服力的资料。</p>
 <p>不过开辟的内存还是得根据成员变量来决定的、只不过昨天测的方式是错的</p>
-<hr>
-<h3 id="问题又来了，Car继承了NSObject、那NSObject里面没有生成成员变量么，这些内存怎么没有加上？">问题又来了，Car继承了NSObject、那NSObject里面没有生成成员变量么，这些内存怎么没有加上？</h3><p>看一下<code>NSObject.h</code></p>
+<h2 id="问题又来了，Car继承了NSObject、那NSObject里面没有生成成员变量么，这些内存怎么没有加上？">问题又来了，Car继承了NSObject、那NSObject里面没有生成成员变量么，这些内存怎么没有加上？</h2><p>看一下<code>NSObject.h</code></p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSObject</span> &lt;<span class="title">NSObject</span>&gt; </span>&#123;</span><br><span class="line">   Class isa  OBJC_ISA_<span class="built_in">AVAILABILITY</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)load;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)initialize;</span><br><span class="line">- (instancetype)init</span><br><span class="line"><span class="preprocessor">#if NS_ENFORCE_NSOBJECT_DESIGNATED_INITIALIZER</span></span><br><span class="line">    <span class="built_in">NS_DESIGNATED_INITIALIZER</span></span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line">    ;</span><br><span class="line"></span><br><span class="line">+ (instancetype)new OBJC_SWIFT_UN<span class="built_in">AVAILABLE</span>(<span class="string">"use object initializers instead"</span>);</span><br><span class="line">+ (instancetype)allocWithZone:(<span class="keyword">struct</span> _<span class="built_in">NSZone</span> *)zone OBJC_SWIFT_UN<span class="built_in">AVAILABLE</span>(<span class="string">"use object initializers instead"</span>);</span><br><span class="line">+ (instancetype)alloc OBJC_SWIFT_UN<span class="built_in">AVAILABLE</span>(<span class="string">"use object initializers instead"</span>);</span><br><span class="line">- (<span class="keyword">void</span>)dealloc OBJC_SWIFT_UN<span class="built_in">AVAILABLE</span>(<span class="string">"use 'deinit' to define a de-initializer"</span>);</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)finalize;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>)<span class="keyword">copy</span>;</span><br><span class="line">- (<span class="keyword">id</span>)mutableCopy;</span><br><span class="line"></span><br><span class="line">.............</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">BOOL</span>)isSubclassOfClass:(Class)aClass;</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">BOOL</span>)resolveClassMethod:(SEL)sel __OSX_<span class="built_in">AVAILABLE_STARTING</span>(__MAC_10_5, __IPHONE_2_0);</span><br><span class="line">+ (<span class="built_in">BOOL</span>)resolveInstanceMethod:(SEL)sel __OSX_<span class="built_in">AVAILABLE_STARTING</span>(__MAC_10_5, __IPHONE_2_0);</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">NSUInteger</span>)hash;</span><br><span class="line">+ (Class)superclass;</span><br><span class="line">+ (Class)class OBJC_SWIFT_UN<span class="built_in">AVAILABLE</span>(<span class="string">"use 'aClass.self' instead"</span>);</span><br><span class="line">+ (<span class="built_in">NSString</span> *)description;</span><br><span class="line">+ (<span class="built_in">NSString</span> *)debugDescription;</span><br></pre></td></tr></table></figure>
 <p>发现头文件里确实没有实例变量的声明、只有一个isa指针、协议里面有一个<code>hash</code>声明成<code>readOnly</code>。</p>
 <p>根据上面对象中的前8字节就是isa指针的说明，看这张图，发现父类的Ivar实例是在跟在子类后面的<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/5_isa顺序.jpg" alt="5_isa顺序.jpg"></p>
