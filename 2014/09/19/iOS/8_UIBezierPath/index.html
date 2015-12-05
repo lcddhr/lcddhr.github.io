@@ -13,7 +13,7 @@
 <meta property="og:description" content="这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。">
 <meta property="og:image" content="http://iosddimage.qiniudn.com/7_UIBezierPath.jpg">
 <meta property="og:image" content="http://iosddimage.qiniudn.com/8_%E5%9C%86%E5%BD%A2.png">
-<meta property="og:updated_time" content="2015-11-10T09:45:40.000Z">
+<meta property="og:updated_time" content="2015-12-03T09:58:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="UIBezierPath贝塞尔曲线">
 <meta name="twitter:description" content="这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。">
@@ -117,7 +117,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 10px;">Swift</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 10px;">Swift</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
 					</div>
 				</section>
 				
@@ -225,15 +225,15 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。<br><a id="more"></a></p>
-<p>##简介<br>引用<a href="http://baike.baidu.com/view/60154.htm?fr=aladdin" target="_blank" rel="external">百度百科</a>的一句话:</p>
+<h2 id="简介">简介</h2><p>引用<a href="http://baike.baidu.com/view/60154.htm?fr=aladdin" target="_blank" rel="external">百度百科</a>的一句话:</p>
 <pre><code>贝赛尔曲线的每一个顶点都有两个控制点，用于控制在该顶点两侧的曲线的弧度。
 曲线的定义有四个点：起始点、终止点（也称锚点）以及两个相互分离的中间点。
 滑动两个中间点，贝塞尔曲线的形状会发生变化。
 </code></pre><p>下面的图片是曲线的其中一种：</p>
 <p><img src="http://iosddimage.qiniudn.com/7_UIBezierPath.jpg" alt="UIBezierPath.png"></p>
 <p>今天主要是总结iOS当中贝塞尔曲线的使用,所以就不详细介绍这漂亮的曲线了，如果想深入了解的，可以参考<a href="http://zh.wikipedia.org/wiki/%E8%B2%9D%E8%8C%B2%E6%9B%B2%E7%B7%9A#.E4.BA.8C.E6.AC.A1.E6.96.B9.E8.B2.9D.E8.8C.B2.E6.9B.B2.E7.B7.9A" target="_blank" rel="external">wiki</a></p>
-<p>##UIBezierPath</p>
-<p><code>UIBezierPath</code>对象是CGPathRef数据类型的封装，可以方便的让我们画出<code>矩形</code>、<code>椭圆</code>或者<code>直线和曲线的组合</code>形状</p>
+<h2 id="UIBezierPath">UIBezierPath</h2><p><code>UIBezierPath</code>对象是CGPathRef数据类型的封装，可以方便的让我们画出<code>矩形</code>、<code>椭圆</code>或者<code>直线和曲线的组合</code>形状</p>
+<h3 id="初始化方法">初始化方法</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">+ (instancetype)bezierPath;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建一个矩形</span></span><br><span class="line">+ (instancetype)bezierPathWithRect:(<span class="built_in">CGRect</span>)rect;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建圆形或者椭圆形</span></span><br><span class="line">+ (instancetype)bezierPathWithOvalInRect:(<span class="built_in">CGRect</span>)rect;</span><br><span class="line">+ (instancetype)bezierPathWithRoundedRect:(<span class="built_in">CGRect</span>)rect cornerRadius:(<span class="built_in">CGFloat</span>)cornerRadius; <span class="comment">// rounds all corners with the same horizontal and vertical radius</span></span><br><span class="line">+ (instancetype)bezierPathWithRoundedRect:(<span class="built_in">CGRect</span>)rect byRoundingCorners:(<span class="built_in">UIRectCorner</span>)corners cornerRadii:(<span class="built_in">CGSize</span>)cornerRadii;</span><br><span class="line">+ (instancetype)bezierPathWithArcCenter:(<span class="built_in">CGPoint</span>)center radius:(<span class="built_in">CGFloat</span>)radius startAngle:(<span class="built_in">CGFloat</span>)startAngle endAngle:(<span class="built_in">CGFloat</span>)endAngle clockwise:(<span class="built_in">BOOL</span>)clockwise;</span><br><span class="line">+ (instancetype)bezierPathWith<span class="built_in">CGPath</span>:(<span class="built_in">CGPathRef</span>)<span class="built_in">CGPath</span>;</span><br></pre></td></tr></table></figure>
 <p>最基本的使用方法是</p>
 <pre><code><span class="comment">//设置描绘的起点</span>
 - (<span class="typename">void</span>)<span class="string">moveToPoint:</span>(CGPoint)point; 

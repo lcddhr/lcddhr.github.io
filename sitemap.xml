@@ -2,6 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.liuchendi.com/2015/12/05/iOS/16_SDWebImage_opence/</loc>
+    <lastmod>2015-12-05T07:38:54.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.liuchendi.com/2014/09/10/iOS/5_load_initialize/</loc>
+    <lastmod>2015-12-04T01:28:13.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.liuchendi.com/2014/09/19/iOS/8_UIBezierPath/</loc>
+    <lastmod>2015-12-03T09:58:01.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://www.liuchendi.com/2015/12/03/iOS/15_my_opensource/</loc>
     <lastmod>2015-12-03T09:26:19.000Z</lastmod>
   </url>
@@ -42,18 +57,8 @@
   </url>
   
   <url>
-    <loc>http://www.liuchendi.com/2014/09/19/iOS/8_UIBezierPath/</loc>
-    <lastmod>2015-11-10T09:45:40.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://www.liuchendi.com/2014/08/24/iOS/1_NSTimer/</loc>
     <lastmod>2015-11-10T09:45:37.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://www.liuchendi.com/2014/09/10/iOS/5_load_initialize/</loc>
-    <lastmod>2015-11-10T09:44:35.000Z</lastmod>
   </url>
   
   <url>
