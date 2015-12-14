@@ -114,7 +114,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 10px;">Swift</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 10px;">Swift</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
 					</div>
 				</section>
 				
@@ -185,6 +185,186 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-iOS/18_逆向工程笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/14/iOS/18_逆向工程笔记/" class="article-date">
+  	<time datetime="2015-12-14T06:10:08.000Z" itemprop="datePublished">2015-12-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/14/iOS/18_逆向工程笔记/">《iOS应用逆向工程》笔记1</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="1、iOS目录结构">1、iOS目录结构</h4><p>iOS是又OSX演化而来,OSX是基于UNIX操作系统。</p>
+<p><code>FHS(Filesystem Hierarchy Standard)</code>为类UNIX操作系统的文件目录结构指定了一套标准。</p>
+<p>####类UNIX操作系统目录结构</p>
+<ul>
+<li><code>/</code> ：根目录，所有文件和目录在根目录下展开</li>
+<li><code>/bin</code>: “binary”简写，存放提供用户级基础功能的二进制文件，如ls、ps</li>
+<li><code>/boot</code>: 存放能使系统成功启动的所有文件。</li>
+<li><code>/dev</code>: “device”简写，存放BSD设备文件。</li>
+<li><code>/sbin</code>: “system binaries”简写，存放提供系统级基础功能的二进制文件,如netstat、reboot等</li>
+<li><code>/etc</code>: “Et Cetera”简写，放系统脚本及配置文件。</li>
+<li><code>/lib</code>: 存放系统库文件、内核模块及设备驱动</li>
+<li><code>/mnt</code>：”mount” 简写，存放临时的文件系统挂载点。</li>
+<li><code>/private</code>：存放/private/etc和/private/var</li>
+<li><code>/tmp</code>:临时目录。</li>
+<li><code>/usr:</code>包含大多数用户工具和程序。</li>
+</ul>
+<h4 id="iOS目录">iOS目录</h4><ul>
+<li><code>/Applications</code>: 存放所有系统App和来自Cydia的App</li>
+<li><code>/Developer</code>： 如果一台设备连接Xcode后被指定为调试机，Xcode就会在iOS中生成这个</li>
+<li><code>/Library</code>： 存放一些提供系统支持的数据</li>
+<li><code>/System/Library</code>: 存放大量系统组件。</li>
+<li><code>/System/Library/PrivateFrameworks</code>： 存放iOS的各种framework.</li>
+<li><code>/User</code>: 用户目录,实际指向/var/mobile。</li>
+<li><code>/var/mobile/Containers</code>： 存放StoreApp.<ul>
+<li>App 可执行文件在bundle于App中的数据目录被分别存放在/var/mobile/Containers/Bundle 和 /var/mobile/Containers/Data这两个不同目录下面</li>
+</ul>
+</li>
+</ul>
+<h4 id="二进制文件类型">二进制文件类型</h4><p><code>bundle</code>: 按某种标准结构来组织的目录，包含了二进制文件及运行所需的资源<br><code>framework</code>: 也是bundle,但是framework的bundle中存放的是一个<code>dylib</code>,而不是可执行文件。</p>
+<h4 id="App目录结构">App目录结构</h4><ul>
+<li><code>Info.plist</code>: 记录了App的基本信息，如bundle identifier、可执行文件名、图标文件名等。</li>
+<li><code>可执行文件</code>: 一般都是项目名字</li>
+<li><code>lproj</code>: 存放各种本地化的字符串</li>
+</ul>
+<h4 id="沙盒">沙盒</h4><p>一种访问限制机制、权限的一种表现形式。授权文件(<code>entitlements</code>)是沙盒的一部分。</p>
+<h4 id="Daemon（守护进程、后台程序）">Daemon（守护进程、后台程序）</h4><p>问题: iOS中没有真正的后台任务？</p>
+<ul>
+<li>正在使用app,电话来了会中断当前的所有操作，将电话界面呈现在面前</li>
+<li>垃圾短信的拦截，如果没有守护进程，怎么实时处理过滤每一条短信</li>
+</ul>
+<p>其实按下home键，进程进入后台了，大多数功能会被暂停。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS/">iOS</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-iOS/19_chisel" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/14/iOS/19_chisel/" class="article-date">
+  	<time datetime="2015-12-14T06:07:16.000Z" itemprop="datePublished">2015-12-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/14/iOS/19_chisel/">初探LLDB插件工具-Chisel</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="简介">简介</h2><p><code>LLDB</code>在Xcode 5发布后就取代了<code>GDB</code>,是一个Xcode默认的调试器。与LLVM编译器一起，提供流程控制和数据检测和调试的功能。<a href="http://www.cocoachina.com/ios/20150126/11021.html" target="_blank" rel="external">这里</a>有个简单的介绍</p>
+<p><a href="https://github.com/facebook/chisel" target="_blank" rel="external">chisel</a>是一个开源工具，是LLDB的增强版，提供了许多内置的命令。</p>
+<h2 id="chisel安装">chisel安装</h2><p>用<code>brew</code>安装，如果没有，请先安装brew.</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>update</span><br><span class="line"><span class="keyword">brew </span>install chisel</span><br></pre></td></tr></table></figure>
+<p>在<code>~/.lldbinit</code>文件内添加python路径</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">command</span> script import /path/<span class="keyword">to</span>/fblldb.<span class="keyword">py</span></span><br></pre></td></tr></table></figure>
+<h2 id="命令介绍">命令介绍</h2><h4 id="pviews">pviews</h4><p>递归打印所有的view,清楚的显示层级，跟lldb里面<code>[view recursiveDescription]</code>一样。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(lldb) pviews</span><br><span class="line">&lt;UIWindow: <span class="number">0x7f90f1dd9ee0</span>; frame = (<span class="number">0</span> <span class="number">0</span>; <span class="number">414</span> <span class="number">736</span>); autoresize = W+H; gestureRecognizers = &lt;NSArray: <span class="number">0x7f90f1ddaf10</span>&gt;; layer = &lt;UIWindowLayer: <span class="number">0x7f90f1dd64f0</span>&gt;&gt;</span><br><span class="line">   | &lt;UIView: <span class="number">0x7f90f1c102d0</span>; frame = (<span class="number">0</span> <span class="number">0</span>; <span class="number">414</span> <span class="number">736</span>); autoresize = W+H; layer = &lt;CALayer: <span class="number">0x7f90f1c11c90</span>&gt;&gt;</span><br><span class="line">   |    | &lt;DDView: <span class="number">0x7f90f1dda1e0</span>; frame = (<span class="number">102</span> <span class="number">156</span>; <span class="number">240</span> <span class="number">128</span>); autoresize = RM+BM; layer = &lt;CALayer: <span class="number">0x7f90f1ddb2a0</span>&gt;&gt;</span><br><span class="line">   |    | &lt;UIView: <span class="number">0x7f90f1d247b0</span>; frame = (<span class="number">102</span> <span class="number">346</span>; <span class="number">240</span> <span class="number">128</span>); autoresize = RM+BM; layer = &lt;CALayer: <span class="number">0x7f90f1dd6440</span>&gt;&gt;</span><br><span class="line">   |    | &lt;_UILayoutGuide: <span class="number">0x7f90f1ddb940</span>; frame = (<span class="number">0</span> <span class="number">0</span>; <span class="number">0</span> <span class="number">20</span>); hidden = YES; layer = &lt;CALayer: <span class="number">0x7f90f1dd5120</span>&gt;&gt;</span><br><span class="line">   |    | &lt;_UILayoutGuide: <span class="number">0x7f90f1ddc050</span>; frame = (<span class="number">0</span> <span class="number">736</span>; <span class="number">0</span> <span class="number">0</span>); hidden = YES; layer = &lt;CALayer: <span class="number">0x7f90f1ddb6c0</span>&gt;&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="pvc">pvc</h4><p>递归打印控制器，跟lldb里面<code>[UIViewController _printHierarchy]</code>效果一样</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(lldb) pvc</span><br><span class="line"><span class="variable">&lt;UINavigationController 0x7fdba3039600&gt;</span>, <span class="keyword">state</span>: appeared, view: <span class="variable">&lt;UILayoutContainerView 0x7fdba2d6b390&gt;</span></span><br><span class="line">   | <span class="variable">&lt;ViewController 0x7fdba2d5f690&gt;</span>, <span class="keyword">state</span>: appeared, view: <span class="variable">&lt;UIView 0x7fdba2d5d8f0&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="visualize">visualize</h4><p>显示预览视图 （<strong> 这个命令需要找到视图的地址 </strong>） </p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">visualize</span> + 地址</span><br></pre></td></tr></table></figure>
+<h4 id="fv_/_fvc">fv / fvc</h4><p>查找视图或者控制器在内存中的地址</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="list">(<span class="keyword">lldb</span>)</span> fv UIImageView</span><br><span class="line"><span class="number">0</span>x7fdba2d6af90 UIImageView</span><br><span class="line"><span class="number">0</span>x7fdba2e24930 UIImageView</span><br><span class="line"><span class="list">(<span class="keyword">lldb</span>)</span> fv ViewController</span><br><span class="line"><span class="number">0</span>x7fdba2e41e50 UIViewControllerWrapperView</span><br><span class="line"><span class="list">(<span class="keyword">lldb</span>)</span> fvc ViewController</span><br><span class="line"><span class="number">0</span>x7fdba2d5f690 ViewController</span><br></pre></td></tr></table></figure>
+<h4 id="show_/_hide">show / hide</h4><p>显示和隐藏视图</p>
+<h4 id="mask/unmask">mask/unmask</h4><p>添加和取消一个遮罩</p>
+<h4 id="border/unborder">border/unborder</h4><p>添加和取消一个边框</p>
+<h4 id="caflush">caflush</h4><p>重新渲染界面,找到界面的内存地址，然后获得变量</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(lldb) p <span class="number">0x7fdba2d407d0</span></span><br><span class="line">(long) <span class="variable">$320</span> = <span class="number">140581306370000</span></span><br><span class="line">(lldb) e (void)[<span class="variable">$320</span> setBackgroundColor:[UIColor redColor]]</span><br><span class="line">(lldb) caflush</span><br></pre></td></tr></table></figure>
+<h4 id="bmessage">bmessage</h4><p>可以打断点。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(lldb) bmessage -[ViewController viewDidAppear:]</span><br><span class="line">Setting <span class="tag">a</span> breakpoint at -[ViewController viewDidAppear:] with condition (void*)<span class="function"><span class="title">object_getClass</span><span class="params">((id)</span></span><span class="variable">$rdi</span>) == <span class="number">0</span>x0000000104cbbd50</span><br><span class="line">Breakpoint <span class="number">2</span>: where = ChiselDemo`-[ViewController viewDidAppear:] at ViewController<span class="class">.m</span>:<span class="number">22</span>, <span class="tag">address</span> = <span class="number">0</span>x0000000104cb9860</span><br></pre></td></tr></table></figure>
+<h2 id="参考">参考</h2><p><a href="https://github.com/facebook/chisel" target="_blank" rel="external">chisel官网</a></p>
+<p><a href="http://blog.cnbluebox.com/blog/2015/03/05/chisel/" target="_blank" rel="external">Chisel-LLDB命令插件，让调试更Easy</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS/">iOS</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-iOS/16_SDWebImage_opence" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -664,126 +844,6 @@
       
         <p class="article-more-link">
           <a  href="/2015/11/10/iOS/2_dispatch_semaphore和NSOperationQueue并发/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-iOS/10_Git用法总结" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/03/16/iOS/10_Git用法总结/" class="article-date">
-  	<time datetime="2015-03-16T03:30:56.000Z" itemprop="datePublished">2015-03-16</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/16/iOS/10_Git用法总结/">Git的用法总结</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>git简单命令记录<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Git/">Git</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Git/">Git</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/03/16/iOS/10_Git用法总结/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-iOS/8_UIBezierPath" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2014/09/19/iOS/8_UIBezierPath/" class="article-date">
-  	<time datetime="2014-09-19T12:30:56.000Z" itemprop="datePublished">2014-09-19</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/09/19/iOS/8_UIBezierPath/">UIBezierPath贝塞尔曲线</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/iOS/">iOS</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/2014/09/19/iOS/8_UIBezierPath/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

@@ -3,20 +3,36 @@
 <head>
   <meta charset="utf-8">
   
-  <title>UIBezierPath贝塞尔曲线 | 小木头</title>
+  <title>《iOS应用逆向工程》笔记1 | 小木头</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。">
+  <meta name="description" content="1、iOS目录结构iOS是又OSX演化而来,OSX是基于UNIX操作系统。
+FHS(Filesystem Hierarchy Standard)为类UNIX操作系统的文件目录结构指定了一套标准。
+####类UNIX操作系统目录结构
+
+/ ：根目录，所有文件和目录在根目录下展开
+/bin: “binary”简写，存放提供用户级基础功能的二进制文件，如ls、ps
+/boot: 存放能使系统成功启动的所">
 <meta property="og:type" content="article">
-<meta property="og:title" content="UIBezierPath贝塞尔曲线">
-<meta property="og:url" content="http://www.liuchendi.com/2014/09/19/iOS/8_UIBezierPath/index.html">
+<meta property="og:title" content="《iOS应用逆向工程》笔记1">
+<meta property="og:url" content="http://www.liuchendi.com/2015/12/14/iOS/18_逆向工程笔记/index.html">
 <meta property="og:site_name" content="小木头">
-<meta property="og:description" content="这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。">
-<meta property="og:image" content="http://iosddimage.qiniudn.com/7_UIBezierPath.jpg">
-<meta property="og:image" content="http://iosddimage.qiniudn.com/8_%E5%9C%86%E5%BD%A2.png">
-<meta property="og:updated_time" content="2015-12-03T09:58:01.000Z">
+<meta property="og:description" content="1、iOS目录结构iOS是又OSX演化而来,OSX是基于UNIX操作系统。
+FHS(Filesystem Hierarchy Standard)为类UNIX操作系统的文件目录结构指定了一套标准。
+####类UNIX操作系统目录结构
+
+/ ：根目录，所有文件和目录在根目录下展开
+/bin: “binary”简写，存放提供用户级基础功能的二进制文件，如ls、ps
+/boot: 存放能使系统成功启动的所">
+<meta property="og:updated_time" content="2015-12-14T06:10:08.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="UIBezierPath贝塞尔曲线">
-<meta name="twitter:description" content="这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。">
+<meta name="twitter:title" content="《iOS应用逆向工程》笔记1">
+<meta name="twitter:description" content="1、iOS目录结构iOS是又OSX演化而来,OSX是基于UNIX操作系统。
+FHS(Filesystem Hierarchy Standard)为类UNIX操作系统的文件目录结构指定了一套标准。
+####类UNIX操作系统目录结构
+
+/ ：根目录，所有文件和目录在根目录下展开
+/bin: “binary”简写，存放提供用户级基础功能的二进制文件，如ls、ps
+/boot: 存放能使系统成功启动的所">
   
     <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
   
@@ -187,11 +203,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-iOS/8_UIBezierPath" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-iOS/18_逆向工程笔记" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2014/09/19/iOS/8_UIBezierPath/" class="article-date">
-  	<time datetime="2014-09-19T12:30:56.000Z" itemprop="datePublished">2014-09-19</time>
+      <a href="/2015/12/14/iOS/18_逆向工程笔记/" class="article-date">
+  	<time datetime="2015-12-14T06:10:08.000Z" itemprop="datePublished">2015-12-14</time>
 </a>
     </div>
   
@@ -204,7 +220,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      UIBezierPath贝塞尔曲线
+      《iOS应用逆向工程》笔记1
     </h1>
   
 
@@ -212,6 +228,10 @@
       
       <div class="article-info article-info-post">
         
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
         
 	<div class="article-category tagcloud">
 	<a class="article-category-link" href="/categories/iOS/">iOS</a>
@@ -224,34 +244,47 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。<br><a id="more"></a></p>
-<h2 id="简介">简介</h2><p>引用<a href="http://baike.baidu.com/view/60154.htm?fr=aladdin" target="_blank" rel="external">百度百科</a>的一句话:</p>
-<pre><code>贝赛尔曲线的每一个顶点都有两个控制点，用于控制在该顶点两侧的曲线的弧度。
-曲线的定义有四个点：起始点、终止点（也称锚点）以及两个相互分离的中间点。
-滑动两个中间点，贝塞尔曲线的形状会发生变化。
-</code></pre><p>下面的图片是曲线的其中一种：</p>
-<p><img src="http://iosddimage.qiniudn.com/7_UIBezierPath.jpg" alt="UIBezierPath.png"></p>
-<p>今天主要是总结iOS当中贝塞尔曲线的使用,所以就不详细介绍这漂亮的曲线了，如果想深入了解的，可以参考<a href="http://zh.wikipedia.org/wiki/%E8%B2%9D%E8%8C%B2%E6%9B%B2%E7%B7%9A#.E4.BA.8C.E6.AC.A1.E6.96.B9.E8.B2.9D.E8.8C.B2.E6.9B.B2.E7.B7.9A" target="_blank" rel="external">wiki</a></p>
-<h2 id="UIBezierPath">UIBezierPath</h2><p><code>UIBezierPath</code>对象是CGPathRef数据类型的封装，可以方便的让我们画出<code>矩形</code>、<code>椭圆</code>或者<code>直线和曲线的组合</code>形状</p>
-<h3 id="初始化方法">初始化方法</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">+ (instancetype)bezierPath;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建一个矩形</span></span><br><span class="line">+ (instancetype)bezierPathWithRect:(<span class="built_in">CGRect</span>)rect;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建圆形或者椭圆形</span></span><br><span class="line">+ (instancetype)bezierPathWithOvalInRect:(<span class="built_in">CGRect</span>)rect;</span><br><span class="line">+ (instancetype)bezierPathWithRoundedRect:(<span class="built_in">CGRect</span>)rect cornerRadius:(<span class="built_in">CGFloat</span>)cornerRadius; <span class="comment">// rounds all corners with the same horizontal and vertical radius</span></span><br><span class="line">+ (instancetype)bezierPathWithRoundedRect:(<span class="built_in">CGRect</span>)rect byRoundingCorners:(<span class="built_in">UIRectCorner</span>)corners cornerRadii:(<span class="built_in">CGSize</span>)cornerRadii;</span><br><span class="line">+ (instancetype)bezierPathWithArcCenter:(<span class="built_in">CGPoint</span>)center radius:(<span class="built_in">CGFloat</span>)radius startAngle:(<span class="built_in">CGFloat</span>)startAngle endAngle:(<span class="built_in">CGFloat</span>)endAngle clockwise:(<span class="built_in">BOOL</span>)clockwise;</span><br><span class="line">+ (instancetype)bezierPathWith<span class="built_in">CGPath</span>:(<span class="built_in">CGPathRef</span>)<span class="built_in">CGPath</span>;</span><br></pre></td></tr></table></figure>
-<p>最基本的使用方法是</p>
-<pre><code><span class="comment">//设置描绘的起点</span>
-- (<span class="typename">void</span>)<span class="string">moveToPoint:</span>(CGPoint)point; 
-
-<span class="comment">//画直线</span>
-- (<span class="typename">void</span>)<span class="string">addLineToPoint:</span>(CGPoint)point; 
-
-<span class="comment">//画曲线，分别对应终点和两个控制点</span>
-- (<span class="typename">void</span>)<span class="string">addCurveToPoint:</span>(CGPoint)endPoint <span class="string">controlPoint1:</span>(CGPoint)controlPoint1 <span class="string">controlPoint2:</span>(CGPoint)controlPoint2;
-
-<span class="comment">//画圆弧</span>
-- (<span class="typename">void</span>)<span class="string">addArcWithCenter:</span>(CGPoint)center <span class="string">radius:</span>(CGFloat)radius <span class="string">startAngle:</span>(CGFloat)startAngle <span class="string">endAngle:</span>(CGFloat)endAngle <span class="string">clockwise:</span>(BOOL)clockwise
-</code></pre><p>画一个圆形</p>
-<pre><code>UIBezierPath *path = [[UIBezierPath alloc] init];
-[path moveToPoint:CGPointMake(<span class="number">175</span>, <span class="number">100</span>)];
-[path addArcWithCenter:CGPointMake(<span class="number">150</span>, <span class="number">100</span>) radius:<span class="number">25</span> startAngle:<span class="number">0</span> endAngle:<span class="number">2</span>*M_PI clockwise:YES];
-</code></pre><p><img src="http://iosddimage.qiniudn.com/8_%E5%9C%86%E5%BD%A2.png" alt="圆形"></p>
-<p>剩余的明天上班后再回来总结</p>
+        <h4 id="1、iOS目录结构">1、iOS目录结构</h4><p>iOS是又OSX演化而来,OSX是基于UNIX操作系统。</p>
+<p><code>FHS(Filesystem Hierarchy Standard)</code>为类UNIX操作系统的文件目录结构指定了一套标准。</p>
+<p>####类UNIX操作系统目录结构</p>
+<ul>
+<li><code>/</code> ：根目录，所有文件和目录在根目录下展开</li>
+<li><code>/bin</code>: “binary”简写，存放提供用户级基础功能的二进制文件，如ls、ps</li>
+<li><code>/boot</code>: 存放能使系统成功启动的所有文件。</li>
+<li><code>/dev</code>: “device”简写，存放BSD设备文件。</li>
+<li><code>/sbin</code>: “system binaries”简写，存放提供系统级基础功能的二进制文件,如netstat、reboot等</li>
+<li><code>/etc</code>: “Et Cetera”简写，放系统脚本及配置文件。</li>
+<li><code>/lib</code>: 存放系统库文件、内核模块及设备驱动</li>
+<li><code>/mnt</code>：”mount” 简写，存放临时的文件系统挂载点。</li>
+<li><code>/private</code>：存放/private/etc和/private/var</li>
+<li><code>/tmp</code>:临时目录。</li>
+<li><code>/usr:</code>包含大多数用户工具和程序。</li>
+</ul>
+<h4 id="iOS目录">iOS目录</h4><ul>
+<li><code>/Applications</code>: 存放所有系统App和来自Cydia的App</li>
+<li><code>/Developer</code>： 如果一台设备连接Xcode后被指定为调试机，Xcode就会在iOS中生成这个</li>
+<li><code>/Library</code>： 存放一些提供系统支持的数据</li>
+<li><code>/System/Library</code>: 存放大量系统组件。</li>
+<li><code>/System/Library/PrivateFrameworks</code>： 存放iOS的各种framework.</li>
+<li><code>/User</code>: 用户目录,实际指向/var/mobile。</li>
+<li><code>/var/mobile/Containers</code>： 存放StoreApp.<ul>
+<li>App 可执行文件在bundle于App中的数据目录被分别存放在/var/mobile/Containers/Bundle 和 /var/mobile/Containers/Data这两个不同目录下面</li>
+</ul>
+</li>
+</ul>
+<h4 id="二进制文件类型">二进制文件类型</h4><p><code>bundle</code>: 按某种标准结构来组织的目录，包含了二进制文件及运行所需的资源<br><code>framework</code>: 也是bundle,但是framework的bundle中存放的是一个<code>dylib</code>,而不是可执行文件。</p>
+<h4 id="App目录结构">App目录结构</h4><ul>
+<li><code>Info.plist</code>: 记录了App的基本信息，如bundle identifier、可执行文件名、图标文件名等。</li>
+<li><code>可执行文件</code>: 一般都是项目名字</li>
+<li><code>lproj</code>: 存放各种本地化的字符串</li>
+</ul>
+<h4 id="沙盒">沙盒</h4><p>一种访问限制机制、权限的一种表现形式。授权文件(<code>entitlements</code>)是沙盒的一部分。</p>
+<h4 id="Daemon（守护进程、后台程序）">Daemon（守护进程、后台程序）</h4><p>问题: iOS中没有真正的后台任务？</p>
+<ul>
+<li>正在使用app,电话来了会中断当前的所有操作，将电话界面呈现在面前</li>
+<li>垃圾短信的拦截，如果没有守护进程，怎么实时处理过滤每一条短信</li>
+</ul>
+<p>其实按下home键，进程进入后台了，大多数功能会被暂停。</p>
 
       
     </div>
@@ -261,18 +294,9 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/03/16/iOS/10_Git用法总结/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          Git的用法总结
-        
-      </div>
-    </a>
   
-  
-    <a href="/2014/09/18/iOS/7_iOS_Fit_Collection/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">iOS适配问题大收集</div>
+    <a href="/2015/12/14/iOS/19_chisel/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">初探LLDB插件工具-Chisel</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -301,7 +325,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="iOS/8_UIBezierPath" data-title="UIBezierPath贝塞尔曲线" data-url="http://www.liuchendi.com/2014/09/19/iOS/8_UIBezierPath/"></div>
+	<div class="ds-thread" data-thread-key="iOS/18_逆向工程笔记" data-title="《iOS应用逆向工程》笔记1" data-url="http://www.liuchendi.com/2015/12/14/iOS/18_逆向工程笔记/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
