@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2015-12-18T02:55:52.000Z</updated>
+  <updated>2015-12-18T03:09:32.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -18,9 +18,14 @@
     <title><![CDATA[iOS逆向 - 使用Tweak工程]]></title>
     <link href="http://www.liuchendi.com/2015/12/18/iOS/21_Tweak/"/>
     <id>http://www.liuchendi.com/2015/12/18/iOS/21_Tweak/</id>
-    <published>2015-12-18T02:55:52.000Z</published>
-    <updated>2015-12-18T02:55:52.000Z</updated>
-    <content type="html"><![CDATA[<p>创建第一个Tweak工程<br><a id="more"></a></p>
+    <published>2015-12-18T03:09:32.000Z</published>
+    <updated>2015-12-18T03:09:32.000Z</updated>
+    <content type="html"><![CDATA[<p>创建第一个Tweak工程. Tweak是用Theos越狱工具开发包创建的.需要提前安装下面的工具</p>
+<p>1、Xcoed 和 Command Line Tools 这个下载完Xcode就有</p>
+<p>2、<a href="https://github.com/DHowett/theos" target="_blank" rel="external">Theos</a></p>
+<p>3、配置<a href="http://joedj.net/ldid" target="_blank" rel="external">ldid</a></p>
+<p>4、配置CydiaSubstrate. 后面有介绍。</p>
+<p>5、配置dpkg-deb.后面有介绍<br><a id="more"></a></p>
 <h2 id="1、创建工程">1、创建工程</h2><p>在目录下面启动NIC<code>/opt/theos/bin/nic.pl</code> ,可以看到有好多个模板可以选择。<code>1、4、6、8、9</code>是Theos自带的模板,其他的是<a href="https://github.com/DHowett/theos-nic-templates" target="_blank" rel="external">https://github.com/DHowett/theos-nic-templates</a>下载的。 这里主要学习tweak的用法，选择9</p>
 <figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">	NIC <span class="number">2</span>.<span class="number">0</span> - New Instance Creator</span><br><span class="line">------------------------------</span><br><span class="line">  <span class="string">[1.]</span> iphone/application</span><br><span class="line">  <span class="string">[2.]</span> iphone/cydget</span><br><span class="line">  <span class="string">[3.]</span> iphone/framework</span><br><span class="line">  <span class="string">[4.]</span> iphone/library</span><br><span class="line">  <span class="string">[5.]</span> iphone/notification_center_widget</span><br><span class="line">  <span class="string">[6.]</span> iphone/preference_bundle</span><br><span class="line">  <span class="string">[7.]</span> iphone/sbsettingstoggle</span><br><span class="line">  <span class="string">[8.]</span> iphone/tool</span><br><span class="line">  <span class="string">[9.]</span> iphone/tweak</span><br><span class="line">  <span class="string">[10.]</span> iphone/xpc_service</span><br><span class="line">Choose a Template (required):</span><br></pre></td></tr></table></figure>
 <p>输入工程的名字</p>
@@ -112,12 +117,18 @@
 <p>编辑control文件</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Package</span>: <span class="string">com.liuchendi.iOSReverse</span></span><br><span class="line"><span class="attribute">Name</span>: <span class="string">reverseDemo</span></span><br><span class="line"><span class="attribute">Depends</span>: <span class="string">mobilesubstrate, firmware (&gt;= 7.0)</span></span><br><span class="line"><span class="attribute">Version</span>: <span class="string">0.0.1</span></span><br><span class="line"><span class="attribute">Architecture</span>: <span class="string">iphoneos-arm</span></span><br><span class="line"><span class="attribute">Description</span>: <span class="string">An awesome MobileSubstrate tweak!</span></span><br><span class="line"><span class="attribute">Maintainer</span>: <span class="string">liuchendi</span></span><br><span class="line"><span class="attribute">Author</span>: <span class="string">liuchendi</span></span><br><span class="line"><span class="attribute">Section</span>: <span class="string">Tweaks</span></span><br></pre></td></tr></table></figure>
 <p>实现的效果：</p>
-<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/reverse_demo_result.PNG" alt="reverse_demo_result.PNG"></p>
+<a href="!--![reverse_demo_result.PNG](http://7i7ht3.com1.z0.glb.clouddn.com/reverse_demo_result.PNG)--">!--![reverse_demo_result.PNG](http://7i7ht3.com1.z0.glb.clouddn.com/reverse_demo_result.PNG)--</a>
+<h4 id="总结">总结</h4><p>1、学习了Tweak工程的创建、Logoes常用语法<br>2、</p>
 <h4 id="参考">参考</h4><p>1、<a href="http://item.jd.com/11670145.html" target="_blank" rel="external">iOS逆向工程第二版</a></p>
 <p>2、<a href="http://bbs.iosre.com/" target="_blank" rel="external">http://bbs.iosre.com/</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>创建第一个Tweak工程<br>]]>
+    <![CDATA[<p>创建第一个Tweak工程. Tweak是用Theos越狱工具开发包创建的.需要提前安装下面的工具</p>
+<p>1、Xcoed 和 Command Line Tools 这个下载完Xcode就有</p>
+<p>2、<a href="https://github.com/DHowett/theos">Theos</a></p>
+<p>3、配置<a href="http://joedj.net/ldid">ldid</a></p>
+<p>4、配置CydiaSubstrate. 后面有介绍。</p>
+<p>5、配置dpkg-deb.后面有介绍<br>]]>
     
     </summary>
     
