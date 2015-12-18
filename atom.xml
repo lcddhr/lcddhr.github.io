@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2015-12-18T03:18:47.000Z</updated>
+  <updated>2015-12-18T03:22:49.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -18,8 +18,8 @@
     <title><![CDATA[iOS逆向 - 使用Tweak]]></title>
     <link href="http://www.liuchendi.com/2015/12/18/iOS/21_Tweak/"/>
     <id>http://www.liuchendi.com/2015/12/18/iOS/21_Tweak/</id>
-    <published>2015-12-18T03:18:47.000Z</published>
-    <updated>2015-12-18T03:18:47.000Z</updated>
+    <published>2015-12-18T03:22:49.000Z</published>
+    <updated>2015-12-18T03:22:49.000Z</updated>
     <content type="html"><![CDATA[<p>创建第一个Tweak工程. Tweak是用Theos越狱工具开发包创建的.需要提前安装下面的工具</p>
 <p>1、Xcoed 和 Command Line Tools 这个下载完Xcode就有</p>
 <p>2、<a href="https://github.com/DHowett/theos" target="_blank" rel="external">Theos</a></p>
@@ -117,8 +117,8 @@
 <p>编辑control文件</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Package</span>: <span class="string">com.liuchendi.iOSReverse</span></span><br><span class="line"><span class="attribute">Name</span>: <span class="string">reverseDemo</span></span><br><span class="line"><span class="attribute">Depends</span>: <span class="string">mobilesubstrate, firmware (&gt;= 7.0)</span></span><br><span class="line"><span class="attribute">Version</span>: <span class="string">0.0.1</span></span><br><span class="line"><span class="attribute">Architecture</span>: <span class="string">iphoneos-arm</span></span><br><span class="line"><span class="attribute">Description</span>: <span class="string">An awesome MobileSubstrate tweak!</span></span><br><span class="line"><span class="attribute">Maintainer</span>: <span class="string">liuchendi</span></span><br><span class="line"><span class="attribute">Author</span>: <span class="string">liuchendi</span></span><br><span class="line"><span class="attribute">Section</span>: <span class="string">Tweaks</span></span><br></pre></td></tr></table></figure>
 <p>实现的效果：</p>
-<a href="!--![reverse_demo_result.PNG](http://7i7ht3.com1.z0.glb.clouddn.com/reverse_demo_result.PNG)--">!--![reverse_demo_result.PNG](http://7i7ht3.com1.z0.glb.clouddn.com/reverse_demo_result.PNG)--</a>
-<h4 id="总结">总结</h4><p>1、学习了Tweak工程的创建、Logoes常用语法<br>2、</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/reverse_demo_result.PNG" alt="reverse_demo_result.PNG"></p>
+<h4 id="总结">总结</h4><p>1、学习了Tweak工程的创建、Logos常用语法<br>2、Tweak文件目录结构，各个文件的基本信息<br>3、编译 + 打包 + 安装 方法</p>
 <h4 id="参考">参考</h4><p>1、<a href="http://item.jd.com/11670145.html" target="_blank" rel="external">iOS逆向工程第二版</a></p>
 <p>2、<a href="http://bbs.iosre.com/" target="_blank" rel="external">http://bbs.iosre.com/</a></p>
 ]]></content>
