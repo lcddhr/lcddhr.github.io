@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2015-12-19T02:50:41.000Z</updated>
+  <updated>2015-12-19T09:15:53.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -15,11 +15,51 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[iOS逆向 - Cycript基本用法]]></title>
+    <link href="http://www.liuchendi.com/2015/12/19/iOS/23_Cycrip/"/>
+    <id>http://www.liuchendi.com/2015/12/19/iOS/23_Cycrip/</id>
+    <published>2015-12-19T09:15:53.000Z</published>
+    <updated>2015-12-19T09:15:53.000Z</updated>
+    <content type="html"><![CDATA[<p>cycript是混合了objective-c与javascript语法的一个工具,让开发者在命令行下和应用交互，在运行时查看和修改应用。</p>
+<a id="more"></a>
+<h2 id="基本使用方法。以SpringBoard为例">基本使用方法。以SpringBoard为例</h2><p>在mac上ssh登录手机，或者在手机上安装<code>Terminal</code>，找到SpringBoard进程</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">didi:~ root<span class="preprocessor"># ps -e | grep SpringBoard</span></span><br><span class="line"><span class="number">1759</span> ??         <span class="number">0</span>:<span class="number">22.40</span> /System/Library/CoreServices/SpringBoard.app/SpringBoard</span><br><span class="line"><span class="number">1835</span> ttys000    <span class="number">0</span>:<span class="number">00.01</span> grep SpringBoard</span><br></pre></td></tr></table></figure>
+<p>获取到进程的id是<code>1759</code>,然后用<code>cycript - p</code>命令注入这个进程</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">didi:</span>~ root<span class="preprocessor"># cycript - p 1759</span></span><br></pre></td></tr></table></figure>
+<p>想要在SpringBoard界面弹出一个提示框，上节使用Tweak工程实现了这个功能，但用cycript的话，只要两句代码就可以了，而且是实时注入的。</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cy<span class="preprocessor"># alertView = [[UIAlertView alloc] initWithTitle:@<span class="string">"test"</span> message:@<span class="string">"liuchendi"</span> delegate:nil cancelButtonTitle:@<span class="string">"OK"</span> otherButtonTitles:nil]</span></span><br><span class="line"><span class="preprocessor">#<span class="string">"&lt;UIAlertView: 0x18b6c8d0; frame = (0 0; 0 0); opaque = NO; layer = &lt;CALayer: 0x18b85720&gt;&gt;"</span></span></span><br><span class="line">cy<span class="preprocessor"># [alertView show]</span></span><br></pre></td></tr></table></figure>
+<p>不需要声明类型,不需要输入分号。使用过程中还能打印一些生成的信息。</p>
+<p>运行结果：<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/cycriptResult.PNG" alt="cycriptResult"></p>
+<h4 id="知道内存地址，获取对象">知道内存地址，获取对象</h4><p>通过<code>#</code>获取对象，比如刚刚生成的UIAlertView对象的内存地址是<code>0x18b6c8d0</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cy<span class="preprocessor"># [#<span class="number">0x18b6c8d0</span> show]</span></span><br></pre></td></tr></table></figure>
+<p>一样可以弹出提示框</p>
+<h4 id="知道一个类，获取内存地址">知道一个类，获取内存地址</h4><p>通过<code>choose</code>命令可以查看,这个命令不一定百发百中，如果没找到需要自己手动找。</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cy<span class="preprocessor"># choose(SBScreenShotter)</span></span><br><span class="line">[<span class="preprocessor">#<span class="string">"&lt;SBScreenShotter: 0x18bc25c0&gt;"</span>]</span></span><br></pre></td></tr></table></figure>
+<h2 id="例子：获取私有函数,登录iMessage">例子：获取私有函数,登录iMessage</h2><p>获取iMessage的控制器</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cy<span class="preprocessor"># controller = [CNFRegController controllerForServiceType:<span class="number">1</span>]</span></span><br><span class="line"><span class="preprocessor">#<span class="string">"&lt;CNFRegController: 0x18e9f990&gt;"</span></span></span><br></pre></td></tr></table></figure>
+<p>登录iMessage,这里屏蔽了敏感的信息.用自己的帐号密码登录</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cy<span class="preprocessor"># [controller beginAccountSetupWithLogin:@<span class="string">"appID"</span> password:@<span class="string">"appPassword"</span> foundExisting:NO]</span></span><br><span class="line"><span class="preprocessor">#<span class="string">"IMAccount: 0x18fcbab0 [ID: 89E8048D-183C-460D-9438-719738CBBC13 Service: IMService[iMessage] Login: E:appID Active: YES LoginStatus: Connected]"</span></span></span><br></pre></td></tr></table></figure>
+<p>这里返回了一个<code>IMAccount</code>对象</p>
+<p>选择收发的邮件地址<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cy<span class="preprocessor"># [controller setAliases:@[@<span class="string">"xxx@qq.com"</span>] onAccount:#<span class="number">0x18fcbab0</span>]</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>返回值为1表示成功登录了iMessage</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>cycript是混合了objective-c与javascript语法的一个工具,让开发者在命令行下和应用交互，在运行时查看和修改应用。</p>]]>
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/tags/iOS/"/>
+    
+      <category term="iOS逆向" scheme="http://www.liuchendi.com/categories/iOS%E9%80%86%E5%90%91/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[iOS逆向 - IDA分析Springboard]]></title>
     <link href="http://www.liuchendi.com/2015/12/19/iOS/22_ida_SpringBoard/"/>
     <id>http://www.liuchendi.com/2015/12/19/iOS/22_ida_SpringBoard/</id>
-    <published>2015-12-19T02:50:41.000Z</published>
-    <updated>2015-12-19T02:50:41.000Z</updated>
+    <published>2015-12-19T02:50:36.000Z</published>
+    <updated>2015-12-19T02:50:36.000Z</updated>
     <content type="html"><![CDATA[<p>简单了解IDA反编译工具的使用。</p>
 <p>IDA就不介绍了,跨平台的强大反编译调试工具。</p>
 <p>IDA工具下载: <a href="https://www.hex-rays.com/products/ida/support/download_demo.shtml" target="_blank" rel="external">https://www.hex-rays.com/products/ida/support/download_demo.shtml</a></p>
@@ -1330,108 +1370,6 @@ groupArray=[[<span class="type">NSMutableArray</span> alloc] initWithCapacity:<s
       <category term="framework" scheme="http://www.liuchendi.com/tags/framework/"/>
     
       <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[浅析iOS高级编程-runtime]]></title>
-    <link href="http://www.liuchendi.com/2014/08/26/iOS/3_runtime/"/>
-    <id>http://www.liuchendi.com/2014/08/26/iOS/3_runtime/</id>
-    <published>2014-08-26T03:30:56.000Z</published>
-    <updated>2015-11-10T08:13:33.000Z</updated>
-    <content type="html"><![CDATA[<p>简单来说, runtime是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法(methods)可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。<br><a id="more"></a></p>
-<h2 id="简介">简介</h2><p>简单来说, <code>runtime</code>是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法（methods）可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。</p>
-<p>Objective-C只是在C语言层面上加了些关键字和语法。真正让Objective-C如此强大的是它的运行时。它很小但却很强大。它的核心是消息分发。想要了解真正的runtime就必须先明白对象模型、消息的传递。</p>
-<h2 id="对象模型">对象模型</h2><p>NSObject类和Java中的Object类有点相似，是所有一切类的父类，也就是根类，打开 <code>NSObject.h</code>类可以发现</p>
-<p><img src="http://iosddimage.qiniudn.com/3_runtime_NSObject.png" alt="runtime_NSObject"></p>
-<p>在来看看<code>runtime.h</code>的组成,就会发现都有<code>isa</code>指针，这是个什么东东？</p>
-<p><img src="http://iosddimage.qiniudn.com/3_runtime_runtime_head.png" alt="runtime_runtime_head"></p>
-<p>根据上面两个类,可以发现一些信息:</p>
-<pre><code><span class="attribute">isa指针</span>: <span class="string">每个对象都是类的实例,isa指针指向这个实例所属的类,每个类也是一个对象,类也有isa指针 </span>
-
-<span class="http"><span class="attribute">super_class</span>: <span class="string">父类</span>
-
-<span class="http"><span class="attribute">name</span>: <span class="string">类的名字</span>
-
-<span class="http"><span class="attribute">info</span>: <span class="string">类的一些信息</span>
-
-<span class="http"><span class="attribute">instance_size</span>: <span class="string">实例的大小</span>
-
-<span class="undefined">objc_ivar_list：实例的参数列表
-
-objc_method_list：实例的方法列表
-
-objc_cache：方法的缓存
-
-objc_protocol_list：协议方法列表</span></span></span></span></span>
-</code></pre><p>接着我们来看一张图片：<a href="http://www.sealiesoftware.com/blog/class%20diagram.pdf" target="_blank" rel="external">类的模型</a></p>
-<p><img src="http://iosddimage.qiniudn.com/3_runtime_class.png" alt="runtime_class"></p>
-<p>从这张图片中,我们可以发现有以下的信息：</p>
-<pre><code>（<span class="number">1</span>）类也是一个对象，这个对象是另外一个类的实例，这个类是meta(元类)
-
- (<span class="number">2</span>) 每个meta类也是一个对象，分别指向根meta类。
-
-（<span class="number">3</span>）根元类的isa指针指向自己，形成了一个闭环。
-
-（<span class="number">4</span>）在继承关系中，由于类方法的定义是保存在元类(metaclass)中，而方法调用的规则是，
-     如果该类没有一个方法的实现，则向它的父类继续查找。所以，为了保证父类的类方法
-     可以在子类中可以被调用，所以子类的元类会继承父类的元类，换而言之，类对象和元
-     类对象有着同样的继承关系。
-</code></pre><h3 id="消息(Message)">消息(Message)</h3><p>执行一个方法，有些语言、编译器会执行一些额外的优化和错误检查，因为调用的关系很直接也很明显。但是对于消息分发来说，就不一定了。在发消息前不必知道某个对象是否能处理消息，你把消息发给它，它可能会处理，也可能会交给其他的objec 处理。一个消息不用对应一个方法、一个对象也可能实现一个方法来处理多条消息。</p>
-<p>在objcetive中，消息是通过<code>objc_msgSend()</code>这个runtime函数实现的。编译器把消息的分发转变成<code>objc_msgSend</code>执行。</p>
-<p>下面看一下这段代码：</p>
-<pre><code><span class="property">id</span> returnValue = [someobject messagename:parameter];
-</code></pre><p>其中someObject是接收者(receiver),messagename叫做Selector，Selector和参数合起来叫做消息.</p>
-<pre><code><span class="function"><span class="title">objc_msgSend</span><span class="params">(id self, sel cmd,...)</span></span>
-</code></pre><p>第一个参数代表接收者，第二个参数是Selector，后面的参数就是消息中得参数，位置顺序不变。所以根据上面的原型，我们可以把函数改写成这样：</p>
-<pre><code>id returnValue = objc_msgsend<span class="list">(<span class="keyword">someobject</span>,@selector<span class="list">(<span class="keyword">messagename</span>:)</span>,parameter)</span><span class="comment">;</span>
-</code></pre><p><code>objc_msgsend</code>函数会根据接受者和<code>selector</code>的类型调用适当的方法。会在接收者所属的类里面搜寻<code>方法列表(list of method)</code>.如果能找到与selector名称相符合的方法，就跳转至实现代码。如果找不到的话，就会向上查找，等找到合适的方法后跳转。如果还是找不到得话就会执行“消息转发”的操作。</p>
-<p>按照这个思路，调用一个方法需要很多步骤。但是objc_msgsend会将结果缓存到<code>快速映射表(fast map)</code>里面，每个类都有一个这样的缓存，若是稍后还向该类发送相同的消息的话，执行起来就很快了。</p>
-<h3 id="Method_Swizzling">Method Swizzling</h3><p>Method Swizzling 可以交换两个方法的实现。为什么会有这样的功能呢？首先看看扩展类的两种途径，第一种是子类化，重写父类的方法，然后调用父类的实现。但是使用子类的过程中，如果返回的时父类的类型的话怎么办？可以使用Category,添加一个扩展方法，这个方法如果没有和系统调用的方法重名的话一般情况下是没有问题的，但是如果重写了系统的方法的话，那么就永远不能调用这个方法了。所以Method Swizzling这个方法能解决这些问题，技能扩展类，又还能调用原来类的实现，通常情况下先建立一个与系统对应的扩展类，然后通过method_exchangeImplementations方法交换它们的实现。</p>
-<p>例如有一个NSString的Category</p>
-<pre><code><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">Addition</span>)</span>
-- (<span class="built_in">NSString</span> *)test_myLowerString;
-<span class="keyword">@end</span>
-
-<span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">Addition</span>)</span>
-
-- (<span class="built_in">NSString</span> *)test_myLowerString
-{
-   <span class="built_in">NSString</span> *lowercase = [<span class="keyword">self</span> test_myLowerString];
-   <span class="built_in">NSLog</span>(<span class="string">@"%@ =&gt;%@"</span>,<span class="keyword">self</span>,lowercase);
-   <span class="keyword">return</span> lowercase;
-}
-
-<span class="keyword">@end</span>
-</code></pre><p>如果我们想把这个类与系统的<code>lowercase</code>替换该如何做呢？</p>
-<pre><code>NSString *testString = @<span class="string">"TEST"</span>;
-NSLog(@<span class="string">"%@,"</span>,[testString lowercaseString]);
-
-<span class="function"><span class="keyword">Method</span> <span class="title">originMethod</span> =</span> class_getInstanceMethod([NSString <span class="class"><span class="keyword">class</span>], @<span class="title">selector</span>(<span class="title">lowercaseString</span>));</span>
-<span class="function"><span class="keyword">Method</span> <span class="title">swapMethod</span> =</span> class_getInstanceMethod([NSString <span class="class"><span class="keyword">class</span>], @<span class="title">selector</span>(<span class="title">test_myLowerString</span>));</span>
-method_exchangeImplementations(originMethod, swapMethod);
-NSLog(@<span class="string">"%@"</span>,[testString lowercaseString]);
-</code></pre><p>查看打印的结果,可以发现系统的方法与我们写的category交换了,有点意思O(∩_∩)O哈哈~</p>
-<pre><code><span class="keyword">test</span>,
-<span class="keyword">TEST</span> =&gt;<span class="keyword">test</span>
-<span class="keyword">test</span>
-</code></pre><p>所以我们改写了系统的lowercaseString方法，每当我们调用扩展的test_myLowerString方法时候，其实是调用系统的lowercaseString方法，这种做法一般情况用在调试系统，不过最好不建议改写系统的一些方法，可能会带来不可调试的后果，所以使用前需慎重。</p>
-<h2 id="动态方法处理和消息转发">动态方法处理和消息转发</h2><p>上面谈了<code>Method Swizzling</code>，是对消息处理的一种，接下来再谈另外一种方法的处理,如下图，是自己总结的一个思维导图：</p>
-<p><img src="http://iosddimage.qiniudn.com/3_runtime_message_forward.png" alt="runtime_forward"></p>
-<h2 id="参考资料:">参考资料:</h2><p><a href="http://limboy.me/ios/2013/08/03/dynamic-tips-and-tricks-with-objective-c.html" target="_blank" rel="external">http://limboy.me/ios/2013/08/03/dynamic-tips-and-tricks-with-objective-c.html</a><br><a href="http://blog.devtang.com/blog/2013/10/15/objective-c-object-model/" target="_blank" rel="external">http://blog.devtang.com/blog/2013/10/15/objective-c-object-model/</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>简单来说, runtime是一个实现Objective-C语言的C库。对象可以用C语言中的结构体表示,而方法(methods)可以用C函数实现。事实上,他们差不多也是这么干了，另外再加上了一些额外的特性。这些结构体和函数被runtime函数封装后，Objective-C程序员可以在程序运行时创建,检查,修改类,对象和它们的方法。<br>]]>
-    
-    </summary>
-    
-      <category term="runtime" scheme="http://www.liuchendi.com/tags/runtime/"/>
-    
-      <category term="对象模型" scheme="http://www.liuchendi.com/tags/%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/"/>
-    
-      <category term="消息转发" scheme="http://www.liuchendi.com/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/"/>
-    
-      <category term="运行时" scheme="http://www.liuchendi.com/categories/%E8%BF%90%E8%A1%8C%E6%97%B6/"/>
     
   </entry>
   
