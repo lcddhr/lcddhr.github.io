@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2015-12-18T03:22:49.000Z</updated>
+  <updated>2015-12-19T02:50:41.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -13,6 +13,66 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[iOS逆向 - IDA分析Springboard]]></title>
+    <link href="http://www.liuchendi.com/2015/12/19/iOS/22_ida_SpringBoard/"/>
+    <id>http://www.liuchendi.com/2015/12/19/iOS/22_ida_SpringBoard/</id>
+    <published>2015-12-19T02:50:41.000Z</published>
+    <updated>2015-12-19T02:50:41.000Z</updated>
+    <content type="html"><![CDATA[<p>简单了解IDA反编译工具的使用。</p>
+<p>IDA就不介绍了,跨平台的强大反编译调试工具。</p>
+<p>IDA工具下载: <a href="https://www.hex-rays.com/products/ida/support/download_demo.shtml" target="_blank" rel="external">https://www.hex-rays.com/products/ida/support/download_demo.shtml</a></p>
+<p>此次学习目标：</p>
+<ul>
+<li><p>了解IDA的界面、简单操作、查找函数</p>
+</li>
+<li><p>了解程序的流程走向，sub子程序、红色和绿色箭头意义</p>
+</li>
+</ul>
+<a id="more"></a>
+<h2 id="获取SpringBoard的文件">获取SpringBoard的文件</h2><p>在<code>/System/Library/CoreServices/SpringBoard.app/Spring</code>拷贝到电脑中，用IDA打开。</p>
+<h2 id="搜寻关键字”relaunch_SpringBoard”">搜寻关键字”relaunch SpringBoard”</h2><p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/ida_relaunchSpringboard.png" alt="ida_relaunchSpringboard"></p>
+<ul>
+<li>首先调用了<code>beginIgnoringInteractionEvents</code>，忽略所有用户的交互事件</li>
+<li>接着调用<code>hideSpringBoardStatusBar</code>隐藏状态栏。</li>
+<li>执行<code>sub_25C74</code>和<code>sub_24F84</code>子程序</li>
+<li>立即执行relaunch</li>
+</ul>
+<h4 id="sub_25C74">sub_25C74</h4><p>主要是记录一些操作的记录</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/ida_sub25C74.png" alt="ida_sub25C74"></p>
+<h4 id="sub_24F84">sub_24F84</h4><p>记录一些操作的记录</p>
+<p>执行了<code>TerminateAllApps</code>方法，杀死所有正在运行的app进程</p>
+<p>执行一些而外的处理事件</p>
+<p>箭头表示的意义：</p>
+<ul>
+<li><p><code>BNE</code>：Branch if Not Equal to zero 不等于0</p>
+</li>
+<li><p>红色箭头：BNE不成立时候执行</p>
+</li>
+<li><p>蓝色箭头：BNE成立的时候执行<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/ida_sub24f84.png" alt="ida_sub24f84"></p>
+</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>简单了解IDA反编译工具的使用。</p>
+<p>IDA就不介绍了,跨平台的强大反编译调试工具。</p>
+<p>IDA工具下载: <a href="https://www.hex-rays.com/products/ida/support/download_demo.shtml">https://www.hex-rays.com/products/ida/support/download_demo.shtml</a></p>
+<p>此次学习目标：</p>
+<ul>
+<li><p>了解IDA的界面、简单操作、查找函数</p>
+</li>
+<li><p>了解程序的流程走向，sub子程序、红色和绿色箭头意义</p>
+</li>
+</ul>]]>
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/tags/iOS/"/>
+    
+      <category term="iOS逆向" scheme="http://www.liuchendi.com/categories/iOS%E9%80%86%E5%90%91/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[iOS逆向 - 使用Tweak]]></title>
@@ -1372,38 +1432,6 @@ NSLog(@<span class="string">"%@"</span>,[testString lowercaseString]);
       <category term="消息转发" scheme="http://www.liuchendi.com/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/"/>
     
       <category term="运行时" scheme="http://www.liuchendi.com/categories/%E8%BF%90%E8%A1%8C%E6%97%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[那些年我们踩过的坑-NSTimer]]></title>
-    <link href="http://www.liuchendi.com/2014/08/24/iOS/1_NSTimer/"/>
-    <id>http://www.liuchendi.com/2014/08/24/iOS/1_NSTimer/</id>
-    <published>2014-08-24T03:18:56.000Z</published>
-    <updated>2015-11-10T09:45:37.000Z</updated>
-    <content type="html"><![CDATA[<p>昨天下午工作的时候遇见一个这样的需求，网络请求失败后把请求数据保存到本地，并自动重发3次，时间间隔是10秒，如果3次后还失败的话，下一次启动这个接口的时候，把新数据和保存在本地的数据都要发送，刚开始以为没多少难度，不就是网络请求发送数据嘛，首先脑子里的第一反应就是用定时器，初始化定时器，然后触发相应的方法，设置请求的次数标志，超过3次停止定时器。事实却证明我还没有理解定时器……<br><a id="more"></a></p>
-<p>由于是老接口，不能修改，因为产品已经上线，修改会涉及到太多业务，所以只能客户端想办法处理。这样导致的问题就是新数据不能和旧数据一起整合在一起发送，得分两次发送。好吧，那就上吧，我就信心满满的上了。</p>
-<p>初始化定时器，遍历本地的数据，分别对应创建一个定时器使用下面的方法，加载到定时器数组<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(id)userInfo repeats:(BOOL)yesOrNo;</span><br></pre></td></tr></table></figure></p>
-<p>然后fire执行。OK,搞定。</p>
-<p>bi..bi…bi…bi….bi…..bi……</p>
-<p>擦，定时器全乱了，10s内定时器没啥问题，10s后所以定时器都交替进行。。。这不是坑爹么。。。。</p>
-<p>吸了口气，喝了一杯水，扫了一眼定时器的代码，灵光一闪，会不会是fire用错了，初始化的时候不要立即执行，等初始化完毕的时候在从数组里面拿出定时器，请求成功或者失败三次后再拿出第二个定时器请求。哈哈哈哈哈哈，应该不会错了，就这么办。</p>
-<p>bi….bi…..bi…..bi….bi……..</p>
-<p>我了个去，稍微好一点了，20秒内的数据是正常的，后面的定时器又交替进行。。。。泥煤呀，甘都得。。。不过已经有进步了，至少20秒是正确的吧，再改改代码应该就可以了，所以立马想一下定时器的执行流程，后来发现会不会是多个定时器和一个定时器的运行是有区别的？因为自己之前基本上都是创建一个定时器就可以了，fire、invalidate使用。没办法,上SOF看看吧。后来才知道原来这两个方法初始化的定时器即使不用fire也会对应的NSTimeInterval后执行,fire只是让他们立即执行，把启动的时间提前到当前，就像一个演唱会本来打算10分钟后开始的，现在因为主唱提前10分钟到了会场，看见粉丝这么热情，提前开始了。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+ (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo;</span><br><span class="line">+ (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(id)userInfo repeats:(BOOL)yesOrNo;</span><br></pre></td></tr></table></figure></p>
-<p>可是问题又来了，那既然这样没办法控制定时器的执行，我这个功能岂不是没法做了，有没有什么办法可以控制定时器么，想执行的时候就执行，不想执行的时候就丢掉它。。。。</p>
-<p>查找资料的过程中还发现了几个初始化定时器的方法：两个类方法，一个实例方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo;</span><br><span class="line">+ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(id)userInfo repeats:(BOOL)yesOrNo;</span><br><span class="line">- (id)initWithFireDate:(NSDate *)date interval:(NSTimeInterval)ti target:(id)t selector:(SEL)s userInfo:(id)ui repeats:(BOOL)rep;</span><br></pre></td></tr></table></figure></p>
-<p>这和上面的初始化方法有什么区别么，接着发现这两个类方法和实例方法是要手动添加到NSRunLoop代码执行的：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[NSRunLoop currentRunLoop]addTimer:timer <span class="keyword">for</span>Mode:NSDefaultRunLoopMode];</span><br></pre></td></tr></table></figure>
-<p>哈哈哈，这不就是我想要的东东嘛(ˇˍˇ），yo yo check now!</p>
-<p>修改定时器的方法，手动添加NSRunLoop执行，然后网络请求不变。。。。OK,搞定。。</p>
-<p>bi..bi…..bi….bi……</p>
-<p>无压力了。。。。测试一个for循环1000次,没发生什么错误。。。</p>
-<p>好吧，来个总结。一直都习惯用最上面的两个方法初始化定时器，然后fire，并且fire的作用只是把定时器的时间提前了，这个是之前使用的时候没有去考虑的。。这种东东在一个定时器下面不会有什么问题，但是多个定时器的话基本上就悲剧。。不过在同一个地方使用多个定时器这样的设计方法我暂时也不知道合理不合理，可能也会有意想不到的的错误，比如内存暴涨，性能受影响之类的，这个暂时没有去考虑，如果你有更好的解决方法，可以交流交流。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>昨天下午工作的时候遇见一个这样的需求，网络请求失败后把请求数据保存到本地，并自动重发3次，时间间隔是10秒，如果3次后还失败的话，下一次启动这个接口的时候，把新数据和保存在本地的数据都要发送，刚开始以为没多少难度，不就是网络请求发送数据嘛，首先脑子里的第一反应就是用定时器，初始化定时器，然后触发相应的方法，设置请求的次数标志，超过3次停止定时器。事实却证明我还没有理解定时器……<br>]]>
-    
-    </summary>
     
   </entry>
   

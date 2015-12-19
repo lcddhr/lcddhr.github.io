@@ -3,17 +3,42 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: iOS | 小木头</title>
+  <title>iOS逆向 - IDA分析Springboard | 小木头</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="hexo搭建的博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="小木头">
-<meta property="og:url" content="http://www.liuchendi.com/tags/iOS/index.html">
+  <meta name="description" content="简单了解IDA反编译工具的使用。
+IDA就不介绍了,跨平台的强大反编译调试工具。
+IDA工具下载: https://www.hex-rays.com/products/ida/support/download_demo.shtml
+此次学习目标：
+
+了解IDA的界面、简单操作、查找函数
+
+了解程序的流程走向，sub子程序、红色和绿色箭头意义">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS逆向 - IDA分析Springboard">
+<meta property="og:url" content="http://www.liuchendi.com/2015/12/19/iOS/22_ida_SpringBoard/index.html">
 <meta property="og:site_name" content="小木头">
-<meta property="og:description" content="hexo搭建的博客">
+<meta property="og:description" content="简单了解IDA反编译工具的使用。
+IDA就不介绍了,跨平台的强大反编译调试工具。
+IDA工具下载: https://www.hex-rays.com/products/ida/support/download_demo.shtml
+此次学习目标：
+
+了解IDA的界面、简单操作、查找函数
+
+了解程序的流程走向，sub子程序、红色和绿色箭头意义">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/ida_relaunchSpringboard.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/ida_sub25C74.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/ida_sub24f84.png">
+<meta property="og:updated_time" content="2015-12-19T02:50:41.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="小木头">
-<meta name="twitter:description" content="hexo搭建的博客">
+<meta name="twitter:title" content="iOS逆向 - IDA分析Springboard">
+<meta name="twitter:description" content="简单了解IDA反编译工具的使用。
+IDA就不介绍了,跨平台的强大反编译调试工具。
+IDA工具下载: https://www.hex-rays.com/products/ida/support/download_demo.shtml
+此次学习目标：
+
+了解IDA的界面、简单操作、查找函数
+
+了解程序的流程走向，sub子程序、红色和绿色箭头意义">
   
     <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
   
@@ -185,197 +210,139 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-iOS/22_ida_SpringBoard" class="article article-type-post" itemscope itemprop="blogPost">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/12/19/iOS/22_ida_SpringBoard/" class="archive-article-date">
-  	<time datetime="2015-12-19T02:50:41.000Z" itemprop="datePublished">12月 19</time>
+    <div class="article-meta">
+      <a href="/2015/12/19/iOS/22_ida_SpringBoard/" class="article-date">
+  	<time datetime="2015-12-19T02:50:41.000Z" itemprop="datePublished">2015-12-19</time>
 </a>
-        </div>
-    	 
+    </div>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/19/iOS/22_ida_SpringBoard/">iOS逆向 - IDA分析Springboard</a>
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS逆向 - IDA分析Springboard
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+      </header>
+      
+      <div class="article-info article-info-post">
+        
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
 	</div>
 
-          
+        
 	<div class="article-category tagcloud">
 	<a class="article-category-link" href="/categories/iOS逆向/">iOS逆向</a>
 	</div>
 
 
-        </div>
         <div class="clearfix"></div>
-    </header>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>简单了解IDA反编译工具的使用。</p>
+<p>IDA就不介绍了,跨平台的强大反编译调试工具。</p>
+<p>IDA工具下载: <a href="https://www.hex-rays.com/products/ida/support/download_demo.shtml" target="_blank" rel="external">https://www.hex-rays.com/products/ida/support/download_demo.shtml</a></p>
+<p>此次学习目标：</p>
+<ul>
+<li><p>了解IDA的界面、简单操作、查找函数</p>
+</li>
+<li><p>了解程序的流程走向，sub子程序、红色和绿色箭头意义</p>
+</li>
+</ul>
+<a id="more"></a>
+<h2 id="获取SpringBoard的文件">获取SpringBoard的文件</h2><p>在<code>/System/Library/CoreServices/SpringBoard.app/Spring</code>拷贝到电脑中，用IDA打开。</p>
+<h2 id="搜寻关键字”relaunch_SpringBoard”">搜寻关键字”relaunch SpringBoard”</h2><p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/ida_relaunchSpringboard.png" alt="ida_relaunchSpringboard"></p>
+<ul>
+<li>首先调用了<code>beginIgnoringInteractionEvents</code>，忽略所有用户的交互事件</li>
+<li>接着调用<code>hideSpringBoardStatusBar</code>隐藏状态栏。</li>
+<li>执行<code>sub_25C74</code>和<code>sub_24F84</code>子程序</li>
+<li>立即执行relaunch</li>
+</ul>
+<h4 id="sub_25C74">sub_25C74</h4><p>主要是记录一些操作的记录</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/ida_sub25C74.png" alt="ida_sub25C74"></p>
+<h4 id="sub_24F84">sub_24F84</h4><p>记录一些操作的记录</p>
+<p>执行了<code>TerminateAllApps</code>方法，杀死所有正在运行的app进程</p>
+<p>执行一些而外的处理事件</p>
+<p>箭头表示的意义：</p>
+<ul>
+<li><p><code>BNE</code>：Branch if Not Equal to zero 不等于0</p>
+</li>
+<li><p>红色箭头：BNE不成立时候执行</p>
+</li>
+<li><p>蓝色箭头：BNE成立的时候执行<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/ida_sub24f84.png" alt="ida_sub24f84"></p>
+</li>
+</ul>
+
+      
+    </div>
+    
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/12/18/iOS/21_Tweak/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS逆向 - 使用Tweak</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/12/18/iOS/21_Tweak/" class="archive-article-date">
-  	<time datetime="2015-12-18T03:22:49.000Z" itemprop="datePublished">12月 18</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/18/iOS/21_Tweak/">iOS逆向 - 使用Tweak</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/iOS逆向/">iOS逆向</a>
-	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/12/17/iOS/20_Reveal/" class="archive-article-date">
-  	<time datetime="2015-12-17T09:17:29.000Z" itemprop="datePublished">12月 17</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/17/iOS/20_Reveal/">iOS逆向 - 用Revel查看别人的App</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/iOS/">iOS</a>
-	</div>
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS/22_ida_SpringBoard" data-title="iOS逆向 - IDA分析Springboard" data-url="http://www.liuchendi.com/2015/12/19/iOS/22_ida_SpringBoard/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"liuchendi"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/12/14/iOS/18_逆向工程笔记/" class="archive-article-date">
-  	<time datetime="2015-12-14T06:14:38.000Z" itemprop="datePublished">12月 14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/14/iOS/18_逆向工程笔记/">《iOS应用逆向工程》笔记1</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/iOS/">iOS</a>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/12/14/iOS/19_chisel/" class="archive-article-date">
-  	<time datetime="2015-12-14T06:07:16.000Z" itemprop="datePublished">12月 14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/14/iOS/19_chisel/">初探LLDB插件工具-Chisel</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/iOS/">iOS</a>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 </div>
       <footer id="footer">
@@ -406,9 +373,9 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: true
 	}
