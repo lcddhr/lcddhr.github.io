@@ -58,8 +58,8 @@
     <title><![CDATA[iOS逆向 - IDA分析Springboard]]></title>
     <link href="http://www.liuchendi.com/2015/12/19/iOS/22_ida_SpringBoard/"/>
     <id>http://www.liuchendi.com/2015/12/19/iOS/22_ida_SpringBoard/</id>
-    <published>2015-12-19T02:50:36.000Z</published>
-    <updated>2015-12-19T02:50:36.000Z</updated>
+    <published>2015-12-19T02:50:41.000Z</published>
+    <updated>2015-12-19T02:50:41.000Z</updated>
     <content type="html"><![CDATA[<p>简单了解IDA反编译工具的使用。</p>
 <p>IDA就不介绍了,跨平台的强大反编译调试工具。</p>
 <p>IDA工具下载: <a href="https://www.hex-rays.com/products/ida/support/download_demo.shtml" target="_blank" rel="external">https://www.hex-rays.com/products/ida/support/download_demo.shtml</a></p>
