@@ -5,28 +5,19 @@
   
   <title>初探LLDB插件工具-Chisel | 小木头</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="简介LLDB在Xcode 5发布后就取代了GDB,是一个Xcode默认的调试器。与LLVM编译器一起，提供流程控制和数据检测和调试的功能。这里有个简单的介绍
-chisel是一个开源工具，是LLDB的增强版，提供了许多内置的命令。
-chisel安装用brew安装，如果没有，请先安装brew.
-12brew updatebrew install chisel
-在~/.lldbinit文件内添加pyth">
+  <meta name="description" content="LLDB在Xcode 5发布后就取代了GDB,是一个Xcode默认的调试器。与LLVM编译器一起，提供流程控制和数据检测和调试的功能。这里有个简单的介绍
+chisel是一个开源工具，是LLDB的增强版，提供了许多内置的命令。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="初探LLDB插件工具-Chisel">
-<meta property="og:url" content="http://www.liuchendi.com/2015/12/14/iOS/19_chisel/index.html">
+<meta property="og:url" content="http://www.liuchendi.com/2015/12/23/iOS/19_chisel/index.html">
 <meta property="og:site_name" content="小木头">
-<meta property="og:description" content="简介LLDB在Xcode 5发布后就取代了GDB,是一个Xcode默认的调试器。与LLVM编译器一起，提供流程控制和数据检测和调试的功能。这里有个简单的介绍
-chisel是一个开源工具，是LLDB的增强版，提供了许多内置的命令。
-chisel安装用brew安装，如果没有，请先安装brew.
-12brew updatebrew install chisel
-在~/.lldbinit文件内添加pyth">
-<meta property="og:updated_time" content="2015-12-14T06:07:16.000Z">
+<meta property="og:description" content="LLDB在Xcode 5发布后就取代了GDB,是一个Xcode默认的调试器。与LLVM编译器一起，提供流程控制和数据检测和调试的功能。这里有个简单的介绍
+chisel是一个开源工具，是LLDB的增强版，提供了许多内置的命令。">
+<meta property="og:updated_time" content="2015-12-23T08:20:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初探LLDB插件工具-Chisel">
-<meta name="twitter:description" content="简介LLDB在Xcode 5发布后就取代了GDB,是一个Xcode默认的调试器。与LLVM编译器一起，提供流程控制和数据检测和调试的功能。这里有个简单的介绍
-chisel是一个开源工具，是LLDB的增强版，提供了许多内置的命令。
-chisel安装用brew安装，如果没有，请先安装brew.
-12brew updatebrew install chisel
-在~/.lldbinit文件内添加pyth">
+<meta name="twitter:description" content="LLDB在Xcode 5发布后就取代了GDB,是一个Xcode默认的调试器。与LLVM编译器一起，提供流程控制和数据检测和调试的功能。这里有个简单的介绍
+chisel是一个开源工具，是LLDB的增强版，提供了许多内置的命令。">
   
     <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
   
@@ -201,8 +192,8 @@ chisel安装用brew安装，如果没有，请先安装brew.
       <div class="body-wrap"><article id="post-iOS/19_chisel" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/12/14/iOS/19_chisel/" class="article-date">
-  	<time datetime="2015-12-14T06:07:16.000Z" itemprop="datePublished">2015-12-14</time>
+      <a href="/2015/12/23/iOS/19_chisel/" class="article-date">
+  	<time datetime="2015-12-23T08:20:27.000Z" itemprop="datePublished">2015-12-23</time>
 </a>
     </div>
   
@@ -239,8 +230,8 @@ chisel安装用brew安装，如果没有，请先安装brew.
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="简介">简介</h2><p><code>LLDB</code>在Xcode 5发布后就取代了<code>GDB</code>,是一个Xcode默认的调试器。与LLVM编译器一起，提供流程控制和数据检测和调试的功能。<a href="http://www.cocoachina.com/ios/20150126/11021.html" target="_blank" rel="external">这里</a>有个简单的介绍</p>
-<p><a href="https://github.com/facebook/chisel" target="_blank" rel="external">chisel</a>是一个开源工具，是LLDB的增强版，提供了许多内置的命令。</p>
+        <p><code>LLDB</code>在Xcode 5发布后就取代了<code>GDB</code>,是一个Xcode默认的调试器。与LLVM编译器一起，提供流程控制和数据检测和调试的功能。<a href="http://www.cocoachina.com/ios/20150126/11021.html" target="_blank" rel="external">这里</a>有个简单的介绍</p>
+<p><a href="https://github.com/facebook/chisel" target="_blank" rel="external">chisel</a>是一个开源工具，是LLDB的增强版，提供了许多内置的命令。<br><a id="more"></a></p>
 <h2 id="chisel安装">chisel安装</h2><p>用<code>brew</code>安装，如果没有，请先安装brew.</p>
 <figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>update</span><br><span class="line"><span class="keyword">brew </span>install chisel</span><br></pre></td></tr></table></figure>
 <p>在<code>~/.lldbinit</code>文件内添加python路径</p>
@@ -271,18 +262,18 @@ chisel安装用brew安装，如果没有，请先安装brew.
     
 <nav id="article-nav">
   
-    <a href="/2015/12/14/iOS/18_逆向工程笔记/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/12/23/iOS/24_dumpdecrypted/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          《iOS应用逆向工程》笔记1
+          iOS逆向 - dumpdecrypted工具砸壳
         
       </div>
     </a>
   
   
-    <a href="/2015/12/05/iOS/16_SDWebImage_opence/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">SDWebImage源码学习</div>
+    <a href="/2015/12/19/iOS/23_Cycrip/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS逆向 - Cycript基本用法</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -311,7 +302,7 @@ chisel安装用brew安装，如果没有，请先安装brew.
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="iOS/19_chisel" data-title="初探LLDB插件工具-Chisel" data-url="http://www.liuchendi.com/2015/12/14/iOS/19_chisel/"></div>
+	<div class="ds-thread" data-thread-key="iOS/19_chisel" data-title="初探LLDB插件工具-Chisel" data-url="http://www.liuchendi.com/2015/12/23/iOS/19_chisel/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

@@ -187,6 +187,132 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-iOS/24_dumpdecrypted" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/23/iOS/24_dumpdecrypted/" class="article-date">
+  	<time datetime="2015-12-23T08:28:05.000Z" itemprop="datePublished">2015-12-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/23/iOS/24_dumpdecrypted/">iOS逆向 - dumpdecrypted工具砸壳</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Appstore下载的App是苹果加密过的, 可执行文件套上了一层保护壳. <code>class-dump</code> 无法作用于加密过的App。所以，要想获取头文件，首先得破解加密的可执行文件，俗称”砸壳”.</p>
+<p><a href="https://github.com/stefanesser/dumpdecrypted">dumpdecrypted</a>就是砸壳工具，需要自行编译。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS逆向/">iOS逆向</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/23/iOS/24_dumpdecrypted/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-iOS/19_chisel" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/23/iOS/19_chisel/" class="article-date">
+  	<time datetime="2015-12-23T08:20:27.000Z" itemprop="datePublished">2015-12-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/23/iOS/19_chisel/">初探LLDB插件工具-Chisel</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><code>LLDB</code>在Xcode 5发布后就取代了<code>GDB</code>,是一个Xcode默认的调试器。与LLVM编译器一起，提供流程控制和数据检测和调试的功能。<a href="http://www.cocoachina.com/ios/20150126/11021.html">这里</a>有个简单的介绍</p>
+<p><a href="https://github.com/facebook/chisel">chisel</a>是一个开源工具，是LLDB的增强版，提供了许多内置的命令。<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS/">iOS</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/23/iOS/19_chisel/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-iOS/23_Cycrip" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -547,87 +673,6 @@
 
 
   
-    <article id="post-iOS/19_chisel" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/14/iOS/19_chisel/" class="article-date">
-  	<time datetime="2015-12-14T06:07:16.000Z" itemprop="datePublished">2015-12-14</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/14/iOS/19_chisel/">初探LLDB插件工具-Chisel</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="简介">简介</h2><p><code>LLDB</code>在Xcode 5发布后就取代了<code>GDB</code>,是一个Xcode默认的调试器。与LLVM编译器一起，提供流程控制和数据检测和调试的功能。<a href="http://www.cocoachina.com/ios/20150126/11021.html" target="_blank" rel="external">这里</a>有个简单的介绍</p>
-<p><a href="https://github.com/facebook/chisel" target="_blank" rel="external">chisel</a>是一个开源工具，是LLDB的增强版，提供了许多内置的命令。</p>
-<h2 id="chisel安装">chisel安装</h2><p>用<code>brew</code>安装，如果没有，请先安装brew.</p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>update</span><br><span class="line"><span class="keyword">brew </span>install chisel</span><br></pre></td></tr></table></figure>
-<p>在<code>~/.lldbinit</code>文件内添加python路径</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">command</span> script import /path/<span class="keyword">to</span>/fblldb.<span class="keyword">py</span></span><br></pre></td></tr></table></figure>
-<h2 id="命令介绍">命令介绍</h2><h4 id="pviews">pviews</h4><p>递归打印所有的view,清楚的显示层级，跟lldb里面<code>[view recursiveDescription]</code>一样。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(lldb) pviews</span><br><span class="line">&lt;UIWindow: <span class="number">0x7f90f1dd9ee0</span>; frame = (<span class="number">0</span> <span class="number">0</span>; <span class="number">414</span> <span class="number">736</span>); autoresize = W+H; gestureRecognizers = &lt;NSArray: <span class="number">0x7f90f1ddaf10</span>&gt;; layer = &lt;UIWindowLayer: <span class="number">0x7f90f1dd64f0</span>&gt;&gt;</span><br><span class="line">   | &lt;UIView: <span class="number">0x7f90f1c102d0</span>; frame = (<span class="number">0</span> <span class="number">0</span>; <span class="number">414</span> <span class="number">736</span>); autoresize = W+H; layer = &lt;CALayer: <span class="number">0x7f90f1c11c90</span>&gt;&gt;</span><br><span class="line">   |    | &lt;DDView: <span class="number">0x7f90f1dda1e0</span>; frame = (<span class="number">102</span> <span class="number">156</span>; <span class="number">240</span> <span class="number">128</span>); autoresize = RM+BM; layer = &lt;CALayer: <span class="number">0x7f90f1ddb2a0</span>&gt;&gt;</span><br><span class="line">   |    | &lt;UIView: <span class="number">0x7f90f1d247b0</span>; frame = (<span class="number">102</span> <span class="number">346</span>; <span class="number">240</span> <span class="number">128</span>); autoresize = RM+BM; layer = &lt;CALayer: <span class="number">0x7f90f1dd6440</span>&gt;&gt;</span><br><span class="line">   |    | &lt;_UILayoutGuide: <span class="number">0x7f90f1ddb940</span>; frame = (<span class="number">0</span> <span class="number">0</span>; <span class="number">0</span> <span class="number">20</span>); hidden = YES; layer = &lt;CALayer: <span class="number">0x7f90f1dd5120</span>&gt;&gt;</span><br><span class="line">   |    | &lt;_UILayoutGuide: <span class="number">0x7f90f1ddc050</span>; frame = (<span class="number">0</span> <span class="number">736</span>; <span class="number">0</span> <span class="number">0</span>); hidden = YES; layer = &lt;CALayer: <span class="number">0x7f90f1ddb6c0</span>&gt;&gt;</span><br></pre></td></tr></table></figure>
-<h4 id="pvc">pvc</h4><p>递归打印控制器，跟lldb里面<code>[UIViewController _printHierarchy]</code>效果一样</p>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(lldb) pvc</span><br><span class="line"><span class="variable">&lt;UINavigationController 0x7fdba3039600&gt;</span>, <span class="keyword">state</span>: appeared, view: <span class="variable">&lt;UILayoutContainerView 0x7fdba2d6b390&gt;</span></span><br><span class="line">   | <span class="variable">&lt;ViewController 0x7fdba2d5f690&gt;</span>, <span class="keyword">state</span>: appeared, view: <span class="variable">&lt;UIView 0x7fdba2d5d8f0&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="visualize">visualize</h4><p>显示预览视图 （<strong> 这个命令需要找到视图的地址 </strong>） </p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">visualize</span> + 地址</span><br></pre></td></tr></table></figure>
-<h4 id="fv_/_fvc">fv / fvc</h4><p>查找视图或者控制器在内存中的地址</p>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="list">(<span class="keyword">lldb</span>)</span> fv UIImageView</span><br><span class="line"><span class="number">0</span>x7fdba2d6af90 UIImageView</span><br><span class="line"><span class="number">0</span>x7fdba2e24930 UIImageView</span><br><span class="line"><span class="list">(<span class="keyword">lldb</span>)</span> fv ViewController</span><br><span class="line"><span class="number">0</span>x7fdba2e41e50 UIViewControllerWrapperView</span><br><span class="line"><span class="list">(<span class="keyword">lldb</span>)</span> fvc ViewController</span><br><span class="line"><span class="number">0</span>x7fdba2d5f690 ViewController</span><br></pre></td></tr></table></figure>
-<h4 id="show_/_hide">show / hide</h4><p>显示和隐藏视图</p>
-<h4 id="mask/unmask">mask/unmask</h4><p>添加和取消一个遮罩</p>
-<h4 id="border/unborder">border/unborder</h4><p>添加和取消一个边框</p>
-<h4 id="caflush">caflush</h4><p>重新渲染界面,找到界面的内存地址，然后获得变量</p>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(lldb) p <span class="number">0x7fdba2d407d0</span></span><br><span class="line">(long) <span class="variable">$320</span> = <span class="number">140581306370000</span></span><br><span class="line">(lldb) e (void)[<span class="variable">$320</span> setBackgroundColor:[UIColor redColor]]</span><br><span class="line">(lldb) caflush</span><br></pre></td></tr></table></figure>
-<h4 id="bmessage">bmessage</h4><p>可以打断点。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(lldb) bmessage -[ViewController viewDidAppear:]</span><br><span class="line">Setting <span class="tag">a</span> breakpoint at -[ViewController viewDidAppear:] with condition (void*)<span class="function"><span class="title">object_getClass</span><span class="params">((id)</span></span><span class="variable">$rdi</span>) == <span class="number">0</span>x0000000104cbbd50</span><br><span class="line">Breakpoint <span class="number">2</span>: where = ChiselDemo`-[ViewController viewDidAppear:] at ViewController<span class="class">.m</span>:<span class="number">22</span>, <span class="tag">address</span> = <span class="number">0</span>x0000000104cb9860</span><br></pre></td></tr></table></figure>
-<h2 id="参考">参考</h2><p><a href="https://github.com/facebook/chisel" target="_blank" rel="external">chisel官网</a></p>
-<p><a href="http://blog.cnbluebox.com/blog/2015/03/05/chisel/" target="_blank" rel="external">Chisel-LLDB命令插件，让调试更Easy</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/iOS/">iOS</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
     <article id="post-iOS/16_SDWebImage_opence" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -798,68 +843,6 @@
       
         <p class="article-more-link">
           <a  href="/2015/12/03/iOS/14_object_memory_topic/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-iOS/13_cocospodLib" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/10/iOS/13_cocospodLib/" class="article-date">
-  	<time datetime="2015-11-10T11:59:25.000Z" itemprop="datePublished">2015-11-10</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/10/iOS/13_cocospodLib/">制作cocospod库的过程总结</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>制作cocospod库需要注意的地方<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cocospod/">cocospod</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/iOS/">iOS</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/10/iOS/13_cocospodLib/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
