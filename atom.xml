@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2015-12-27T15:53:19.000Z</updated>
+  <updated>2015-12-27T15:57:30.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -18,11 +18,12 @@
     <title><![CDATA[iOS架构学习 - VIP总结]]></title>
     <link href="http://www.liuchendi.com/2015/12/27/iOS/25_iOS%E6%9E%B6%E6%9E%84/"/>
     <id>http://www.liuchendi.com/2015/12/27/iOS/25_iOS架构/</id>
-    <published>2015-12-27T15:53:19.000Z</published>
-    <updated>2015-12-27T15:53:19.000Z</updated>
+    <published>2015-12-27T15:57:30.000Z</published>
+    <updated>2015-12-27T15:57:30.000Z</updated>
     <content type="html"><![CDATA[<p>感谢<a href="http://weibo.com/u/1438670852?topnav=1&amp;wvr=6&amp;topsug=1&amp;is_all=1" target="_blank" rel="external">@叶孤城</a>在近一段时间组织的斗鱼直播讲解代码的活动,一些开发技巧和工具让我受益匪浅，再次感谢。</p>
 <p>昨天是由36氪的iOS Team Leader<a href="http://weibo.com/u/1840543654?from=myfollow_all&amp;is_all=1" target="_blank" rel="external">@罗琦aidenluo</a>讲解项目的架构, 有种茅塞顿开的感觉。</p>
 <p>所以就在这里总结一下学习到的知识点。</p>
+<p>项目地址是：<a href="https://github.com/aidenluo177/GitHubber" target="_blank" rel="external">https://github.com/aidenluo177/GitHubber</a></p>
 <a id="more"></a>
 <h2 id="1、架构比较">1、架构比较</h2><p>一直以来自己都是遵循<code>MVC</code>模式，这个应该是苹果首推的开发架构，按照这个模式开发APP实现功能问题不大，但是存在的问题也非常明显，后期项目比较大了的话，Controller会便得越来越臃肿。不利于需求的改动和维护、后面入职的小伙伴也会经常看得一头雾水。</p>
 <p>后来出现了<code>MVVM</code>、<code>VIPER</code>. 具体是什么就不介绍了，可以谷歌一下。</p>
@@ -51,7 +52,8 @@
     <summary type="html">
     <![CDATA[<p>感谢<a href="http://weibo.com/u/1438670852?topnav=1&amp;wvr=6&amp;topsug=1&amp;is_all=1">@叶孤城</a>在近一段时间组织的斗鱼直播讲解代码的活动,一些开发技巧和工具让我受益匪浅，再次感谢。</p>
 <p>昨天是由36氪的iOS Team Leader<a href="http://weibo.com/u/1840543654?from=myfollow_all&amp;is_all=1">@罗琦aidenluo</a>讲解项目的架构, 有种茅塞顿开的感觉。</p>
-<p>所以就在这里总结一下学习到的知识点。</p>]]>
+<p>所以就在这里总结一下学习到的知识点。</p>
+<p>项目地址是：<a href="https://github.com/aidenluo177/GitHubber">https://github.com/aidenluo177/GitHubber</a></p>]]>
     
     </summary>
     
