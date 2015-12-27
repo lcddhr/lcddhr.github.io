@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2015-12-23T08:28:04.000Z</updated>
+  <updated>2015-12-27T15:47:40.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -13,6 +13,53 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[iOS架构学习 - VIP总结]]></title>
+    <link href="http://www.liuchendi.com/2015/12/27/iOS/25_iOS%E6%9E%B6%E6%9E%84/"/>
+    <id>http://www.liuchendi.com/2015/12/27/iOS/25_iOS架构/</id>
+    <published>2015-12-27T15:47:40.000Z</published>
+    <updated>2015-12-27T15:47:40.000Z</updated>
+    <content type="html"><![CDATA[<p>感谢<a href="http://weibo.com/u/1438670852?topnav=1&amp;wvr=6&amp;topsug=1&amp;is_all=1" target="_blank" rel="external">@叶孤城</a>在近一段时间组织的斗鱼直播讲解代码的活动,一些开发技巧和工具让我受益匪浅，再次感谢。</p>
+<p>昨天是由36氪的iOS Team Leader<a href="http://weibo.com/u/1840543654?from=myfollow_all&amp;is_all=1" target="_blank" rel="external">@罗琦aidenluo</a>讲解项目的架构, 有种茅塞顿开的感觉。</p>
+<p>所以就在这里总结一下学习到的知识点。</p>
+<a id="more"></a>
+<h2 id="1、架构比较">1、架构比较</h2><p>一直以来自己都是遵循<code>MVC</code>模式，这个应该是苹果首推的开发架构，按照这个模式开发APP实现功能问题不大，但是存在的问题也非常明显，后期项目比较大了的话，Controller会便得越来越臃肿。不利于需求的改动和维护、后面入职的小伙伴也会经常看得一头雾水。</p>
+<p>后来出现了<code>MVVM</code>、<code>VIPER</code>. 具体是什么就不介绍了，可以谷歌一下。</p>
+<p>MVVM一般都会结合RAC来使用，之前了解过RAC，函数式编程的思想在某些地方用的是很方便、比如监听一些事件。 用RAC可以很快写出紧凑的代码，而且封装的很好，思路也很清晰。但是RAC的学习成本在我看来应该是最大的，看到一些开源的项目，一般都是部分功能用RAC去实现，<a href="https://github.com/leichunfeng/MVVMReactiveCocoa" target="_blank" rel="external">这里</a>有个纯RAC的项目，不过是个人作品。团队开发如果要每个人都熟悉RAC，估计成本太高。</p>
+<p><a href="http://objccn.io/issue-13-5/" target="_blank" rel="external">VIPER</a>还没有真正在项目中使用过，看了这介绍的DEMO,分层有点多，有种过度设计的感觉。</p>
+<h2 id="2、视频里的VIP架构">2、视频里的VIP架构</h2><p>VIP就是<code>ViewController</code>、<code>Interaction</code>、<code>Present</code>,看一下下面这张图</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/iOS-vip.png" alt="iOS-vip"></p>
+<p>首先数据的流向是单向的、职责都狠明确，<code>Interaction</code>做了一些<code>Controller</code>的逻辑操作、<code>Presnet</code>主要做一些转换的工作，例如一些数据的处理显示，因为很多时候数据拉取回来，并不能马上使用，通常需要而外转换一层，最后再把处理完成的数据丢会给<code>Controller</code>做显示的工作。</p>
+<p>之前写代码很多时候数据都需要双向交互，这样的确有不确定性，开发久了有可能就忘了约定好的数据交互方式，不知不觉按照自己的逻辑开发，但是这个单向的数据流可以避免这个问题，因为有且只有一个方法，每个模块有输入和输出。</p>
+<p>视频中作者把这个输入和输出的接口定义成一个协议(也就是接口),很清楚指明了数据的流向，每个协议要做的事情，</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">TrendingViewControllerToInteractorPipline</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">   <span class="func"><span class="keyword">func</span> <span class="title">refreshData</span><span class="params">(request: TrendingDataRequest)</span></span></span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">TrendingInteractorToPresenterPipline</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">   <span class="func"><span class="keyword">func</span> <span class="title">presentData</span><span class="params">(response: TrendingDataResponse)</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">TrendingPresenterToViewControllerPipline</span>: <span class="title">class</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">   <span class="func"><span class="keyword">func</span> <span class="title">displayData</span><span class="params">(viewModel: TrendingDataViewModel)</span></span></span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每个模块里面用了<code>typealias</code>关键字重新命名了协议，为了区分不同的模块的协议方法，增加了可读性。</p>
+<p>比如在ViewController里面：</p>
+<figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typealias</span> TrendingViewControllerInput = TrendingPresenterToViewControllerPipline</span><br><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> TrendingViewControllerOutput = TrendingViewControllerToInteractorPipline</span><br></pre></td></tr></table></figure>
+<p>输入流只接受present的数据,方便present做好数据的转换之后，执行视图的渲染显示操作。</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">	extension TrendingViewController: TrendingViewControllerInput &#123;</span><br><span class="line">    </span><br><span class="line">    func displayData(viewModel: TrendingDataViewModel) &#123;</span><br><span class="line">        data.removeAll()</span><br><span class="line">        viewModel.list.forEach &#123; data.append(<span class="variable">$0</span>) &#125;</span><br><span class="line">        refreshControl?.endRefreshing()</span><br><span class="line">        tableView.reloadData()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每个Controller里面都有初始化各个模块的工作,把<code>interactor</code>和<code>presnet</code>组织起来了</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="func"><span class="keyword">func</span> <span class="title">setupVIP</span><span class="params">()</span></span> &#123;</span><br><span class="line">       <span class="keyword">let</span> interactor = <span class="type">TrendingInteractor</span>()</span><br><span class="line">       <span class="keyword">let</span> presenter = <span class="type">TrendingPresenter</span>()</span><br><span class="line">       output = interactor</span><br><span class="line">       interactor.output = presenter</span><br><span class="line">       presenter.output = <span class="keyword">self</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>再来看看<code>Interactor</code>的工作,这里有一个请求的worker，做数据的刷新处理工作，至于怎么去请求可以不用知道，只管结果。然后把拉取回来的数据传递给<code>presnet</code></p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">	extension TrendingInteract<span class="subst">or</span>: TrendingInteractorInput &#123;</span><br><span class="line">    </span><br><span class="line">    func refreshData(request: TrendingDataRequest) &#123;</span><br><span class="line">        worker<span class="built_in">.</span>fetchTrendingData(&#123; (<span class="built_in">data</span>) <span class="subst">-&gt; </span><span class="literal">Void</span> <span class="keyword">in</span></span><br><span class="line">            <span class="built_in">self</span><span class="built_in">.</span>output<span class="built_in">.</span>presentData(<span class="built_in">data</span>)</span><br><span class="line">            &#125;) &#123; (err<span class="subst">or</span>) <span class="subst">-&gt; </span><span class="literal">Void</span> <span class="keyword">in</span></span><br><span class="line">                <span class="comment">// handle error</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Presnet</code>做了数据的转换工作、生成了viewModel丢回给Controller</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">	extension TrendingPresenter: TrendingPresenterInput &#123;</span><br><span class="line">    </span><br><span class="line">    func presentData(response: TrendingDataResponse) &#123;</span><br><span class="line">        //Transform etc...</span><br><span class="line">        let viewModel = TrendingDataViewModel(list: response.list.map &#123;</span><br><span class="line">            var cellModel = TrendingDataViewCellModel()</span><br><span class="line">            cellModel.cellText = <span class="variable">$0</span>.name</span><br><span class="line">            cellModel.cellLink = <span class="variable">$0</span>.link</span><br><span class="line">            return cellModel</span><br><span class="line">            &#125;)</span><br><span class="line">        output.displayData(viewModel)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面看出这简单的操作数据流向非常明确，模块与模块之间只有输入和输出，职责也非常明确，职责明确地好处就是调试方便、找问题可以集中到出问题的部分查找、节省时间。</p>
+<p>至于单元测试，还不太清楚、之前写代码也没怎么写过单元测试，这块知识还是空白状态。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>感谢<a href="http://weibo.com/u/1438670852?topnav=1&amp;wvr=6&amp;topsug=1&amp;is_all=1">@叶孤城</a>在近一段时间组织的斗鱼直播讲解代码的活动,一些开发技巧和工具让我受益匪浅，再次感谢。</p>
+<p>昨天是由36氪的iOS Team Leader<a href="http://weibo.com/u/1840543654?from=myfollow_all&amp;is_all=1">@罗琦aidenluo</a>讲解项目的架构, 有种茅塞顿开的感觉。</p>
+<p>所以就在这里总结一下学习到的知识点。</p>]]>
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/tags/iOS/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[iOS逆向 - dumpdecrypted工具砸壳]]></title>
@@ -1333,41 +1380,6 @@ groupArray=[[<span class="type">NSMutableArray</span> alloc] initWithCapacity:<s
     </summary>
     
       <category term="个人生活" scheme="http://www.liuchendi.com/categories/%E4%B8%AA%E4%BA%BA%E7%94%9F%E6%B4%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[load和initialize区别]]></title>
-    <link href="http://www.liuchendi.com/2014/09/10/iOS/5_load_initialize/"/>
-    <id>http://www.liuchendi.com/2014/09/10/iOS/5_load_initialize/</id>
-    <published>2014-09-10T14:30:56.000Z</published>
-    <updated>2015-12-04T01:28:13.000Z</updated>
-    <content type="html"><![CDATA[<p>这两个方法基本上没怎么接触过,平时也很少用到，但是今晚我就非常好奇为什么会用不到，所以顺便就记录下来了，说不定以后用得上<br><a id="more"></a></p>
-<h1 id="load">load</h1><p>先看一下苹果官方文档的解释</p>
-<blockquote>
-<p>Invoked whenever a class or category is added to the Objective-C runtime;<br>implement this method to perform class-specific behavior upon loading.</p>
-</blockquote>
-<p>这个方法在类被添加进来的时候就会调用，也就是说程序在开始加载期间，这个方法就被调用.</p>
-<p>load的加载时机：子类的+load会在父类的+load方法之后执行,而分类的load则会在主类的load方法之后执行，不同类之间的load方法调用顺序是不确定的。</p>
-<h1 id="initialize">initialize</h1><blockquote>
-<p>Initializes the class before it receives its first message.<br>The runtime sends <code>initialize</code> to each class in a program just before the class, or any class that<br>inherits from it, is sent its first message from within the program. The runtime sends the<br><code>initialize</code> message to classes in a thread-safe manner. Superclasses receive this message before<br>their subclasses. The superclass implementation may be called multiple times if subclasses do not<br>implement <code>initialize—the</code> runtime will call the inherited implementation—or if subclasses<br>explicitly call <code>[super initialize]</code></p>
-</blockquote>
-<p>这个方法会在类的第一个方法调用前被调用。首先会先调用父类的<code>initialize</code>方法，如果子类没有实现<code>initialize</code>方法,那么父类会多次触发这个方法,为了避免这种情况的发生，可以在实现的方法里面添加一个判断：</p>
-<pre><code>+ (<span class="keyword">void</span>)initialize {
-    <span class="keyword">if</span> (<span class="keyword">self</span> == [ClassName <span class="keyword">self</span>]) {
-     <span class="comment">// ... do the initialization ...</span>
-    }
-}
-</code></pre><h1 id="选择使用的时机">选择使用的时机</h1><p>当类的加载是耗时或者需要消耗比较多的内存的时候,尽量不要在<code>load</code>方法里面做这些耗时的工作,因为这样只会增加App的启动时间,降低用户的体验。<br><code>initialize</code>其实可以被认为是延迟加载的方法，类加载的时候并不会执行这个方法，只有当类实例化的时候，或者类的第一个方法被调用的时候才会执行这个方法</p>
-<h1 id="category中的load和initialize">category中的load和initialize</h1><p>在category中<code>load</code>方法会等到实现类加载完自身的<code>load</code>方法后再执行category的<code>load</code>方法.</p>
-<p><code>initialize</code>则调用最后一个被加载完成的类的<code>initialize</code>的方法.</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>这两个方法基本上没怎么接触过,平时也很少用到，但是今晚我就非常好奇为什么会用不到，所以顺便就记录下来了，说不定以后用得上<br>]]>
-    
-    </summary>
-    
-      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
     
   </entry>
   

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS架构学习 - VIP总结 | 小木头</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="感谢@叶孤城在近一段时间组织的斗鱼直播讲解代码的活动,一些开发技巧和工具让我受益匪浅，再次感谢。
+昨天是由36氪的iOS Team Leader@罗琦aidenluo讲解项目的架构, 有种茅塞顿开的感觉。
+所以就在这里总结一下学习到的知识点。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS架构学习 - VIP总结">
+<meta property="og:url" content="http://www.liuchendi.com/2015/12/27/iOS/25_iOS架构/index.html">
+<meta property="og:site_name" content="小木头">
+<meta property="og:description" content="感谢@叶孤城在近一段时间组织的斗鱼直播讲解代码的活动,一些开发技巧和工具让我受益匪浅，再次感谢。
+昨天是由36氪的iOS Team Leader@罗琦aidenluo讲解项目的架构, 有种茅塞顿开的感觉。
+所以就在这里总结一下学习到的知识点。">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/iOS-vip.png">
+<meta property="og:updated_time" content="2015-12-27T15:47:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS架构学习 - VIP总结">
+<meta name="twitter:description" content="感谢@叶孤城在近一段时间组织的斗鱼直播讲解代码的活动,一些开发技巧和工具让我受益匪浅，再次感谢。
+昨天是由36氪的iOS Team Leader@罗琦aidenluo讲解项目的架构, 有种茅塞顿开的感觉。
+所以就在这里总结一下学习到的知识点。">
+  
+    <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7i7ht3.com1.z0.glb.clouddn.com/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">小木头</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心中无敌则无敌于天下</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/about">关于我</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/lcddhr" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/329096966" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="http://lcddhr.github.io/atom.xml" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 10px;">Swift</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://xiaoxuetu.github.io/">小学徒的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">小木头   iOS开发者</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">小木头</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7i7ht3.com1.z0.glb.clouddn.com/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">小木头</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心中无敌则无敌于天下</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/about">关于我</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/lcddhr" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/329096966" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="http://lcddhr.github.io/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-iOS/25_iOS架构" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/27/iOS/25_iOS架构/" class="article-date">
+  	<time datetime="2015-12-27T15:47:40.000Z" itemprop="datePublished">2015-12-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS架构学习 - VIP总结
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS/">iOS</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>感谢<a href="http://weibo.com/u/1438670852?topnav=1&amp;wvr=6&amp;topsug=1&amp;is_all=1" target="_blank" rel="external">@叶孤城</a>在近一段时间组织的斗鱼直播讲解代码的活动,一些开发技巧和工具让我受益匪浅，再次感谢。</p>
+<p>昨天是由36氪的iOS Team Leader<a href="http://weibo.com/u/1840543654?from=myfollow_all&amp;is_all=1" target="_blank" rel="external">@罗琦aidenluo</a>讲解项目的架构, 有种茅塞顿开的感觉。</p>
+<p>所以就在这里总结一下学习到的知识点。</p>
+<a id="more"></a>
+<h2 id="1、架构比较">1、架构比较</h2><p>一直以来自己都是遵循<code>MVC</code>模式，这个应该是苹果首推的开发架构，按照这个模式开发APP实现功能问题不大，但是存在的问题也非常明显，后期项目比较大了的话，Controller会便得越来越臃肿。不利于需求的改动和维护、后面入职的小伙伴也会经常看得一头雾水。</p>
+<p>后来出现了<code>MVVM</code>、<code>VIPER</code>. 具体是什么就不介绍了，可以谷歌一下。</p>
+<p>MVVM一般都会结合RAC来使用，之前了解过RAC，函数式编程的思想在某些地方用的是很方便、比如监听一些事件。 用RAC可以很快写出紧凑的代码，而且封装的很好，思路也很清晰。但是RAC的学习成本在我看来应该是最大的，看到一些开源的项目，一般都是部分功能用RAC去实现，<a href="https://github.com/leichunfeng/MVVMReactiveCocoa" target="_blank" rel="external">这里</a>有个纯RAC的项目，不过是个人作品。团队开发如果要每个人都熟悉RAC，估计成本太高。</p>
+<p><a href="http://objccn.io/issue-13-5/" target="_blank" rel="external">VIPER</a>还没有真正在项目中使用过，看了这介绍的DEMO,分层有点多，有种过度设计的感觉。</p>
+<h2 id="2、视频里的VIP架构">2、视频里的VIP架构</h2><p>VIP就是<code>ViewController</code>、<code>Interaction</code>、<code>Present</code>,看一下下面这张图</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/iOS-vip.png" alt="iOS-vip"></p>
+<p>首先数据的流向是单向的、职责都狠明确，<code>Interaction</code>做了一些<code>Controller</code>的逻辑操作、<code>Presnet</code>主要做一些转换的工作，例如一些数据的处理显示，因为很多时候数据拉取回来，并不能马上使用，通常需要而外转换一层，最后再把处理完成的数据丢会给<code>Controller</code>做显示的工作。</p>
+<p>之前写代码很多时候数据都需要双向交互，这样的确有不确定性，开发久了有可能就忘了约定好的数据交互方式，不知不觉按照自己的逻辑开发，但是这个单向的数据流可以避免这个问题，因为有且只有一个方法，每个模块有输入和输出。</p>
+<p>视频中作者把这个输入和输出的接口定义成一个协议(也就是接口),很清楚指明了数据的流向，每个协议要做的事情，</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">TrendingViewControllerToInteractorPipline</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">   <span class="func"><span class="keyword">func</span> <span class="title">refreshData</span><span class="params">(request: TrendingDataRequest)</span></span></span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">TrendingInteractorToPresenterPipline</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">   <span class="func"><span class="keyword">func</span> <span class="title">presentData</span><span class="params">(response: TrendingDataResponse)</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">TrendingPresenterToViewControllerPipline</span>: <span class="title">class</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">   <span class="func"><span class="keyword">func</span> <span class="title">displayData</span><span class="params">(viewModel: TrendingDataViewModel)</span></span></span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每个模块里面用了<code>typealias</code>关键字重新命名了协议，为了区分不同的模块的协议方法，增加了可读性。</p>
+<p>比如在ViewController里面：</p>
+<figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typealias</span> TrendingViewControllerInput = TrendingPresenterToViewControllerPipline</span><br><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> TrendingViewControllerOutput = TrendingViewControllerToInteractorPipline</span><br></pre></td></tr></table></figure>
+<p>输入流只接受present的数据,方便present做好数据的转换之后，执行视图的渲染显示操作。</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">	extension TrendingViewController: TrendingViewControllerInput &#123;</span><br><span class="line">    </span><br><span class="line">    func displayData(viewModel: TrendingDataViewModel) &#123;</span><br><span class="line">        data.removeAll()</span><br><span class="line">        viewModel.list.forEach &#123; data.append(<span class="variable">$0</span>) &#125;</span><br><span class="line">        refreshControl?.endRefreshing()</span><br><span class="line">        tableView.reloadData()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每个Controller里面都有初始化各个模块的工作,把<code>interactor</code>和<code>presnet</code>组织起来了</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="func"><span class="keyword">func</span> <span class="title">setupVIP</span><span class="params">()</span></span> &#123;</span><br><span class="line">       <span class="keyword">let</span> interactor = <span class="type">TrendingInteractor</span>()</span><br><span class="line">       <span class="keyword">let</span> presenter = <span class="type">TrendingPresenter</span>()</span><br><span class="line">       output = interactor</span><br><span class="line">       interactor.output = presenter</span><br><span class="line">       presenter.output = <span class="keyword">self</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>再来看看<code>Interactor</code>的工作,这里有一个请求的worker，做数据的刷新处理工作，至于怎么去请求可以不用知道，只管结果。然后把拉取回来的数据传递给<code>presnet</code></p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">	extension TrendingInteract<span class="subst">or</span>: TrendingInteractorInput &#123;</span><br><span class="line">    </span><br><span class="line">    func refreshData(request: TrendingDataRequest) &#123;</span><br><span class="line">        worker<span class="built_in">.</span>fetchTrendingData(&#123; (<span class="built_in">data</span>) <span class="subst">-&gt; </span><span class="literal">Void</span> <span class="keyword">in</span></span><br><span class="line">            <span class="built_in">self</span><span class="built_in">.</span>output<span class="built_in">.</span>presentData(<span class="built_in">data</span>)</span><br><span class="line">            &#125;) &#123; (err<span class="subst">or</span>) <span class="subst">-&gt; </span><span class="literal">Void</span> <span class="keyword">in</span></span><br><span class="line">                <span class="comment">// handle error</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Presnet</code>做了数据的转换工作、生成了viewModel丢回给Controller</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">	extension TrendingPresenter: TrendingPresenterInput &#123;</span><br><span class="line">    </span><br><span class="line">    func presentData(response: TrendingDataResponse) &#123;</span><br><span class="line">        //Transform etc...</span><br><span class="line">        let viewModel = TrendingDataViewModel(list: response.list.map &#123;</span><br><span class="line">            var cellModel = TrendingDataViewCellModel()</span><br><span class="line">            cellModel.cellText = <span class="variable">$0</span>.name</span><br><span class="line">            cellModel.cellLink = <span class="variable">$0</span>.link</span><br><span class="line">            return cellModel</span><br><span class="line">            &#125;)</span><br><span class="line">        output.displayData(viewModel)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面看出这简单的操作数据流向非常明确，模块与模块之间只有输入和输出，职责也非常明确，职责明确地好处就是调试方便、找问题可以集中到出问题的部分查找、节省时间。</p>
+<p>至于单元测试，还不太清楚、之前写代码也没怎么写过单元测试，这块知识还是空白状态。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/12/23/iOS/24_dumpdecrypted/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS逆向 - dumpdecrypted工具砸壳</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS/25_iOS架构" data-title="iOS架构学习 - VIP总结" data-url="http://www.liuchendi.com/2015/12/27/iOS/25_iOS架构/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"liuchendi"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 小木头
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256997755'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1256997755%26online%3D1%26show%3Dline' type='text/javascript'%3E%3C/script%3E"));</script>
+>
+
+</footer>
+
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
