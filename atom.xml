@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2015-12-31T03:25:47.000Z</updated>
+  <updated>2015-12-31T03:55:31.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -18,8 +18,8 @@
     <title><![CDATA[Swift第三方常用框架整理]]></title>
     <link href="http://www.liuchendi.com/2015/12/31/iOS/26_SwiftThirdpart/"/>
     <id>http://www.liuchendi.com/2015/12/31/iOS/26_SwiftThirdpart/</id>
-    <published>2015-12-31T03:25:47.000Z</published>
-    <updated>2015-12-31T03:25:47.000Z</updated>
+    <published>2015-12-31T03:55:31.000Z</published>
+    <updated>2015-12-31T03:55:31.000Z</updated>
     <content type="html"><![CDATA[<p>整理收集开发过程中比较常用的开发框架。（持续更新中…同时欢迎大伙分享自己使用的框架）</p>
 <a id="more"></a>
 <h2 id="工具类">工具类</h2><p>RSA算法: <a href="https://github.com/TakeScoop/SwiftyRSA" target="_blank" rel="external">https://github.com/TakeScoop/SwiftyRSA</a></p>
@@ -31,12 +31,20 @@
 <p>代码片段snippets <a href="https://github.com/CodeEagle/SwiftCodeSnippets" target="_blank" rel="external">https://github.com/CodeEagle/SwiftCodeSnippets</a></p>
 <p>设备尺寸: <a href="https://github.com/Ekhoo/Device" target="_blank" rel="external">https://github.com/Ekhoo/Device</a></p>
 <p>本地化: <a href="https://github.com/JiriTrecak/Laurine" target="_blank" rel="external">https://github.com/JiriTrecak/Laurine</a></p>
+<p>标准类型的扩展: <a href="https://github.com/pNre/ExSwift" target="_blank" rel="external">https://github.com/pNre/ExSwift</a></p>
+<p>后台运行简洁代码：<a href="https://github.com/duemunk/Async" target="_blank" rel="external">https://github.com/duemunk/Async</a></p>
 <h2 id="图片">图片</h2><p>加载、缓存：<a href="https://github.com/kean/Nuke" target="_blank" rel="external">https://github.com/kean/Nuke</a></p>
 <p>轮播图： <a href="https://github.com/aiqiuqiu/HGADView-Swift" target="_blank" rel="external">https://github.com/aiqiuqiu/HGADView-Swift</a></p>
-<h2 id="网络请求">网络请求</h2><p>Alamofire的封装:<a href="https://github.com/Moya/Moya" target="_blank" rel="external">https://github.com/Moya/Moya</a></p>
+<p>图片处理: <a href="https://github.com/gavinbunney/Toucan" target="_blank" rel="external">https://github.com/gavinbunney/Toucan</a></p>
+<h2 id="网络">网络</h2><p>Alamofire的封装:<a href="https://github.com/Moya/Moya" target="_blank" rel="external">https://github.com/Moya/Moya</a></p>
 <p>重写Reachability网络监听:<a href="https://github.com/ashleymills/Reachability.swift" target="_blank" rel="external">https://github.com/ashleymills/Reachability.swift</a></p>
 <p>网络调试工具 <a href="https://github.com/kasketis/netfox" target="_blank" rel="external">https://github.com/kasketis/netfox</a></p>
+<p>Ji:解析XML：<a href="https://github.com/honghaoz/Ji" target="_blank" rel="external">https://github.com/honghaoz/Ji</a></p>
 <h2 id="存储">存储</h2><p>轻量级数据存储:<a href="https://github.com/nickoneill/Pantry" target="_blank" rel="external">https://github.com/nickoneill/Pantry</a></p>
+<p>SQLite: <a href="https://github.com/stephencelis/SQLite.swift" target="_blank" rel="external">https://github.com/stephencelis/SQLite.swift</a></p>
+<p>UserDefault:<a href="https://github.com/radex/SwiftyUserDefaults" target="_blank" rel="external">https://github.com/radex/SwiftyUserDefaults</a></p>
+<p>realm数据库:<a href="https://github.com/realm/realm-cocoa" target="_blank" rel="external">https://github.com/realm/realm-cocoa</a></p>
+<h2 id="布局">布局</h2><p>Neon:<a href="https://github.com/mamaral/Neon" target="_blank" rel="external">https://github.com/mamaral/Neon</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>整理收集开发过程中比较常用的开发框架。（持续更新中…同时欢迎大伙分享自己使用的框架）</p>]]>
