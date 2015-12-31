@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2015-12-27T15:57:30.000Z</updated>
+  <updated>2015-12-31T03:25:47.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -13,6 +13,41 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Swift第三方常用框架整理]]></title>
+    <link href="http://www.liuchendi.com/2015/12/31/iOS/26_SwiftThirdpart/"/>
+    <id>http://www.liuchendi.com/2015/12/31/iOS/26_SwiftThirdpart/</id>
+    <published>2015-12-31T03:25:47.000Z</published>
+    <updated>2015-12-31T03:25:47.000Z</updated>
+    <content type="html"><![CDATA[<p>整理收集开发过程中比较常用的开发框架。（持续更新中…同时欢迎大伙分享自己使用的框架）</p>
+<a id="more"></a>
+<h2 id="工具类">工具类</h2><p>RSA算法: <a href="https://github.com/TakeScoop/SwiftyRSA" target="_blank" rel="external">https://github.com/TakeScoop/SwiftyRSA</a></p>
+<p>货币计算: <a href="https://github.com/danthorpe/Money" target="_blank" rel="external">https://github.com/danthorpe/Money</a></p>
+<p>随机数: <a href="https://github.com/thellimist/SwiftRandom" target="_blank" rel="external">https://github.com/thellimist/SwiftRandom</a></p>
+<p>排序: <a href="https://github.com/dsmatter/SwiftSortUtils" target="_blank" rel="external">https://github.com/dsmatter/SwiftSortUtils</a></p>
+<p>文件路径: <a href="https://github.com/kylef/PathKit" target="_blank" rel="external">https://github.com/kylef/PathKit</a></p>
+<p>初始化语法糖,很方便：<a href="https://github.com/devxoul/Then" target="_blank" rel="external">https://github.com/devxoul/Then</a></p>
+<p>代码片段snippets <a href="https://github.com/CodeEagle/SwiftCodeSnippets" target="_blank" rel="external">https://github.com/CodeEagle/SwiftCodeSnippets</a></p>
+<p>设备尺寸: <a href="https://github.com/Ekhoo/Device" target="_blank" rel="external">https://github.com/Ekhoo/Device</a></p>
+<p>本地化: <a href="https://github.com/JiriTrecak/Laurine" target="_blank" rel="external">https://github.com/JiriTrecak/Laurine</a></p>
+<h2 id="图片">图片</h2><p>加载、缓存：<a href="https://github.com/kean/Nuke" target="_blank" rel="external">https://github.com/kean/Nuke</a></p>
+<p>轮播图： <a href="https://github.com/aiqiuqiu/HGADView-Swift" target="_blank" rel="external">https://github.com/aiqiuqiu/HGADView-Swift</a></p>
+<h2 id="网络请求">网络请求</h2><p>Alamofire的封装:<a href="https://github.com/Moya/Moya" target="_blank" rel="external">https://github.com/Moya/Moya</a></p>
+<p>重写Reachability网络监听:<a href="https://github.com/ashleymills/Reachability.swift" target="_blank" rel="external">https://github.com/ashleymills/Reachability.swift</a></p>
+<p>网络调试工具 <a href="https://github.com/kasketis/netfox" target="_blank" rel="external">https://github.com/kasketis/netfox</a></p>
+<h2 id="存储">存储</h2><p>轻量级数据存储:<a href="https://github.com/nickoneill/Pantry" target="_blank" rel="external">https://github.com/nickoneill/Pantry</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>整理收集开发过程中比较常用的开发框架。（持续更新中…同时欢迎大伙分享自己使用的框架）</p>]]>
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/tags/iOS/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[iOS架构学习 - VIP总结]]></title>
@@ -1352,36 +1387,6 @@ groupArray=[[<span class="type">NSMutableArray</span> alloc] initWithCapacity:<s
       <category term="适配" scheme="http://www.liuchendi.com/tags/%E9%80%82%E9%85%8D/"/>
     
       <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[毕业后的第一个生日]]></title>
-    <link href="http://www.liuchendi.com/2014/09/11/iOS/6_first_Birthday/"/>
-    <id>http://www.liuchendi.com/2014/09/11/iOS/6_first_Birthday/</id>
-    <published>2014-09-11T02:30:56.000Z</published>
-    <updated>2015-11-10T09:42:52.000Z</updated>
-    <content type="html"><![CDATA[<p>毕业后的第一个生日,心里总想说点什么，来记录一下生活中的点点滴滴。<br><a id="more"></a></p>
-<p>##生日##<br>貌似自己印象中的生日总是没有多大的感觉,与平常的生活差不多,每到生日的时候都不会忘记给老妈打一个电话唠叨几句，其实我心里在想的是感谢老妈的养育之恩，觉得生日最要感谢的人时我的母亲（听起来有点清高，但我心里的确是这么想的，勿见怪O(∩_∩)。。。）.也没多少人记得我生日,我也很少跟他们谈及,让我意外的是高中的橙子舍长却还及得我的生日，让我有点喜出望外，一句简单的祝福扫清了一天工作的疲惫，谢谢舍长。</p>
-<p>##毕业后的工作##<br>毕业两个多月了,开始还是处于选择工作的迷茫期，对于自己快要毕业了还要换工作是非常不好的现象,但是心里想去大公司工作的欲望从未停止过,无论如何自己也得想办法去大公司呆个几年，因为自己想要学习一些大公司文化的熏陶以及日常流程化的工作，而不是呆在小公司里自己的摸爬滚打。。。</p>
-<p>毕业前在光点呆了3个月,X支付呆了2个月左右,五个多月的实习让自己的技术有了一定的成长。大多数情况多事自己的摸爬滚打,乐驼项目,x支付项目,茂名OA项目,虽然自己最后没有完整的参与下来,但一些开发技巧以及控件的掌握已经上升了一个等次，并且有了一些自己的小开发架构，现在回过头去砍这些代码总觉得为啥自己当初会写下这么烂的代码，哈哈。失败也好，总是有收获的。以至于到现在的XX游戏公司能够快速适应环境，很庆幸自己能够在毕业前进入一家游戏公司，虽然目前还是做SDK的开发，但是最近开始接触<code>Unity3D</code>让自己兴奋了一把。</p>
-<p>为什么自己要换两次工作？首先,人往高处走，当一个地方满足不了你的成长的时候，又或者这个地方总是做着意义不大的工作，纯粹是帮人完成任务，当做廉价劳动力的时候，没有理由让我不换工作。</p>
-<p>现在的工作情况: 也有重复的工作，代码不规范的情况，还有更多的挑战（Unity3D、新应用的开发）</p>
-<p>##生活<br>最大的感触就是，赚钱真的不容易，要在大城市里面靠自己打拼换取一个属于自己的落脚点有点像天方夜谭。。。但人总是要积极乐观向上，机会很多，说不定沉淀久了哪一天就爆发了，所以保持一个乐观的心态工作，多学习，多思考总是错不了的。</p>
-<p>开始正真意义上的断奶生活，靠自己的努力挣钱花的理所当然，只不过有时候物质欲望过于强烈，不过还不至于月光,零花钱还是有滴。</p>
-<p>下班后喜欢在旁边小区广场上跑步锻炼身体，回来泡上一杯柠檬蜂蜜茶，还有时间的话就看看书写写博客之类的，感觉这样也还不错，至少为了上班我不会在去熬夜了。</p>
-<p>好久没去踩车了,领着这么丁点工资想换个小轮都不够呀，说好去云南丽江的到现在都还没有去，算是大学生活里面最遗憾的一件事吧。</p>
-<p>小侄女也去东莞了，不能再像以前一样随意玩、随意吃了，身边的朋友也茫茫碌碌的，虽然好朋友也没有几个，但是都联系也渐渐少了起来，都开始为了事业奋斗。</p>
-<p>##情感<br>老爸8月31号为了坐飞机来了广州，带了老妈烧得一手好菜，还有两瓶家乡的酒，我看着老爸辛苦的样子，有种说不出来的感觉，现在总是会多去体谅一下父母，想有自己的一些行动去为他们做些什么，第一个月发工资后，我了解到老爸在家会失眠睡不着，我也就买了一个电热浴足盆给他。这让我想起了今年过年我拿着实习工资给老爸买了一台小米2S手机，现在的我总想可以让老爸老妈的生活变得更好，他们为我付出了这么多，自己也要懂得感恩。</p>
-<p>和小魂淡谈恋爱差不多两年了,毕业就分手貌似在当今大学生里已经见怪不怪了，虽然她比我小两届，我也有过担心，但是现在我们的关系还是算比较稳定的，希望能够一直好好地走下去。</p>
-<p>##最后<br>希望自己在第一年的工作中好好学习，踏踏实实的工作、以负责任的态度做好每一件事。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>毕业后的第一个生日,心里总想说点什么，来记录一下生活中的点点滴滴。<br>]]>
-    
-    </summary>
-    
-      <category term="个人生活" scheme="http://www.liuchendi.com/categories/%E4%B8%AA%E4%BA%BA%E7%94%9F%E6%B4%BB/"/>
     
   </entry>
   
