@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2015-12-31T06:08:16.000Z</updated>
+  <updated>2016-01-01T16:46:32.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -13,6 +13,43 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[2015个人总结]]></title>
+    <link href="http://www.liuchendi.com/2016/01/02/iOS/27_2015/"/>
+    <id>http://www.liuchendi.com/2016/01/02/iOS/27_2015/</id>
+    <published>2016-01-01T16:46:32.000Z</published>
+    <updated>2016-01-01T16:46:32.000Z</updated>
+    <content type="html"><![CDATA[<p>算是对过去的2015年一个简单的回顾吧。</p>
+<a id="more"></a>
+<h2 id="工作">工作</h2><p>对于过去的2015年，内心没有太多惊喜，年末换了份工作，受不了温水煮青蛙的工作方式，有人说我傻，拿同样的工资单干活少一些轻松一点不是更好么，我本来就是一个闲不下来的人，爸妈为了说服我去考公务员费劲了口舌，我依然坚定自己的看法，我不想过轻松的工作方式。。。</p>
+<h2 id="学习">学习</h2><p>1、Git</p>
+<p>2、Swift。开始过度到Swift开发了</p>
+<p>3、看了SDWebImageView、TMCache源码，部分AFNetwork源码</p>
+<p>4、开源了几个控件。</p>
+<p>5、复习了数据结构和算法。</p>
+<p>6、了解了iOS的逆向相关知识</p>
+<p>7、iOS开发的进阶：Autolayout、动画、性能优化等。</p>
+<p>8、关注别人的博客、学习方法的改进，获取iOS信息的渠道增加了不少、但是有些QQ群的质量不高、所以尽可能避免QQ群里面扯淡。</p>
+<h2 id="课外书">课外书</h2><p>1、《穷爸爸和富爸爸》</p>
+<p>2、《乖，摸摸头》</p>
+<p>3、《从0到1》</p>
+<h2 id="生活">生活</h2><p>家里打算换房子了，意味着每个月都得付出大部分的工资，所以基本上没什么存款了，就更谈不上做自己想做的事了。 想到父母为了自己付出了大部分心血，我就想尽自己所能给他们提供更好的条件，我现在能做的，就是把剩余的房贷还清，有空多回去陪陪父母。</p>
+<h2 id="未来计划">未来计划</h2><p>1、多读课外书。一个月至少一本除技术之外的书、比如理财呀、思维、传记等。</p>
+<p>2、工作上的稳定： 现在的工作还不够稳定、有时候工作量不饱和或者自己想要的一些想法在工作中没办法实现。领导层的决定会让自己的利益受到影响，内心比较动荡。</p>
+<p>3、出国外旅游一次。</p>
+<p>4、深入了解iOS开发。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>算是对过去的2015年一个简单的回顾吧。</p>]]>
+    
+    </summary>
+    
+      <category term="总结" scheme="http://www.liuchendi.com/tags/%E6%80%BB%E7%BB%93/"/>
+    
+      <category term="其他" scheme="http://www.liuchendi.com/categories/%E5%85%B6%E4%BB%96/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Swift第三方常用框架整理]]></title>
@@ -1317,86 +1354,6 @@ NSBlockOperation *operation2 = [NSBlockOperation blockOperationWithBlock:^(){
     <![CDATA[<p>这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。<br>]]>
     
     </summary>
-    
-      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[iOS适配问题大收集]]></title>
-    <link href="http://www.liuchendi.com/2014/09/18/iOS/7_iOS_Fit_Collection/"/>
-    <id>http://www.liuchendi.com/2014/09/18/iOS/7_iOS_Fit_Collection/</id>
-    <published>2014-09-18T12:18:56.000Z</published>
-    <updated>2015-12-02T01:30:10.000Z</updated>
-    <content type="html"><![CDATA[<p>记录不同版本的适配小技巧<br><a id="more"></a></p>
-<h1 id="Update:iOS9">Update:iOS9</h1><h4 id="编译问题（Bitcode)">编译问题（Bitcode)</h4><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxx does <span class="operator">not</span> contain bitcode. You must rebuild <span class="keyword">it</span> <span class="operator">with</span> bitcode enabled (Xcode setting ENABLE_BITCODE), obtain <span class="operator">an</span> updated library <span class="built_in">from</span> <span class="operator">the</span> vendor, <span class="operator">or</span> disable bitcode <span class="keyword">for</span> this target.</span><br></pre></td></tr></table></figure>
-<p>xcode7默认启用了Bitcode，暂时先关闭掉，因为大部分第三方库还未能支持。解决办法：<br>Build settings -&gt; Build Options -&gt; Enable Bitcode  设置为NO</p>
-<h4 id="Http请求失败">Http请求失败</h4><p>iOS9默认不支持HTTP请求，需要改用更安全的HTTPS。在info.plist源码里面添加下面代码</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">key</span>&gt;</span>NSAppTransportSecurity<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">key</span>&gt;</span>NSAllowsArbitraryLoads<span class="tag">&lt;/<span class="title">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dict</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h1 id="Update:iOS8">Update:iOS8</h1><h3 id="iOS6中UITextField中secureTextEntry的bug">iOS6中UITextField中secureTextEntry的bug</h3><p>今天把SDK去做iOS6的测试，结果反馈回来一大堆bug，其中一个就是在做UITextField<code>明暗文切换</code>的时候,明明在iOS7运行的好好的跑到iOS6就错了,而且功能都实现不了,后来在<a href="http://stackoverflow.com/questions/6710019/uitextfield-securetextentry-works-going-from-yes-to-no-but-changing-back-to-y" target="_blank" rel="external">这里</a>找到了答案</p>
-<pre><code><span class="constant">_passwordTextField.enabled</span> = <span class="literal">false</span>;<span class="comment">//iOS6.1Bug fix</span>
-<span class="constant">
-_passwordTextField.secureTextEntry</span> = YES;
-<span class="constant">
-_passwordTextField.enabled</span> = <span class="literal">true</span>;
-</code></pre><h3 id="UIWebView不能响应键盘">UIWebView不能响应键盘</h3><p>因为在SDK里面有一个自定义的window,然后APP也有一个主window,当把自定义的window发送了<code>makeKeyAndVisible</code>消息之后,webView在iOS上面竟然不能响应键盘事件了,因为我的webView是全屏的，所以即使键盘弹出来了也有有可能被弹出来的webView遮挡主，解决办法是：</p>
-<pre><code>在webView打开绘制到界面上的时候主<span class="built_in">window</span>发送消息makeKeyAndVisible,
-
-关闭webView的时候再设置自定义的<span class="built_in">window</span>发送消息makeKeyAndVisible。
-</code></pre><p>###3、UITableView分割线不能靠边的问题###</p>
-<pre><code>从ios7开始有个属性 separatorInset，一般你需要设置这个值为<span class="built_in">UIEdgeInsetsZero</span>,否则，每个分割线的起点会从文字区域开始，左边会留白
-
-<span class="built_in">UITableViewCell</span>的默认背景是白色的
-</code></pre><p>###4、获取视频的分辨率</p>
-<pre><code>        <span class="type">ALAssetsLibrary</span> *assetsLibrary;
-<span class="type">NSMutableArray</span> *groupArray;
-assetsLibrary = [[<span class="type">ALAssetsLibrary</span> alloc] init];
-groupArray=[[<span class="type">NSMutableArray</span> alloc] initWithCapacity:<span class="number">1</span>];
-[assetsLibrary enumerateGroupsWithTypes:<span class="type">ALAssetsGroupAll</span> usingBlock:^(<span class="type">ALAssetsGroup</span> *group, <span class="type">BOOL</span> *stop) {
-    <span class="keyword">if</span> (group) {
-        [groupArray addObject:group];
-        <span class="type">NSLog</span>(@<span class="string">"%@"</span>,group);
-
-        [group enumerateAssetsUsingBlock:^(<span class="type">ALAsset</span> *<span class="literal">result</span>, <span class="type">NSUInteger</span> index, <span class="type">BOOL</span> *stop) {
-            <span class="keyword">if</span> (<span class="literal">result</span>) {
-
-                <span class="type">NSLog</span>(@<span class="string">"%@"</span>,<span class="literal">result</span>);
-
-                <span class="type">NSString</span> *<span class="keyword">type</span>=[<span class="literal">result</span> valueForProperty:<span class="type">ALAssetPropertyType</span>];
-
-                <span class="keyword">if</span> ([<span class="keyword">type</span> isEqualToString:<span class="type">ALAssetTypeVideo</span>]) {
-
-                     <span class="type">NSLog</span>(@<span class="string">"找到了视频"</span>);
-
-                    <span class="type">ALAssetRepresentation</span>* representation = [<span class="literal">result</span> defaultRepresentation];
-                    <span class="type">AVURLAsset</span>* videoAsset = [[<span class="type">AVURLAsset</span> alloc]initWithURL:[representation url] options:<span class="keyword">nil</span>];
-                    <span class="type">NSArray</span>* allVideoTracks = [videoAsset tracksWithMediaType:<span class="type">AVMediaTypeVideo</span>];
-                    <span class="keyword">if</span> ([allVideoTracks count] &gt; <span class="number">0</span>) {
-                        <span class="type">AVAssetTrack</span>* track = [[videoAsset tracksWithMediaType:<span class="type">AVMediaTypeVideo</span>]objectAtIndex:<span class="number">0</span>];
-                        <span class="type">CGSize</span> size = [track naturalSize];
-
-                        <span class="type">NSLog</span>(@<span class="string">"视频尺寸:%@"</span>,<span class="type">NSStringFromCGSize</span>(size));
-
-//                            <span class="type">CGSize</span> dimensions = <span class="type">CGSizeApplyAffineTransform</span>(track.naturalSize, track.preferredTransform);
-//                            <span class="type">NSLog</span>(@<span class="string">"%f,%f"</span>,fabsf(dimensions.width),fabsf(dimensions.height));
-                        }
-                    }
-                }
-            }];
-        }
-    } failureBlock:^(<span class="type">NSError</span> *error) {
-        <span class="type">NSLog</span>(@<span class="string">"Group not found!\n"</span>);
-    }];
-</code></pre><p>##设置字体间隔</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">NSMutableAttributedString</span> *attributedString = [[<span class="built_in">NSMutableAttributedString</span> alloc]initWithString:<span class="keyword">self</span><span class="variable">.title</span>];</span><br><span class="line">  <span class="comment">//设置字体间隔</span></span><br><span class="line">  <span class="keyword">long</span> number = <span class="number">5</span>;</span><br><span class="line">  <span class="built_in">CFNumberRef</span> num = <span class="built_in">CFNumberCreate</span>(k<span class="built_in">CFAllocatorDefault</span>,k<span class="built_in">CFNumberSInt8Type</span>,&amp;number);</span><br><span class="line">  [attributedString addAttribute:(<span class="keyword">id</span>)kCTKernAttributeName value:(__bridge <span class="keyword">id</span>)num range:<span class="built_in">NSMakeRange</span>(<span class="number">0</span>,[attributedString length])];</span><br><span class="line">  <span class="built_in">CFRelease</span>(num);</span><br></pre></td></tr></table></figure>
-<h2 id="阻断事件的传递">阻断事件的传递</h2><p><code>endIgnoringInteractionEvents</code></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[iOS8出来了,之前一直都是手写代码= =、,现在有点悲剧了,Autolayout也不太会用，只是熟悉了几天，现在又来了size classes.....不过还是得好好去学,所以就用一篇博客来记录适配过程中发生的一些问题]]>
-    
-    </summary>
-    
-      <category term="适配" scheme="http://www.liuchendi.com/tags/%E9%80%82%E9%85%8D/"/>
     
       <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
     
