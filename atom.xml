@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2016-01-01T16:46:32.000Z</updated>
+  <updated>2016-01-04T08:58:25.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -15,14 +15,268 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[iOS-RunLoop]]></title>
+    <link href="http://www.liuchendi.com/2016/01/04/iOS/28_Runloop/"/>
+    <id>http://www.liuchendi.com/2016/01/04/iOS/28_Runloop/</id>
+    <published>2016-01-04T08:58:25.000Z</published>
+    <updated>2016-01-04T08:58:25.000Z</updated>
+    <content type="html"><![CDATA[<p>RunLoop总结</p>
+<a id="more"></a>
+<h2 id="需要思考问题">需要思考问题</h2><blockquote>
+<p>为什么程序在使用的时候可以接受用户的触摸事件，不使用的时候什么事件都不发生？</p>
+</blockquote>
+<p>查看一下<code>main.m</code>文件，这是程序启动的入口函数。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, <span class="built_in">NSStringFromClass</span>([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码调用的时候,主线程也开始运行。文档上说<code>UIApplicationMain</code>函数指定了appliacaion的delegate，并且开启了event cycle。那什么是event cycle？</p>
+<h2 id="RunLoop">RunLoop</h2><p>程序的event cycle其实就是RunLoop，RunLoop在程序启动的时候就开启，接受用户的处理事件。</p>
+<p>这是官方文档上面的一个图，可以看到RunLoop在线程中循环监听需要处理的事件。能够接收两种不同的事件源</p>
+<ul>
+<li>Input sources（输入源）：传递异步事件。</li>
+<li>Timer sources（定时器）: 传递同步事件、发生在特定时间或者重复的时间间隔。</li>
+</ul>
+<p><img src="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/Art/runloop.jpg" alt="runloop.jpg"></p>
+<h2 id="RunLoop_Mode">RunLoop Mode</h2><ul>
+<li><p>Default模式：几乎包含了所有输入源，一般情况下使用这个模式</p>
+<ul>
+<li>NSDefaultRunLoopMode (Cocoa) </li>
+<li>kCFRunLoopDefaultMode (Core Foundation)</li>
+</ul>
+</li>
+<li><p>Connection模式</p>
+<ul>
+<li>处理NSConnection对象相关事件，系统内部使用，用户基本不会使用。</li>
+</ul>
+</li>
+<li>Modal模式<ul>
+<li>处理modal panels事件</li>
+</ul>
+</li>
+<li><p>Event tracking模式：滑动Scrollview、Tableview的时候就处于这个模式</p>
+<ul>
+<li>UITrackingRunLoopMode(iOS)</li>
+<li>NSEventTrackingRunLoopMode(cocoa)</li>
+</ul>
+</li>
+<li><p>Common模式: 模式的组合，所有的模式下都可以处理</p>
+<ul>
+<li>NSRunLoopCommonModes (Cocoa) </li>
+<li>kCFRunLoopCommonModes (Core Foundation)</li>
+</ul>
+</li>
+</ul>
+<h2 id="RunLoop与线程的关系">RunLoop与线程的关系</h2><p>每条线程都有唯一的RunLoop对象与之对应，主线程的RunLoop是自动创建并启动的。子线程的RunLoop需要手动创建，并且调用<code>run</code>方法启动。<code>currentRunLoop</code>是延迟加载的，只创建一次.</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">[<span class="collection">[NSRunLoop currentRunLoop]</span> run]</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p>指定RunLoop运行的模式和过期时间</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="pp">- <span class="params">(<span class="variable">BOOL</span>)</span>runMode:<span class="params">(<span class="variable">NSString</span> *)</span>mode beforeDate:<span class="params">(<span class="variable">NSDate</span> *)</span>limitDate;</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用场景">使用场景</h2><p>1、NSTimer</p>
+<p>如果在ScrollView里面使用到NSTimer的，需要调用<code>addTimer:forMode</code>方法指定model，才能在滚动的时候生效。</p>
+<p>NSTimer创建的定时器因为需要指定model运行，在RunLoop中需要处理各种事件，导致NSTimer不精确。可以使用GCD方法来创建,GCD不受RunLoop的Mode影响.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">dispatch_queue_t</span> <span class="built_in">queue</span> = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">dispatch_source_t</span> timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, <span class="number">0</span>, <span class="number">0</span>, <span class="built_in">queue</span>);</span><br><span class="line">    <span class="comment">// 要搞一个强引用，不然定时器创建出来就挂了</span></span><br><span class="line">    self.timer = timer;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 延迟3秒开始执行</span></span><br><span class="line">    <span class="keyword">dispatch_time_t</span> start = dispatch_time(DISPATCH_TIME_NOW, (<span class="keyword">int64_t</span>)(<span class="number">3.0</span> * NSEC_PER_SEC));</span><br><span class="line">    <span class="comment">// 每隔2秒执行一次</span></span><br><span class="line">    <span class="keyword">uint64_t</span> interval = (<span class="keyword">uint64_t</span>)(<span class="number">2.0</span> * NSEC_PER_SEC);</span><br><span class="line">    dispatch_source_set_timer(self.timer, start, interval, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 要执行的任务</span></span><br><span class="line">    dispatch_source_set_event_handler(self.timer, ^&#123;</span><br><span class="line">        NSLog(@<span class="string">"%s"</span>,__func__);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 启动定时器</span></span><br><span class="line">    dispatch_resume(self.timer);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 停止定时器</span></span><br><span class="line">dispatch_cancel(self.timer);</span><br></pre></td></tr></table></figure>
+<p>2、ImageView的加载<br>图片的加载放在<code>NSDefaultRunLoopMode</code>，因为ScrollView的滚动是在<code>UITrackingRunLoopMode</code>下运行的。</p>
+<p>3、PerformSelector指定执行的模式</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="pp">- <span class="params">(void)</span>performSelector:<span class="params">(<span class="variable">SEL</span>)</span>aSelector withObject:<span class="params">(nullable id)</span>anArgument afterDelay:<span class="params">(<span class="variable">NSTimeInterval</span>)</span>delay inModes:<span class="params">(<span class="variable">NSArray</span>&lt;<span class="variable">NSString</span> *&gt; *)</span>modes;</span></span><br></pre></td></tr></table></figure>
+<h2 id="参考">参考</h2><p>1、<a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1" target="_blank" rel="external">官方文档</a></p>
+<p>2、<a href="http://www.cnblogs.com/xuebao/p/4643704.html" target="_blank" rel="external">http://www.cnblogs.com/xuebao/p/4643704.html</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>RunLoop总结</p>]]>
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/tags/iOS/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[常用的第三方库整理收集]]></title>
+    <link href="http://www.liuchendi.com/2016/01/04/iOS/11_ThridPart/"/>
+    <id>http://www.liuchendi.com/2016/01/04/iOS/11_ThridPart/</id>
+    <published>2016-01-04T05:58:14.000Z</published>
+    <updated>2016-01-04T05:58:14.000Z</updated>
+    <content type="html"><![CDATA[<p>收集了常见的APP所用到的第三方库，提高开发效率<br><a id="more"></a></p>
+<h2 id="弹出视图">弹出视图</h2><p>1、底部弹出栏，可以控制视图差 ：<a href="https://github.com/zoonooz/ZFDragableModalTransition" target="_blank" rel="external">ZFDragableModalTransition</a></p>
+<p>2、类似微信点击加号弹出的选项视图:<a href="https://github.com/kolyvan/kxmenu" target="_blank" rel="external">kxmenu</a></p>
+<p>3、底部弹出视图：<a href="https://github.com/carsonperrotti/CNPPopupController" target="_blank" rel="external">CNPPopupController</a></p>
+<p>4、类似QQ和微信，长按可以弹出黑色的选项视图<a href="https://github.com/questbeat/QBPopupMenu" target="_blank" rel="external">QBPopupMenu</a></p>
+<p>5、类似微博的菜单栏弹出:<a href="https://github.com/cyndibaby905/TumblrMenu" target="_blank" rel="external">TumblrMenu</a></p>
+<p>6、菜单栏上方弹出:<a href="https://github.com/lminhtm/LMDropdownView" target="_blank" rel="external">LMDropdownView</a></p>
+<p>7、底部弹出视图：<a href="https://github.com/lukegeiger/LGSemiModalNavController" target="_blank" rel="external">LGSemiModalNavController</a></p>
+<p>8、类似美团的下拉菜单选择:<a href="https://github.com/jsfu/JSDropDownMenu" target="_blank" rel="external">JSDropDownMenu</a></p>
+<h2 id="动画">动画</h2><p>1、卡片式交互 ：</p>
+<ul>
+<li><a href="https://github.com/modocache/MDCSwipeToChoose" target="_blank" rel="external">MDCSwipeToChoose</a></li>
+<li><a href="https://github.com/Yalantis/Koloda" target="_blank" rel="external">Koloda</a></li>
+</ul>
+<p>2、动画知识点学习：<a href="https://github.com/AttackOnDobby/iOS-Core-Animation-Advanced-Techniques" target="_blank" rel="external">iOS-Core-Animation-Advanced-Techniques</a></p>
+<p>3、Bubble效果:</p>
+<ul>
+<li><p><a href="https://github.com/andreamazz/BubbleTransition" target="_blank" rel="external">BubbleTransition</a></p>
+</li>
+<li><p><a href="https://github.com/jonathantribouharet/JTMaterialTransition" target="_blank" rel="external">JTMaterialTransition</a></p>
+</li>
+</ul>
+<p>4、具有视差弹出、push效果:<a href="https://github.com/Raizlabs/RZTransitions" target="_blank" rel="external">RZTransitions</a></p>
+<p>5、类似点赞的效果，闪烁一下:<a href="https://github.com/okmr-d/DOFavoriteButton" target="_blank" rel="external">DOFavoriteButton</a></p>
+<p>6、照片放大动画：<a href="https://github.com/recruit-mp/RMPZoomTransitionAnimator" target="_blank" rel="external">RMPZoomTransitionAnimator</a></p>
+<p>7、水波动画:<a href="https://github.com/antiguab/BAFluidView" target="_blank" rel="external">BAFluidView</a></p>
+<p>8、弹出框，可以输入一些文字发送，类似发微博:<a href="https://github.com/romaonthego/REComposeViewController" target="_blank" rel="external">REComposeViewController</a></p>
+<p>9、精美的按钮动画：<a href="https://github.com/AlexeyBelezeko/TBIconTransitionKit" target="_blank" rel="external">TBIconTransitionKit</a></p>
+<p>10、Label文字动画:<a href="https://github.com/overboming/ZCAnimatedLabel" target="_blank" rel="external">ZCAnimatedLabel</a></p>
+<p>11、动画库集合:<a href="https://github.com/sxyx2008/awesome-ios-animation" target="_blank" rel="external">awesome-ios-animation</a></p>
+<p>12、简单的视图动画:<a href="https://github.com/daltoniam/DCAnimationKit" target="_blank" rel="external">DCAnimationKit</a></p>
+<p>13 、TableView移动动画<a href="https://github.com/okla/QuickRearrangeTableView" target="_blank" rel="external">QuickRearrangeTableView</a></p>
+<p>14、slideIn动画:<a href="https://github.com/JV17/JVMenuPopover" target="_blank" rel="external">JVMenuPopover</a></p>
+<p>15、按钮动画带有波纹效果:<a href="https://github.com/SatanWoo/WZFlashButton" target="_blank" rel="external">WZFlashButton</a></p>
+<p>16、点赞动画:<a href="https://github.com/K-cat/CatZanButton" target="_blank" rel="external">CatZanButton</a></p>
+<h2 id="布局">布局</h2><p>1、选项卡：</p>
+<ul>
+<li><a href="https://github.com/uacaps/PageMenu" target="_blank" rel="external">PageMenu</a></li>
+<li>类似Twitter选项栏:<a href="https://github.com/StefanLage/SLPagingView" target="_blank" rel="external">SLPagingView</a></li>
+<li><a href="https://github.com/kitasuke/PagingMenuController" target="_blank" rel="external">PagingMenuController</a></li>
+<li><a href="https://github.com/HAHAKea/HACursor" target="_blank" rel="external">HACursor</a></li>
+<li><a href="https://github.com/y-hryk/YSLContainerViewController" target="_blank" rel="external">YSLContainerViewController</a></li>
+<li><a href="https://github.com/IOStao/ZTPageController" target="_blank" rel="external">ZTPageController</a></li>
+<li><a href="https://github.com/ermalkaleci/CarbonKit" target="_blank" rel="external">CarbonKit</a></li>
+</ul>
+<p>2、collection布局</p>
+<ul>
+<li><a href="https://github.com/gringoireDM/FBLikeLayout" target="_blank" rel="external">FBLikeLayout</a></li>
+<li><a href="https://github.com/openboy2012/DDCollectionViewFlowLayout" target="_blank" rel="external">DDCollectionViewFlowLayout</a></li>
+</ul>
+<p>3、测拉菜单</p>
+<ul>
+<li><a href="https://github.com/WXGBridgeQ/WXGSlideMenuDemo" target="_blank" rel="external">WXGSlideMenuDemo</a></li>
+</ul>
+<p>4、树形菜单</p>
+<ul>
+<li><a href="https://github.com/yixiangboy/TreeTableView" target="_blank" rel="external">TreeTableView</a></li>
+</ul>
+<p>5、滑动返回</p>
+<ul>
+<li><a href="https://github.com/singro/SCNavigation" target="_blank" rel="external">SCNavigation</a></li>
+</ul>
+<h2 id="照片浏览器和选择">照片浏览器和选择</h2><ul>
+<li><p><a href="https://github.com/ideaismobile/IDMPhotoBrowser" target="_blank" rel="external">IDMPhotoBrowser</a></p>
+</li>
+<li><p><a href="https://github.com/chiunam/CTAssetsPickerController" target="_blank" rel="external">CTAssetsPickerController</a></p>
+</li>
+<li><p>提供多选照片:<a href="https://github.com/questbeat/QBImagePicker" target="_blank" rel="external">QBImagePicker</a></p>
+</li>
+<li><p><a href="https://github.com/nsdictionary/CorePhotoBroswerVC" target="_blank" rel="external">CorePhotoBroswerVC</a></p>
+</li>
+<li><p><a href="https://github.com/mikaoj/BSImagePicker" target="_blank" rel="external">BSImagePicker</a></p>
+</li>
+<li><p><a href="https://github.com/johnil/JFImagePickerController" target="_blank" rel="external">JFImagePickerController</a></p>
+</li>
+<li><p><a href="https://github.com/MakeZL/ZLPhotoLib" target="_blank" rel="external">ZLPhotoLib</a></p>
+</li>
+<li><p><a href="https://github.com/SpringOx/AGImagePickerController" target="_blank" rel="external">AGImagePickerController</a></p>
+</li>
+</ul>
+<h2 id="HUD">HUD</h2><ul>
+<li><p><a href="https://github.com/oarrabi/OAStackView" target="_blank" rel="external">OAStackView</a></p>
+</li>
+<li><p>精美的HUD动画：<a href="https://github.com/ninjaprox/NVActivityIndicatorView" target="_blank" rel="external">NVActivityIndicatorView</a></p>
+</li>
+<li><p>等待加载的精美过度界面:<a href="https://github.com/NghiaTranUIT/FeSpinner" target="_blank" rel="external">FeSpinner</a></p>
+</li>
+<li><p>加载图片:<a href="https://github.com/rounak/RJImageLoader" target="_blank" rel="external">RJImageLoader</a></p>
+</li>
+<li><p><a href="https://github.com/TaimurAyaz/TAOverlay" target="_blank" rel="external">TAOverlay</a></p>
+</li>
+<li><p><a href="https://github.com/relatedcode/ProgressHUD" target="_blank" rel="external">ProgressHUD</a></p>
+</li>
+<li><p><a href="https://github.com/gontovnik/DGActivityIndicatorView" target="_blank" rel="external">DGActivityIndicatorView</a></p>
+</li>
+<li><p><a href="https://github.com/devxoul/JLToast" target="_blank" rel="external">JLToast</a></p>
+</li>
+<li><p><a href="https://github.com/devSC/WSProgressHUD" target="_blank" rel="external">WSProgressHUD</a></p>
+</li>
+<li><p><a href="https://github.com/knn90/KNCirclePercentView" target="_blank" rel="external">KNCirclePercentView</a></p>
+</li>
+</ul>
+<h2 id="图片编辑器">图片编辑器</h2><ul>
+<li><a href="https://github.com/yackle/CLImageEditor" target="_blank" rel="external">CLImageEditor</a></li>
+</ul>
+<h2 id="AlertView">AlertView</h2><ul>
+<li><p><a href="https://github.com/mtonio91/AMSmoothAlert" target="_blank" rel="external">AMSmoothAlert</a></p>
+</li>
+<li><p><a href="https://github.com/ChrisXu1221/CXCardView" target="_blank" rel="external">CXCardView</a></p>
+</li>
+<li><p><a href="https://github.com/mayuur/MJAlertView" target="_blank" rel="external">MJAlertView</a></p>
+</li>
+<li><p><a href="https://github.com/Friend-LGA/LGAlertView" target="_blank" rel="external">LGAlertView</a></p>
+</li>
+</ul>
+<h2 id="ActionSheet">ActionSheet</h2><ul>
+<li><p><a href="https://github.com/leverdeterre/JMActionSheetDescription" target="_blank" rel="external">JMActionSheetDescription</a></p>
+</li>
+<li><p><a href="https://github.com/zhangyu9050/UUPhotoActionSheet" target="_blank" rel="external">UUPhotoActionSheet</a></p>
+</li>
+<li><p><a href="https://github.com/GeekZP/ZPActionSheet" target="_blank" rel="external">ZPActionSheet</a></p>
+</li>
+</ul>
+<h2 id="相机">相机</h2><ul>
+<li><a href="https://github.com/danielebogo/DBCamera" target="_blank" rel="external">DBCamera</a></li>
+</ul>
+<h2 id="图文混排">图文混排</h2><ul>
+<li><a href="https://github.com/kishikawakatsumi/SECoreTextView" target="_blank" rel="external">SECoreTextView</a></li>
+<li><a href="https://github.com/molon/MLEmojiLabel" target="_blank" rel="external">MLEmojiLabel</a></li>
+<li><a href="https://github.com/12207480/TYAttributedLabel" target="_blank" rel="external">TYAttributedLabel</a></li>
+<li><a href="https://github.com/molon/MLLabel" target="_blank" rel="external">MLLabel</a></li>
+</ul>
+<h2 id="手势密码">手势密码</h2><ul>
+<li><a href="https://github.com/nsdictionary/CoreLock" target="_blank" rel="external">CoreLock</a></li>
+</ul>
+<h2 id="图片循环播放器">图片循环播放器</h2><ul>
+<li><a href="https://github.com/gsdios/SDCycleScrollView" target="_blank" rel="external">SDCycleScrollView</a></li>
+<li><a href="https://github.com/TanguyAladenise/TAPageControl" target="_blank" rel="external">TAPageControl</a></li>
+<li><a href="https://github.com/ZYCoderIOS/ZYAdView" target="_blank" rel="external">ZYAdView</a></li>
+</ul>
+<h2 id="Scrollview">Scrollview</h2><ul>
+<li><p>功能栏滚动隐藏:<a href="https://github.com/pixyzehn/MediumScrollFullScreen" target="_blank" rel="external">MediumScrollFullScreen</a></p>
+</li>
+<li><p>精美的scrollview动画:<a href="https://github.com/starchand/MBTwitterScroll" target="_blank" rel="external">MBTwitterScroll</a></p>
+</li>
+<li><p>欢迎界面<a href="https://github.com/lukegeiger/LGSublimationView" target="_blank" rel="external">LGSublimationView</a></p>
+</li>
+</ul>
+<h2 id="tableView">tableView</h2><ul>
+<li>滚动的时候cell有视差:<a href="https://github.com/adad184/MMParallaxCell" target="_blank" rel="external">MMParallaxCell</a></li>
+<li>滑动具有菜单栏的cell:<a href="https://github.com/joseria/JASwipeCell" target="_blank" rel="external">JASwipeCell</a></li>
+</ul>
+<h2 id="类似谷歌UI的一些素材">类似谷歌UI的一些素材</h2><ul>
+<li><a href="https://github.com/fpt-software/Material-Controls-For-iOS" target="_blank" rel="external">Material-Controls-For-iOS</a></li>
+</ul>
+<h2 id="表格视图">表格视图</h2><ul>
+<li><a href="https://github.com/ZhipingYang/UUChartView" target="_blank" rel="external">UUChartView</a></li>
+</ul>
+<h2 id="UIPageViewController">UIPageViewController</h2><ul>
+<li>可以滑动的页面视图：<a href="https://github.com/an0/WLPageViewController" target="_blank" rel="external">WLPageViewController</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>收集了常见的APP所用到的第三方库，提高开发效率<br>]]>
+    
+    </summary>
+    
+      <category term="第三方库" scheme="http://www.liuchendi.com/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[2015个人总结]]></title>
-    <link href="http://www.liuchendi.com/2016/01/02/iOS/27_2015/"/>
-    <id>http://www.liuchendi.com/2016/01/02/iOS/27_2015/</id>
-    <published>2016-01-01T16:46:32.000Z</published>
-    <updated>2016-01-01T16:46:32.000Z</updated>
+    <link href="http://www.liuchendi.com/2016/01/03/iOS/27_2015/"/>
+    <id>http://www.liuchendi.com/2016/01/03/iOS/27_2015/</id>
+    <published>2016-01-02T17:06:12.000Z</published>
+    <updated>2016-01-02T17:06:12.000Z</updated>
     <content type="html"><![CDATA[<p>算是对过去的2015年一个简单的回顾吧。</p>
 <a id="more"></a>
-<h2 id="工作">工作</h2><p>对于过去的2015年，内心没有太多惊喜，年末换了份工作，受不了温水煮青蛙的工作方式，有人说我傻，拿同样的工资单干活少一些轻松一点不是更好么，我本来就是一个闲不下来的人，爸妈为了说服我去考公务员费劲了口舌，我依然坚定自己的看法，我不想过轻松的工作方式。。。</p>
+<h2 id="工作">工作</h2><p>对于过去的2015年，内心没有太多惊喜，年末换了份工作，受不了温水煮青蛙的工作方式，每个人有每个人工作和生活的方式,我比较想要有一些挑战的工作。有人说我傻，拿同样的工资干一些轻松的或不是更好吗。我是一个闲不下来的人，爸妈为了说服我去考公务员费劲了口舌，我依然坚定自己的看法，我不想过轻松的工作方式。。。</p>
 <h2 id="学习">学习</h2><p>1、Git</p>
 <p>2、Swift。开始过度到Swift开发了</p>
 <p>3、看了SDWebImageView、TMCache源码，部分AFNetwork源码</p>
@@ -962,182 +1216,6 @@ git push -<span class="keyword">u</span> origin master
   </entry>
   
   <entry>
-    <title><![CDATA[常用的第三方库整理收集]]></title>
-    <link href="http://www.liuchendi.com/2015/11/10/iOS/11_ThridPart/"/>
-    <id>http://www.liuchendi.com/2015/11/10/iOS/11_ThridPart/</id>
-    <published>2015-11-10T09:55:46.000Z</published>
-    <updated>2015-11-10T09:55:46.000Z</updated>
-    <content type="html"><![CDATA[<p>收集了常见的APP所用到的第三方库，提高开发效率<br><a id="more"></a></p>
-<h2 id="弹出视图">弹出视图</h2><p>1、底部弹出栏，可以控制视图差 ：<a href="https://github.com/zoonooz/ZFDragableModalTransition" target="_blank" rel="external">ZFDragableModalTransition</a></p>
-<p>2、类似微信点击加号弹出的选项视图:<a href="https://github.com/kolyvan/kxmenu" target="_blank" rel="external">kxmenu</a></p>
-<p>3、底部弹出视图：<a href="https://github.com/carsonperrotti/CNPPopupController" target="_blank" rel="external">CNPPopupController</a></p>
-<p>4、类似QQ和微信，长按可以弹出黑色的选项视图<a href="https://github.com/questbeat/QBPopupMenu" target="_blank" rel="external">QBPopupMenu</a></p>
-<p>5、类似微博的菜单栏弹出:<a href="https://github.com/cyndibaby905/TumblrMenu" target="_blank" rel="external">TumblrMenu</a></p>
-<p>6、菜单栏上方弹出:<a href="https://github.com/lminhtm/LMDropdownView" target="_blank" rel="external">LMDropdownView</a></p>
-<p>7、底部弹出视图：<a href="https://github.com/lukegeiger/LGSemiModalNavController" target="_blank" rel="external">LGSemiModalNavController</a></p>
-<p>8、类似美团的下拉菜单选择:<a href="https://github.com/jsfu/JSDropDownMenu" target="_blank" rel="external">JSDropDownMenu</a></p>
-<h2 id="动画">动画</h2><p>1、卡片式交互 ：</p>
-<ul>
-<li><a href="https://github.com/modocache/MDCSwipeToChoose" target="_blank" rel="external">MDCSwipeToChoose</a></li>
-<li><a href="https://github.com/Yalantis/Koloda" target="_blank" rel="external">Koloda</a></li>
-</ul>
-<p>2、动画知识点学习：<a href="https://github.com/AttackOnDobby/iOS-Core-Animation-Advanced-Techniques" target="_blank" rel="external">iOS-Core-Animation-Advanced-Techniques</a></p>
-<p>3、Bubble效果:</p>
-<ul>
-<li><p><a href="https://github.com/andreamazz/BubbleTransition" target="_blank" rel="external">BubbleTransition</a></p>
-</li>
-<li><p><a href="https://github.com/jonathantribouharet/JTMaterialTransition" target="_blank" rel="external">JTMaterialTransition</a></p>
-</li>
-</ul>
-<p>4、具有视差弹出、push效果:<a href="https://github.com/Raizlabs/RZTransitions" target="_blank" rel="external">RZTransitions</a></p>
-<p>5、类似点赞的效果，闪烁一下:<a href="https://github.com/okmr-d/DOFavoriteButton" target="_blank" rel="external">DOFavoriteButton</a></p>
-<p>6、照片放大动画：<a href="https://github.com/recruit-mp/RMPZoomTransitionAnimator" target="_blank" rel="external">RMPZoomTransitionAnimator</a></p>
-<p>7、水波动画:<a href="https://github.com/antiguab/BAFluidView" target="_blank" rel="external">BAFluidView</a></p>
-<p>8、弹出框，可以输入一些文字发送，类似发微博:<a href="https://github.com/romaonthego/REComposeViewController" target="_blank" rel="external">REComposeViewController</a></p>
-<p>9、精美的按钮动画：<a href="https://github.com/AlexeyBelezeko/TBIconTransitionKit" target="_blank" rel="external">TBIconTransitionKit</a></p>
-<p>10、Label文字动画:<a href="https://github.com/overboming/ZCAnimatedLabel" target="_blank" rel="external">ZCAnimatedLabel</a></p>
-<p>11、动画库集合:<a href="https://github.com/sxyx2008/awesome-ios-animation" target="_blank" rel="external">awesome-ios-animation</a></p>
-<p>12、简单的视图动画:<a href="https://github.com/daltoniam/DCAnimationKit" target="_blank" rel="external">DCAnimationKit</a></p>
-<p>13 、TableView移动动画<a href="https://github.com/okla/QuickRearrangeTableView" target="_blank" rel="external">QuickRearrangeTableView</a></p>
-<p>14、slideIn动画:<a href="https://github.com/JV17/JVMenuPopover" target="_blank" rel="external">JVMenuPopover</a></p>
-<p>15、按钮动画带有波纹效果:<a href="https://github.com/SatanWoo/WZFlashButton" target="_blank" rel="external">WZFlashButton</a></p>
-<p>16、点赞动画:<a href="https://github.com/K-cat/CatZanButton" target="_blank" rel="external">CatZanButton</a></p>
-<h2 id="布局">布局</h2><p>1、选项卡：</p>
-<ul>
-<li><a href="https://github.com/uacaps/PageMenu" target="_blank" rel="external">PageMenu</a></li>
-<li>类似Twitter选项栏:<a href="https://github.com/StefanLage/SLPagingView" target="_blank" rel="external">SLPagingView</a></li>
-<li><a href="https://github.com/kitasuke/PagingMenuController" target="_blank" rel="external">PagingMenuController</a></li>
-<li><a href="https://github.com/HAHAKea/HACursor" target="_blank" rel="external">HACursor</a></li>
-<li><a href="https://github.com/y-hryk/YSLContainerViewController" target="_blank" rel="external">YSLContainerViewController</a></li>
-<li><a href="https://github.com/IOStao/ZTPageController" target="_blank" rel="external">ZTPageController</a></li>
-</ul>
-<p>2、collection布局</p>
-<ul>
-<li><a href="https://github.com/gringoireDM/FBLikeLayout" target="_blank" rel="external">FBLikeLayout</a></li>
-<li><a href="https://github.com/openboy2012/DDCollectionViewFlowLayout" target="_blank" rel="external">DDCollectionViewFlowLayout</a></li>
-</ul>
-<p>3、测拉菜单</p>
-<ul>
-<li><a href="https://github.com/WXGBridgeQ/WXGSlideMenuDemo" target="_blank" rel="external">WXGSlideMenuDemo</a></li>
-</ul>
-<p>4、树形菜单</p>
-<ul>
-<li><a href="https://github.com/yixiangboy/TreeTableView" target="_blank" rel="external">TreeTableView</a></li>
-</ul>
-<p>5、滑动返回</p>
-<ul>
-<li><a href="https://github.com/singro/SCNavigation" target="_blank" rel="external">SCNavigation</a></li>
-</ul>
-<h2 id="照片浏览器和选择">照片浏览器和选择</h2><ul>
-<li><p><a href="https://github.com/ideaismobile/IDMPhotoBrowser" target="_blank" rel="external">IDMPhotoBrowser</a></p>
-</li>
-<li><p><a href="https://github.com/chiunam/CTAssetsPickerController" target="_blank" rel="external">CTAssetsPickerController</a></p>
-</li>
-<li><p>提供多选照片:<a href="https://github.com/questbeat/QBImagePicker" target="_blank" rel="external">QBImagePicker</a></p>
-</li>
-<li><p><a href="https://github.com/nsdictionary/CorePhotoBroswerVC" target="_blank" rel="external">CorePhotoBroswerVC</a></p>
-</li>
-<li><p><a href="https://github.com/mikaoj/BSImagePicker" target="_blank" rel="external">BSImagePicker</a></p>
-</li>
-<li><p><a href="https://github.com/johnil/JFImagePickerController" target="_blank" rel="external">JFImagePickerController</a></p>
-</li>
-<li><p><a href="https://github.com/MakeZL/ZLPhotoLib" target="_blank" rel="external">ZLPhotoLib</a></p>
-</li>
-<li><p><a href="https://github.com/SpringOx/AGImagePickerController" target="_blank" rel="external">AGImagePickerController</a></p>
-</li>
-</ul>
-<h2 id="HUD">HUD</h2><ul>
-<li><p><a href="https://github.com/oarrabi/OAStackView" target="_blank" rel="external">OAStackView</a></p>
-</li>
-<li><p>精美的HUD动画：<a href="https://github.com/ninjaprox/NVActivityIndicatorView" target="_blank" rel="external">NVActivityIndicatorView</a></p>
-</li>
-<li><p>等待加载的精美过度界面:<a href="https://github.com/NghiaTranUIT/FeSpinner" target="_blank" rel="external">FeSpinner</a></p>
-</li>
-<li><p>加载图片:<a href="https://github.com/rounak/RJImageLoader" target="_blank" rel="external">RJImageLoader</a></p>
-</li>
-<li><p><a href="https://github.com/TaimurAyaz/TAOverlay" target="_blank" rel="external">TAOverlay</a></p>
-</li>
-<li><p><a href="https://github.com/relatedcode/ProgressHUD" target="_blank" rel="external">ProgressHUD</a></p>
-</li>
-<li><p><a href="https://github.com/gontovnik/DGActivityIndicatorView" target="_blank" rel="external">DGActivityIndicatorView</a></p>
-</li>
-<li><p><a href="https://github.com/devxoul/JLToast" target="_blank" rel="external">JLToast</a></p>
-</li>
-<li><p><a href="https://github.com/devSC/WSProgressHUD" target="_blank" rel="external">WSProgressHUD</a></p>
-</li>
-</ul>
-<h2 id="图片编辑器">图片编辑器</h2><ul>
-<li><a href="https://github.com/yackle/CLImageEditor" target="_blank" rel="external">CLImageEditor</a></li>
-</ul>
-<h2 id="AlertView">AlertView</h2><ul>
-<li><p><a href="https://github.com/mtonio91/AMSmoothAlert" target="_blank" rel="external">AMSmoothAlert</a></p>
-</li>
-<li><p><a href="https://github.com/ChrisXu1221/CXCardView" target="_blank" rel="external">CXCardView</a></p>
-</li>
-<li><p><a href="https://github.com/mayuur/MJAlertView" target="_blank" rel="external">MJAlertView</a></p>
-</li>
-<li><p><a href="https://github.com/Friend-LGA/LGAlertView" target="_blank" rel="external">LGAlertView</a></p>
-</li>
-</ul>
-<h2 id="ActionSheet">ActionSheet</h2><ul>
-<li><p><a href="https://github.com/leverdeterre/JMActionSheetDescription" target="_blank" rel="external">JMActionSheetDescription</a></p>
-</li>
-<li><p><a href="https://github.com/zhangyu9050/UUPhotoActionSheet" target="_blank" rel="external">UUPhotoActionSheet</a></p>
-</li>
-<li><p><a href="https://github.com/GeekZP/ZPActionSheet" target="_blank" rel="external">ZPActionSheet</a></p>
-</li>
-</ul>
-<h2 id="相机">相机</h2><ul>
-<li><a href="https://github.com/danielebogo/DBCamera" target="_blank" rel="external">DBCamera</a></li>
-</ul>
-<h2 id="图文混排">图文混排</h2><ul>
-<li><a href="https://github.com/kishikawakatsumi/SECoreTextView" target="_blank" rel="external">SECoreTextView</a></li>
-<li><a href="https://github.com/molon/MLEmojiLabel" target="_blank" rel="external">MLEmojiLabel</a></li>
-<li><a href="https://github.com/12207480/TYAttributedLabel" target="_blank" rel="external">TYAttributedLabel</a></li>
-<li><a href="https://github.com/molon/MLLabel" target="_blank" rel="external">MLLabel</a></li>
-</ul>
-<h2 id="手势密码">手势密码</h2><ul>
-<li><a href="https://github.com/nsdictionary/CoreLock" target="_blank" rel="external">CoreLock</a></li>
-</ul>
-<h2 id="图片循环播放器">图片循环播放器</h2><ul>
-<li><a href="https://github.com/gsdios/SDCycleScrollView" target="_blank" rel="external">SDCycleScrollView</a></li>
-<li><a href="https://github.com/TanguyAladenise/TAPageControl" target="_blank" rel="external">TAPageControl</a></li>
-<li><a href="https://github.com/ZYCoderIOS/ZYAdView" target="_blank" rel="external">ZYAdView</a></li>
-</ul>
-<h2 id="Scrollview">Scrollview</h2><ul>
-<li><p>功能栏滚动隐藏:<a href="https://github.com/pixyzehn/MediumScrollFullScreen" target="_blank" rel="external">MediumScrollFullScreen</a></p>
-</li>
-<li><p>精美的scrollview动画:<a href="https://github.com/starchand/MBTwitterScroll" target="_blank" rel="external">MBTwitterScroll</a></p>
-</li>
-<li><p>欢迎界面<a href="https://github.com/lukegeiger/LGSublimationView" target="_blank" rel="external">LGSublimationView</a></p>
-</li>
-</ul>
-<h2 id="tableView">tableView</h2><ul>
-<li>滚动的时候cell有视差:<a href="https://github.com/adad184/MMParallaxCell" target="_blank" rel="external">MMParallaxCell</a></li>
-<li>滑动具有菜单栏的cell:<a href="https://github.com/joseria/JASwipeCell" target="_blank" rel="external">JASwipeCell</a></li>
-</ul>
-<h2 id="类似谷歌UI的一些素材">类似谷歌UI的一些素材</h2><ul>
-<li><a href="https://github.com/fpt-software/Material-Controls-For-iOS" target="_blank" rel="external">Material-Controls-For-iOS</a></li>
-</ul>
-<h2 id="表格视图">表格视图</h2><ul>
-<li><a href="https://github.com/ZhipingYang/UUChartView" target="_blank" rel="external">UUChartView</a></li>
-</ul>
-<h2 id="UIPageViewController">UIPageViewController</h2><ul>
-<li>可以滑动的页面视图：<a href="https://github.com/an0/WLPageViewController" target="_blank" rel="external">WLPageViewController</a></li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>收集了常见的APP所用到的第三方库，提高开发效率<br>]]>
-    
-    </summary>
-    
-      <category term="第三方库" scheme="http://www.liuchendi.com/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/"/>
-    
-      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[谈谈iOS重构]]></title>
     <link href="http://www.liuchendi.com/2015/11/10/iOS/9_Refactoring/"/>
     <id>http://www.liuchendi.com/2015/11/10/iOS/9_Refactoring/</id>
@@ -1312,50 +1390,6 @@ NSBlockOperation *operation2 = [NSBlockOperation blockOperationWithBlock:^(){
       <category term="Git" scheme="http://www.liuchendi.com/tags/Git/"/>
     
       <category term="Git" scheme="http://www.liuchendi.com/categories/Git/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[UIBezierPath贝塞尔曲线]]></title>
-    <link href="http://www.liuchendi.com/2014/09/19/iOS/8_UIBezierPath/"/>
-    <id>http://www.liuchendi.com/2014/09/19/iOS/8_UIBezierPath/</id>
-    <published>2014-09-19T12:30:56.000Z</published>
-    <updated>2015-12-03T09:58:01.000Z</updated>
-    <content type="html"><![CDATA[<p>这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。<br><a id="more"></a></p>
-<h2 id="简介">简介</h2><p>引用<a href="http://baike.baidu.com/view/60154.htm?fr=aladdin" target="_blank" rel="external">百度百科</a>的一句话:</p>
-<pre><code>贝赛尔曲线的每一个顶点都有两个控制点，用于控制在该顶点两侧的曲线的弧度。
-曲线的定义有四个点：起始点、终止点（也称锚点）以及两个相互分离的中间点。
-滑动两个中间点，贝塞尔曲线的形状会发生变化。
-</code></pre><p>下面的图片是曲线的其中一种：</p>
-<p><img src="http://iosddimage.qiniudn.com/7_UIBezierPath.jpg" alt="UIBezierPath.png"></p>
-<p>今天主要是总结iOS当中贝塞尔曲线的使用,所以就不详细介绍这漂亮的曲线了，如果想深入了解的，可以参考<a href="http://zh.wikipedia.org/wiki/%E8%B2%9D%E8%8C%B2%E6%9B%B2%E7%B7%9A#.E4.BA.8C.E6.AC.A1.E6.96.B9.E8.B2.9D.E8.8C.B2.E6.9B.B2.E7.B7.9A" target="_blank" rel="external">wiki</a></p>
-<h2 id="UIBezierPath">UIBezierPath</h2><p><code>UIBezierPath</code>对象是CGPathRef数据类型的封装，可以方便的让我们画出<code>矩形</code>、<code>椭圆</code>或者<code>直线和曲线的组合</code>形状</p>
-<h3 id="初始化方法">初始化方法</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">+ (instancetype)bezierPath;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建一个矩形</span></span><br><span class="line">+ (instancetype)bezierPathWithRect:(<span class="built_in">CGRect</span>)rect;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建圆形或者椭圆形</span></span><br><span class="line">+ (instancetype)bezierPathWithOvalInRect:(<span class="built_in">CGRect</span>)rect;</span><br><span class="line">+ (instancetype)bezierPathWithRoundedRect:(<span class="built_in">CGRect</span>)rect cornerRadius:(<span class="built_in">CGFloat</span>)cornerRadius; <span class="comment">// rounds all corners with the same horizontal and vertical radius</span></span><br><span class="line">+ (instancetype)bezierPathWithRoundedRect:(<span class="built_in">CGRect</span>)rect byRoundingCorners:(<span class="built_in">UIRectCorner</span>)corners cornerRadii:(<span class="built_in">CGSize</span>)cornerRadii;</span><br><span class="line">+ (instancetype)bezierPathWithArcCenter:(<span class="built_in">CGPoint</span>)center radius:(<span class="built_in">CGFloat</span>)radius startAngle:(<span class="built_in">CGFloat</span>)startAngle endAngle:(<span class="built_in">CGFloat</span>)endAngle clockwise:(<span class="built_in">BOOL</span>)clockwise;</span><br><span class="line">+ (instancetype)bezierPathWith<span class="built_in">CGPath</span>:(<span class="built_in">CGPathRef</span>)<span class="built_in">CGPath</span>;</span><br></pre></td></tr></table></figure>
-<p>最基本的使用方法是</p>
-<pre><code><span class="comment">//设置描绘的起点</span>
-- (<span class="typename">void</span>)<span class="string">moveToPoint:</span>(CGPoint)point; 
-
-<span class="comment">//画直线</span>
-- (<span class="typename">void</span>)<span class="string">addLineToPoint:</span>(CGPoint)point; 
-
-<span class="comment">//画曲线，分别对应终点和两个控制点</span>
-- (<span class="typename">void</span>)<span class="string">addCurveToPoint:</span>(CGPoint)endPoint <span class="string">controlPoint1:</span>(CGPoint)controlPoint1 <span class="string">controlPoint2:</span>(CGPoint)controlPoint2;
-
-<span class="comment">//画圆弧</span>
-- (<span class="typename">void</span>)<span class="string">addArcWithCenter:</span>(CGPoint)center <span class="string">radius:</span>(CGFloat)radius <span class="string">startAngle:</span>(CGFloat)startAngle <span class="string">endAngle:</span>(CGFloat)endAngle <span class="string">clockwise:</span>(BOOL)clockwise
-</code></pre><p>画一个圆形</p>
-<pre><code>UIBezierPath *path = [[UIBezierPath alloc] init];
-[path moveToPoint:CGPointMake(<span class="number">175</span>, <span class="number">100</span>)];
-[path addArcWithCenter:CGPointMake(<span class="number">150</span>, <span class="number">100</span>) radius:<span class="number">25</span> startAngle:<span class="number">0</span> endAngle:<span class="number">2</span>*M_PI clockwise:YES];
-</code></pre><p><img src="http://iosddimage.qiniudn.com/8_%E5%9C%86%E5%BD%A2.png" alt="圆形"></p>
-<p>剩余的明天上班后再回来总结</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。<br>]]>
-    
-    </summary>
-    
-      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
     
   </entry>
   

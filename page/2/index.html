@@ -187,6 +187,166 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-iOS/20_Reveal" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/17/iOS/20_Reveal/" class="article-date">
+  	<time datetime="2015-12-17T09:17:29.000Z" itemprop="datePublished">2015-12-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/17/iOS/20_Reveal/">iOS逆向 - 用Revel查看别人的App</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/revealicon.png" alt="revealicon.png"><br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS/">iOS</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/17/iOS/20_Reveal/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-iOS/18_逆向工程笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/14/iOS/18_逆向工程笔记/" class="article-date">
+  	<time datetime="2015-12-14T06:14:38.000Z" itemprop="datePublished">2015-12-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/14/iOS/18_逆向工程笔记/">《iOS应用逆向工程》笔记1</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="1、iOS目录结构">1、iOS目录结构</h4><p>iOS是又OSX演化而来,OSX是基于UNIX操作系统。</p>
+<p><code>FHS(Filesystem Hierarchy Standard)</code>为类UNIX操作系统的文件目录结构指定了一套标准。</p>
+<h4 id="类UNIX操作系统目录结构">类UNIX操作系统目录结构</h4><ul>
+<li><code>/</code> ：根目录，所有文件和目录在根目录下展开</li>
+<li><code>/bin</code>: “binary”简写，存放提供用户级基础功能的二进制文件，如ls、ps</li>
+<li><code>/boot</code>: 存放能使系统成功启动的所有文件。</li>
+<li><code>/dev</code>: “device”简写，存放BSD设备文件。</li>
+<li><code>/sbin</code>: “system binaries”简写，存放提供系统级基础功能的二进制文件,如netstat、reboot等</li>
+<li><code>/etc</code>: “Et Cetera”简写，放系统脚本及配置文件。</li>
+<li><code>/lib</code>: 存放系统库文件、内核模块及设备驱动</li>
+<li><code>/mnt</code>：”mount” 简写，存放临时的文件系统挂载点。</li>
+<li><code>/private</code>：存放/private/etc和/private/var</li>
+<li><code>/tmp</code>:临时目录。</li>
+<li><code>/usr:</code>包含大多数用户工具和程序。</li>
+</ul>
+<h4 id="iOS目录">iOS目录</h4><ul>
+<li><code>/Applications</code>: 存放所有系统App和来自Cydia的App</li>
+<li><code>/Developer</code>： 如果一台设备连接Xcode后被指定为调试机，Xcode就会在iOS中生成这个</li>
+<li><code>/Library</code>： 存放一些提供系统支持的数据</li>
+<li><code>/System/Library</code>: 存放大量系统组件。</li>
+<li><code>/System/Library/PrivateFrameworks</code>： 存放iOS的各种framework.</li>
+<li><code>/User</code>: 用户目录,实际指向/var/mobile。</li>
+<li><code>/var/mobile/Containers</code>： 存放StoreApp.<ul>
+<li>App 可执行文件在bundle于App中的数据目录被分别存放在/var/mobile/Containers/Bundle 和 /var/mobile/Containers/Data这两个不同目录下面</li>
+</ul>
+</li>
+</ul>
+<h4 id="二进制文件类型">二进制文件类型</h4><p><code>bundle</code>: 按某种标准结构来组织的目录，包含了二进制文件及运行所需的资源<br><code>framework</code>: 也是bundle,但是framework的bundle中存放的是一个<code>dylib</code>,而不是可执行文件。</p>
+<h4 id="App目录结构">App目录结构</h4><ul>
+<li><code>Info.plist</code>: 记录了App的基本信息，如bundle identifier、可执行文件名、图标文件名等。</li>
+<li><code>可执行文件</code>: 一般都是项目名字</li>
+<li><code>lproj</code>: 存放各种本地化的字符串</li>
+</ul>
+<h4 id="沙盒">沙盒</h4><p>一种访问限制机制、权限的一种表现形式。授权文件(<code>entitlements</code>)是沙盒的一部分。</p>
+<h4 id="Daemon（守护进程、后台程序）">Daemon（守护进程、后台程序）</h4><p>问题: iOS中没有真正的后台任务？</p>
+<ul>
+<li>正在使用app,电话来了会中断当前的所有操作，将电话界面呈现在面前</li>
+<li>垃圾短信的拦截，如果没有守护进程，怎么实时处理过滤每一条短信</li>
+</ul>
+<p>其实按下home键，进程进入后台了，大多数功能会被暂停。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS/">iOS</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-iOS/16_SDWebImage_opence" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -497,68 +657,6 @@
 
 
   
-    <article id="post-iOS/11_ThridPart" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/10/iOS/11_ThridPart/" class="article-date">
-  	<time datetime="2015-11-10T09:55:46.000Z" itemprop="datePublished">2015-11-10</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/10/iOS/11_ThridPart/">常用的第三方库整理收集</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>收集了常见的APP所用到的第三方库，提高开发效率<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/第三方库/">第三方库</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/iOS/">iOS</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/10/iOS/11_ThridPart/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
     <article id="post-iOS/9_Refactoring" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -727,64 +825,6 @@
       
         <p class="article-more-link">
           <a  href="/2015/03/16/iOS/10_Git用法总结/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-iOS/8_UIBezierPath" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2014/09/19/iOS/8_UIBezierPath/" class="article-date">
-  	<time datetime="2014-09-19T12:30:56.000Z" itemprop="datePublished">2014-09-19</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/09/19/iOS/8_UIBezierPath/">UIBezierPath贝塞尔曲线</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这个星期都在学习动画的相关知识,其中离不开贝塞尔曲线UIBezierPath的绘制,今天也把SDK里面小助手的动画基本完成了,第一次自己写动画,感觉好搓的样子。。。囧…….所以今天就总结一下贝塞尔曲线到底是个什么东东。<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/iOS/">iOS</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/2014/09/19/iOS/8_UIBezierPath/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
