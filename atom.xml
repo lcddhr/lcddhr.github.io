@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2016-01-05T11:23:33.000Z</updated>
+  <updated>2016-01-05T11:26:02.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -18,10 +18,10 @@
     <title><![CDATA[iOS-你真的了解并发吗?]]></title>
     <link href="http://www.liuchendi.com/2016/01/05/iOS/29_GCD_Operation/"/>
     <id>http://www.liuchendi.com/2016/01/05/iOS/29_GCD_Operation/</id>
-    <published>2016-01-05T11:23:33.000Z</published>
-    <updated>2016-01-05T11:23:33.000Z</updated>
+    <published>2016-01-05T11:26:02.000Z</published>
+    <updated>2016-01-05T11:26:02.000Z</updated>
     <content type="html"><![CDATA[<p>翻译了一篇appcoda的文章，通俗易懂，理清了并发的相关知识点。</p>
-<p>为了防止被墙，已把把图片和demo下载的连接全部改成国内存储。</p>
+<p>为了防止被墙，已把图片和demo下载的连接全部改成国内存储。</p>
 <p>原文链接: <a href="http://www.appcoda.com/ios-concurrency/" target="_blank" rel="external">http://www.appcoda.com/ios-concurrency/</a></p>
 <a id="more"></a>
 <p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_1.jpg" alt="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_1.jpg"><br>并发一直被认为是iOS开发中的比较奇特的一部分。它被认为是危险的所以许多开发者尽可能避免使用。还有传言说尽可能避免使用多线程。如果你不能很好的理解多线程，多线程的确是危险的。猜想一下人们的生活中有多少危险的行为和活动，很多是吧？只有当我们掌握它，才能运用自如。并发是一个双刃剑，所以你必须掌握如何使用它。它帮助你写出高效、快速执行、响应迅速的app，但与此同时，如果误用则会毫不留情的毁坏你的app。这就是我们在写并发代码之前，首先考虑为什么需要并发，哪个API才能解决问题的原因。 在iOS里面我们有许多API可以使用，在这个教程里面，我们来谈谈最常用的 - <code>NSOperation</code> 和 <code>Dispatch Queues</code></p>
@@ -166,7 +166,7 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<p>翻译了一篇appcoda的文章，通俗易懂，理清了并发的相关知识点。</p>
-<p>为了防止被墙，已把把图片和demo下载的连接全部改成国内存储。</p>
+<p>为了防止被墙，已把图片和demo下载的连接全部改成国内存储。</p>
 <p>原文链接: <a href="http://www.appcoda.com/ios-concurrency/">http://www.appcoda.com/ios-concurrency/</a></p>]]>
     
     </summary>
