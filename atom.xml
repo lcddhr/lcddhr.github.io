@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2016-01-04T08:58:25.000Z</updated>
+  <updated>2016-01-05T10:55:43.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -13,6 +13,172 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[iOS-你真的了解并发吗?]]></title>
+    <link href="http://www.liuchendi.com/2016/01/05/iOS/29_GCD_Operation/"/>
+    <id>http://www.liuchendi.com/2016/01/05/iOS/29_GCD_Operation/</id>
+    <published>2016-01-05T10:55:43.000Z</published>
+    <updated>2016-01-05T10:55:43.000Z</updated>
+    <content type="html"><![CDATA[<p>翻译了一篇appcoda的文章，通俗易懂，理清了并发的相关知识点。</p>
+<p>原文链接: <a href="http://www.appcoda.com/ios-concurrency/" target="_blank" rel="external">http://www.appcoda.com/ios-concurrency/</a></p>
+<a id="more"></a>
+<p><img src="http://www.appcoda.com/wp-content/uploads/2015/10/ios-concurrency-featured-1024x683.jpg" alt=""><br>并发一直被认为是iOS开发中的比较奇特的一部分。它被认为是危险的所以许多开发者尽可能避免使用。还有传言说尽可能避免使用多线程。如果你能很好的理解多线程，多线程的确是危险的。猜想一下人们的生活中有多少危险的行为和活动，很多是吧？只有当我们掌握它，才能运用自如。并发是一个双刃剑，所以你必须掌握如何使用它。它帮助你写出高效、快速执行、响应迅速的app，但与此同时，如果误用则会毫不留情的毁坏你的app。这就是我们在写并发代码之前，首先考虑为什么需要并发，哪个API才能解决问题的原因。 在iOS里面我们又许多API可以使用，在这个教程里面，我们来谈谈最常用的两个API - <code>NSOperation</code> 和 <code>Dispatch Queues</code></p>
+<h3 id="为什么需要并发？">为什么需要并发？</h3><p>我知道你是一个很棒的iOS开发者。无论你打算创造什么类型的app，你都需要知道并发能让你的app能够响应更迅速并且运行更快。这里总结了使用并发的几个优点</p>
+<ul>
+<li><p>利用iOS设备硬件：现在全部iOS设备有多核处理器允许开发者并发执行多个任务。你应该利用这个特性发挥硬件的优势。</p>
+</li>
+<li><p>更好的体验：你也许曾经写过web服务、处理一些IO,或者运行一些繁重的任务。做这类型的操作在UI线程将堵塞app的运行。用户面对这种情况，直接关闭app。并发在处理这些任务的时候可以在后台运行，不会阻塞主线程，不会让用户感觉的厌烦，他们仍然可以点击按钮，滑动app里面的视图，所有繁重的任务都在后台运行了。</p>
+</li>
+<li><p>NSOperation和dispatch queues的使用让并发更加简单：创建和管理线程并不是一件简单的任务。这就是为什么大部分开发者惧怕听到并发和多线程。在iOS里面，并发的API使用起来非常简单。你不必要关心线程的创建或者是底层的管理。API会帮你做这些事。另外一个重要的优点非常容易实现同步避免资源竞争。竞争发生在多线程访问共享资源，这样会导无法预料的结果。通过同步，你保证了线程间的资源的共享。</p>
+</li>
+</ul>
+<h3 id="关于并发你需要知道什么?">关于并发你需要知道什么?</h3><p>这这个教程里，我们将向你解释需要了解的并发知识，减轻你的恐惧。首先我们推荐先了解一些<code>blocks</code>（Swift中的闭包）,因为并发的API里面大量的使用这些知识。然后我们将谈谈<code>dispatch queues</code>和<code>NSOperationQueues</code>,我们将引导你了解并发的知识点、不同点、如何去使用。</p>
+<h3 id="Part_1:_GCD_(Grand_Central_Dispatch)">Part 1: GCD (Grand Central Dispatch)</h3><p>GCD 是最常用的API用来管理并发和执行异步操作在Unix底层系统中。GCD提供管理任务的队列。首先我们来看看队列(queue)是什么?</p>
+<h3 id="什么是Queues">什么是Queues</h3><p>队列是一个数据结构，管理对象的先进先出(FIFO)。 对垒非常想电影院售票窗口排队情况。 谁先来舍就能买到票。在计算机科学中，第一个添加进队列的对象也是第一个被移除的。<br><img src="http://www.appcoda.com/wp-content/uploads/2015/10/queue-line-2-1166050-1280x960.jpg" alt="http://www.appcoda.com/wp-content/uploads/2015/10/queue-line-2-1166050-1280x960.jpg"></p>
+<h3 id="Dispatch_Queues">Dispatch Queues</h3><p><code>Dispatch queues</code>能够非常容易异步的并发执行任务在你的应用中。任务被以<code>blocks</code>的形式提交到队列中。有两种类型的队列： </p>
+<ul>
+<li>(1) 串行队列(serial queues)</li>
+<li>(2) 并发队列(concurrent queues)</li>
+</ul>
+<p>在谈他们之间的不同点时，你应该知道任务是不同线程中执行而不是单独的线程中处理。换句话说，你在主线程中创建的blocks提交了任务到dispatch queues.但是所有这些任务(Blocks of codes)将在不同的线程中执行。</p>
+<h2 id="Serial_Queues">Serial Queues</h2><p>当你创建一个串行队列的时候，这个队列同一时间只能执行一个任务.所有在队列的任务都是平等的，按顺序执行。当然，你不比关心不同队列的任务，因为你任然可以通过多个串行队列并发执行任务。举个例子：你可以创建两个串行队列，每个队列同一时刻执行一个任务，但是两个任务可以并发执行。</p>
+<p>串行队列管理共享资源是非常有用的。他保证按顺序访问，防止竞争。想象一下只有售票口，但是一群人都想去买，所有的工作人员在这里是共享资源。如果人们不得不同时给人们提供服务，那么这将会变得没有秩序。为了解决这钟情况，需要要求人们排队(serial queue),所以工作人员才能同一时间为消费者提供服务。</p>
+<p>另外一方面，这并不意味着电影院可以同一时间接纳一个消费者，假如它设定了多个售票口，他便可以为多个消费者服务。这就是我说的为什么使用多个串行队列任然可以执行多个任务。</p>
+<p>使用串行队列的有点：</p>
+<ul>
+<li>1、保证访问的有序性，防止资源的竞争。</li>
+<li>2、任务有序的执行。提交到串行队列的任务将按顺序执行</li>
+<li>3、可以创建多个串行队列</li>
+</ul>
+<h2 id="Concurrent_Queues">Concurrent Queues</h2><p>顾名思义，并发队列允许并发的执行多个任务。每个任务(blocks of codes)按照他们添加到队列中的顺序启动。但是他们的执行是并发的，他们不必等其他任务开始。并发队列保证任务同一时间开始但不知道执行的顺序，执行时间、同一个时间点执行的任务数量。</p>
+<p>举个列子，你提交了3个任务(#1,#2,#3)到一个并发对ie.任务是并发执行的，启动的时候是按照添加到队列的顺序启动。然后，执行时间和完成时间是不一样的。甚至可能#2和#3开始花费了一些时间，他们也可以在#1任务完成前启动。 由系统来决定执行这些任务。</p>
+<h2 id="使用Queues">使用Queues</h2><p>刚刚我们解释了串行和并发队列，现在我们来看看怎么使用它们。默认情况下，系统提供给我们一个串行队列和4个并发队列。</p>
+<p><code>main dispatch queue</code>是全局的串行队列在主线程中执行。用来更新APP UI和运行UIView相关的更新。同一时间只有一个任务被执行，这就是当我们运行繁重的任务时会阻塞UI</p>
+<p>除了主队列，系统还提供4个并发队列。我们叫他们是<code>Global Dispatch queues</code>。这些队列是全局的，通过优先级来区分。使用这些全局的并发队列，你可以获得首选队列使用<code>dispatch_get_global_queue</code>,其中第一个参数可以有下面几个值：</p>
+<ul>
+<li>DISPATCH_QUEUE_PRIORITY_HIGH</li>
+<li>DISPATCH_QUEUE_PRIORITY_DEFAULT</li>
+<li>DISPATCH_QUEUE_PRIORITY_LOW</li>
+<li>DISPATCH_QUEUE_PRIORITY_BACKGROUND</li>
+</ul>
+<p>这些队列类型代表着执行的优先级。<code>DISPATCH_QUEUE_PRIORITY_HIGH</code>优先级最高,<code>DISPATCH_QUEUE_PRIORITY_BACKGROUND</code>优先级最低。所以你可以基于任务的优先级来使用这些队列。请注意，Apple的API也在使用这些队列，所以你的任务并不是唯一的在这些队列中。</p>
+<p>最后，你可以创建任意数量的串行和并行队列。尽管你可以自己创建并发队列，但我强烈建议使用这4个全局的并发队列。</p>
+<h2 id="GCD_备忘录">GCD 备忘录</h2><p>现在，你已经基本了解了 dispatch queues，我打算给你一个简单的备忘录，这个图非常简单，包含了所有你需要知道的GCD知识点。<br><img src="http://www.appcoda.com/wp-content/uploads/2015/10/gcd-cheatsheet.png" alt="http://www.appcoda.com/wp-content/uploads/2015/10/gcd-cheatsheet.png"></p>
+<p>很棒是吧？现在让我们来写一个demo来看看如何使用dispatch queues。我讲向你展示如何利用dispatch queues完善app的展示，让它更快的响应。</p>
+<h2 id="Demo_Project">Demo Project</h2><p>这个demo非常简单，展示4张图片,每一个需要请求网络。这个图片在主线程请求。为了展示给你UI是如何响应的，我添加了一个slider在image下面。<a href="http://7i7ht3.com1.z0.glb.clouddn.com/ConcurrencyDemoStarter.zip" target="_blank" rel="external">下载Demo</a></p>
+<p>点击start按钮下载图片,与此同时拖动slider在下载期间，你会发现你不能拖动他。</p>
+<p><img src="http://www.appcoda.com/wp-content/uploads/2015/10/concurrency-demo.png" alt="http://www.appcoda.com/wp-content/uploads/2015/10/concurrency-demo.png"></p>
+<p>当你点击开始按钮，图片开始被加载在主线程。很明显，这个方法非常糟糕，让UI没有反应。不幸的是现在还有好多APP在加载这样的任务的时候还放在主线程。现在我们用dispatch queues修改它。</p>
+<p>首先我们将使用并发队列然后再使用串行队列</p>
+<h2 id="使用并发队列">使用并发队列</h2><p>打开<code>ViewController.swift</code>，在<code>didClickOnStart</code>方法是处理图片的下载。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">	<span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">didClickOnStart</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">    <span class="keyword">let</span> img1 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">0</span>])</span><br><span class="line">    <span class="keyword">self</span>.imageView1.image = img1</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> img2 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">self</span>.imageView2.image = img2</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> img3 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">2</span>])</span><br><span class="line">    <span class="keyword">self</span>.imageView3.image = img3</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> img4 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">3</span>])</span><br><span class="line">    <span class="keyword">self</span>.imageView4.image = img4</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每一个<code>downloader</code>被认为是一个任务，所有任务都在主线程执行。现在，让我们获得一个全局并发队列的引用，这个优先级的Default</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>)</span><br><span class="line">       dispatch_async<span class="function"><span class="params">(queue)</span> &#123; <span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">           </span><br><span class="line">           <span class="keyword">let</span> img1 = Downloader.downloadImageWithURL(imageURLs[<span class="number">0</span>])</span><br><span class="line">           dispatch_async(dispatch_get_main_queue(), &#123;</span><br><span class="line">               </span><br><span class="line">               self.imageView1.image = img1</span><br><span class="line">           &#125;)</span><br><span class="line">           </span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<p>我们在block里面提交了一个任务下载第一张图片.当图片下载完成，我们提交另一个任务给主线程，使用这个下载好的image更新视图.换句话说，我们把这些任务放到后台线程下载，然后在主线程执行UI相关的操作.</p>
+<p><code>didClickOnStart</code>修改后的代码:</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">	<span class="property">@IBAction</span> func didClickOnStart(<span class="attribute">sender</span>: AnyObject) &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>)</span><br><span class="line">    dispatch_async<span class="function"><span class="params">(queue)</span> &#123; <span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> img1 = Downloader.downloadImageWithURL(imageURLs[<span class="number">0</span>])</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), &#123;</span><br><span class="line">            </span><br><span class="line">            self.imageView1.image = img1</span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    dispatch_async<span class="function"><span class="params">(queue)</span> &#123; <span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> img2 = Downloader.downloadImageWithURL(imageURLs[<span class="number">1</span>])</span><br><span class="line">        </span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), &#123;</span><br><span class="line">            </span><br><span class="line">            self.imageView2.image = img2</span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    dispatch_async<span class="function"><span class="params">(queue)</span> &#123; <span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> img3 = Downloader.downloadImageWithURL(imageURLs[<span class="number">2</span>])</span><br><span class="line">        </span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), &#123;</span><br><span class="line">            </span><br><span class="line">            self.imageView3.image = img3</span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    dispatch_async<span class="function"><span class="params">(queue)</span> &#123; <span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> img4 = Downloader.downloadImageWithURL(imageURLs[<span class="number">3</span>])</span><br><span class="line">        </span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), &#123;</span><br><span class="line">            </span><br><span class="line">            self.imageView4.image = img4</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你刚刚提交了4个并发下载图片的任务在default queue。现在运行app，它将快速的响应，并且下载的过程中还能够拖动slider</p>
+<h2 id="使用串行队列">使用串行队列</h2><p>另外一种解决的办法是使用串行队列。回到刚刚的<code>didClickOnStart()</code>方法，现在我们将使用串行队列来下载图片. 当我们使用串行队列的时候，我们应该注意引用了那一条队列。每个app有一个默认的串行队列（就是main queue）。 所以，我们在使用串行队列的时候，必须创建一个新的队列，否则任务可能在更新UI的时候执行，这会带来很糟糕的用户体验。你可以使用<code>dispatch_queue_create</code>来创建一个新的队列,修改后的代码是这样的：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">		<span class="property">@IBAction</span> func didClickOnStart(<span class="attribute">sender</span>: AnyObject) &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.appcoda.imagesQueue"</span>, DISPATCH_QUEUE_SERIAL)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    dispatch_async<span class="function"><span class="params">(serialQueue)</span> &#123; <span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> img1 = Downloader .downloadImageWithURL(imageURLs[<span class="number">0</span>])</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), &#123;</span><br><span class="line">            </span><br><span class="line">            self.imageView1.image = img1</span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    dispatch_async<span class="function"><span class="params">(serialQueue)</span> &#123; <span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> img2 = Downloader.downloadImageWithURL(imageURLs[<span class="number">1</span>])</span><br><span class="line">        </span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), &#123;</span><br><span class="line">            </span><br><span class="line">            self.imageView2.image = img2</span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    dispatch_async<span class="function"><span class="params">(serialQueue)</span> &#123; <span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> img3 = Downloader.downloadImageWithURL(imageURLs[<span class="number">2</span>])</span><br><span class="line">        </span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), &#123;</span><br><span class="line">            </span><br><span class="line">            self.imageView3.image = img3</span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    dispatch_async<span class="function"><span class="params">(serialQueue)</span> &#123; <span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> img4 = Downloader.downloadImageWithURL(imageURLs[<span class="number">3</span>])</span><br><span class="line">        </span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), &#123;</span><br><span class="line">            </span><br><span class="line">            self.imageView4.image = img4</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的两个点:</p>
+<ul>
+<li>1、花费长一点的时间下载图片比起并发队列下载。原因是因为我们同一时间只下载一张图片。每一个任务需要等待先前的任务完成，然后再执行</li>
+<li>2、image是按顺序加载的,image1,image2,image3,image4。这是因为串行队列在同一时间只能执行一个任务</li>
+</ul>
+<h2 id="Part_2:_Operation_Queues">Part 2: Operation Queues</h2><p>GCD的底层是基于C来实现并发的。<code>Operation queues</code>，是基于GCD的抽象。这意味着可以像GCD一样执行任务，但是有面向对象的风格。总之，Operation queues让开发者使用起来更简单。</p>
+<p>不像GCD，Operation queues不遵循先进先出顺序。Operation queues和dispatch queues的不同点是：</p>
+<ul>
+<li><p>1、不遵从FIFO(先进先出): 在<code>Operation queues</code>可以设置operation的优先级、添加operation间的依赖，这意味着可以定义operation的执行顺序，某些operation必须在其他opeartion完成之后执行。这就没有遵从先进先出的概念.</p>
+</li>
+<li><p>2、默认的，operation是并发的： 不能改变成串行类型。但是能够通过设置operation之间的依赖关系来实现串行的功能。</p>
+</li>
+<li><p>3、Operation Queues是<code>NSOperationQueue</code>的实例，任务封装在<code>NSOperation</code>实例当中</p>
+</li>
+</ul>
+<h2 id="NSOperation">NSOperation</h2><p>提交到Operation Queues的任务都是<code>NSOperation</code>实例。 我们在GCD中讨论过任务提交的形式都是通过block。 这里也可以这样做，只不过打包在<code>NSOperation</code>中. 你可以简单的认为<code>NSOperation</code>是工作的一个单元。</p>
+<p><code>NSOperation</code>是一个抽象的class，不能直接使用，所以我们不得不使用使用它的子类.在iOS中提供了两个现有的<code>NSOperation</code>的子类，这些类可以直接使用，但你任然可以使用自己的<code>NSOperation</code>子类运行这些操作，这两个类是:</p>
+<ul>
+<li><p>1、NSBlockOperation：使用这个类用block形式初始化operation. 这个operation自己可以包含多个block，当所有block执行完毕，这个operation则被认为是完成</p>
+</li>
+<li><p>2、NSInvocationOperation： 用invok一个selector的方式初始化一个operation</p>
+</li>
+</ul>
+<p>那么，NSOperation的有点是什么？</p>
+<ul>
+<li><p>1、首先，他们支持依赖关系，通过使用<code>addDependency</code>方法.当你需要开始一个operation依赖于另外一个operation执行完成时候，会使用NSOperation。<br><img src="http://www.appcoda.com/wp-content/uploads/2015/10/NSOperation-Fig2.png" alt="http://www.appcoda.com/wp-content/uploads/2015/10/NSOperation-Fig2.png"></p>
+</li>
+<li><p>2、可以改变执行的优先级,设置<code>queuePriority</code>属性为下面的值，高优先级的会先执行。</p>
+</li>
+</ul>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">	public <span class="class"><span class="keyword">enum</span> <span class="title">NSOperationQueuePriority</span> : <span class="title">Int</span> &#123;</span></span><br><span class="line">    <span class="keyword">case</span> <span class="constant">VeryLow</span></span><br><span class="line">    <span class="keyword">case</span> <span class="constant">Low</span></span><br><span class="line">    <span class="keyword">case</span> <span class="constant">Normal</span></span><br><span class="line">    <span class="keyword">case</span> <span class="constant">High</span></span><br><span class="line">    <span class="keyword">case</span> <span class="constant">VeryHigh</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>3、可以取消特定的operation或者所有operation.operation添加到queue之后可以被取消，<code>cancel()</code>方法被调用的时候取消已经完成。 当你取消任意一个operation，下面三个当中场景的其中一个会发生：</p>
+<ul>
+<li>operation已经完成。这种情况cancel方法什么都不做。</li>
+<li>operation正在执行.这种情况，系统不会强制停止operation，但会吧<code>cancelled</code>属性置为true</li>
+<li>operation任然在等待执行。这种情况，operation将永远不会被执行。</li>
+</ul>
+</li>
+<li><p>4、NSOperation有3个有用的bool属性<code>finished</code>、<code>cancelled</code>、<code>ready</code>. </p>
+<ul>
+<li>finished 在执行完成后设置为true</li>
+<li>cancelled 在operation被调用<code>cancel()</code>方法后设置为true</li>
+<li>ready 在operation即将执行的时候设置true</li>
+</ul>
+</li>
+<li>5、任何一个<code>NSOperation</code>有一个完成后被调用的block，这个block将被调用，当finished设置为true的时候</li>
+</ul>
+<p>现在让我们用NSOperationQueues重写刚刚那个的demo。首先声明属性，在ViewController里面:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">var</span> queue = <span class="function"><span class="title">NSOperationQueue</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+<p>在<code>didClickOnstart()</code>方法里面修改代码：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">	<span class="property">@IBAction</span> func didClickOnStart(<span class="attribute">sender</span>: AnyObject) &#123;</span><br><span class="line">    queue = NSOperationQueue()</span><br><span class="line"> </span><br><span class="line">    queue.addOperationWithBlock &#123; <span class="function"><span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> img1 = Downloader.downloadImageWithURL(imageURLs[<span class="number">0</span>])</span><br><span class="line"> </span><br><span class="line">        NSOperationQueue.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">            self.imageView1.image = img1</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    queue.addOperationWithBlock &#123; <span class="function"><span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        <span class="keyword">let</span> img2 = Downloader.downloadImageWithURL(imageURLs[<span class="number">1</span>])</span><br><span class="line">        </span><br><span class="line">        NSOperationQueue.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">            self.imageView2.image = img2</span><br><span class="line">        &#125;)</span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    queue.addOperationWithBlock &#123; <span class="function"><span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        <span class="keyword">let</span> img3 = Downloader.downloadImageWithURL(imageURLs[<span class="number">2</span>])</span><br><span class="line">        </span><br><span class="line">        NSOperationQueue.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">            self.imageView3.image = img3</span><br><span class="line">        &#125;)</span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    queue.addOperationWithBlock &#123; <span class="function"><span class="params">()</span> -&gt;</span> Void <span class="keyword">in</span></span><br><span class="line">        <span class="keyword">let</span> img4 = Downloader.downloadImageWithURL(imageURLs[<span class="number">3</span>])</span><br><span class="line">        </span><br><span class="line">        NSOperationQueue.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">            self.imageView4.image = img4</span><br><span class="line">        &#125;)</span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用<code>addOperationWithBlock</code>创建了一个operation，很简单是不？为了在主线程执行，替代了使用GCD中调用的<code>dispatch_async()</code> ,我们可以用<code>NSOperationQueue.mainQueue()</code>实现相同的功能。</p>
+<p>上面的例子使用<code>addOperationWithBlock</code>来添加operation在queue。让我们来看看<code>NSBlockOperation</code>是如何实现的</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">	<span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">didClickOnStart</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    queue = <span class="type">NSOperationQueue</span>()</span><br><span class="line">    <span class="keyword">let</span> operation1 = <span class="type">NSBlockOperation</span>(block: &#123;</span><br><span class="line">        <span class="keyword">let</span> img1 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">0</span>])</span><br><span class="line">        <span class="type">NSOperationQueue</span>.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">            <span class="keyword">self</span>.imageView1.image = img1</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">    </span><br><span class="line">    operation1.completionBlock = &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Operation 1 completed"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    queue.addOperation(operation1)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> operation2 = <span class="type">NSBlockOperation</span>(block: &#123;</span><br><span class="line">        <span class="keyword">let</span> img2 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">1</span>])</span><br><span class="line">        <span class="type">NSOperationQueue</span>.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">            <span class="keyword">self</span>.imageView2.image = img2</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">    </span><br><span class="line">    operation2.completionBlock = &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Operation 2 completed"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    queue.addOperation(operation2)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> operation3 = <span class="type">NSBlockOperation</span>(block: &#123;</span><br><span class="line">        <span class="keyword">let</span> img3 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">2</span>])</span><br><span class="line">        <span class="type">NSOperationQueue</span>.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">            <span class="keyword">self</span>.imageView3.image = img3</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">    </span><br><span class="line">    operation3.completionBlock = &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Operation 3 completed"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    queue.addOperation(operation3)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> operation4 = <span class="type">NSBlockOperation</span>(block: &#123;</span><br><span class="line">        <span class="keyword">let</span> img4 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">3</span>])</span><br><span class="line">        <span class="type">NSOperationQueue</span>.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">            <span class="keyword">self</span>.imageView4.image = img4</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">    </span><br><span class="line">    operation4.completionBlock = &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Operation 4 completed"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    queue.addOperation(operation4)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建了一个<code>NSBlockOperation</code>实例把任务封装到block。 使用<code>NSBlockOperation</code>，允许设置完成的回调(completion handler). Operation完成后，回调会被调用。运行demo后，控制台上输出:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Operation <span class="number">1</span> completed</span><br><span class="line">Operation <span class="number">3</span> completed</span><br><span class="line">Operation <span class="number">2</span> completed</span><br><span class="line">Operation <span class="number">4</span> completed</span><br></pre></td></tr></table></figure>
+<h2 id="取消Operations">取消Operations</h2><p>如上面提到的，<code>NSBlockOperation</code>允许我们管理operations。现在我们创建一个cancel按钮放到导航栏,实现cancel这个事件。 为了说明cancel operation,添加依赖在#2和#1之间, 然后在添加#3和#2之间的依赖。 这就说明#2会在#1完成时候开始，#3会在#2完成后开始。 #4没有依赖会并发工作。</p>
+<p>取消所有operation的方法是<code>cancelAllOperations()</code>,在ViewController类里面添加。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">didClickOnCancel</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">       </span><br><span class="line">       <span class="keyword">self</span>.queue.cancelAllOperations()</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>修改后的didClickOnStart()代码是</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">didClickOnStart</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">      queue = <span class="type">NSOperationQueue</span>()</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">let</span> operation1 = <span class="type">NSBlockOperation</span>(block: &#123;</span><br><span class="line">          <span class="keyword">let</span> img1 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">0</span>])</span><br><span class="line">          <span class="type">NSOperationQueue</span>.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">              <span class="keyword">self</span>.imageView1.image = img1</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line">      </span><br><span class="line">      operation1.completionBlock = &#123;</span><br><span class="line">          <span class="built_in">print</span>(<span class="string">"Operation 1 completed, cancelled:<span class="subst">\(operation1.cancelled)</span>"</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      queue.addOperation(operation1)</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">let</span> operation2 = <span class="type">NSBlockOperation</span>(block: &#123;</span><br><span class="line">          <span class="keyword">let</span> img2 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">1</span>])</span><br><span class="line">          <span class="type">NSOperationQueue</span>.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">              <span class="keyword">self</span>.imageView2.image = img2</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line">      operation2.addDependency(operation1)</span><br><span class="line">      operation2.completionBlock = &#123;</span><br><span class="line">          <span class="built_in">print</span>(<span class="string">"Operation 2 completed, cancelled:<span class="subst">\(operation2.cancelled)</span>"</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      queue.addOperation(operation2)</span><br><span class="line">      </span><br><span class="line">      </span><br><span class="line">      <span class="keyword">let</span> operation3 = <span class="type">NSBlockOperation</span>(block: &#123;</span><br><span class="line">          <span class="keyword">let</span> img3 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">2</span>])</span><br><span class="line">          <span class="type">NSOperationQueue</span>.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">              <span class="keyword">self</span>.imageView3.image = img3</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line">      operation3.addDependency(operation2)</span><br><span class="line"></span><br><span class="line">      operation3.completionBlock = &#123;</span><br><span class="line">          <span class="built_in">print</span>(<span class="string">"Operation 3 completed, cancelled:<span class="subst">\(operation3.cancelled)</span>"</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      queue.addOperation(operation3)</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">let</span> operation4 = <span class="type">NSBlockOperation</span>(block: &#123;</span><br><span class="line">          <span class="keyword">let</span> img4 = <span class="type">Downloader</span>.downloadImageWithURL(imageURLs[<span class="number">3</span>])</span><br><span class="line">          <span class="type">NSOperationQueue</span>.mainQueue().addOperationWithBlock(&#123;</span><br><span class="line">              <span class="keyword">self</span>.imageView4.image = img4</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line">      </span><br><span class="line">      operation4.completionBlock = &#123;</span><br><span class="line">          <span class="built_in">print</span>(<span class="string">"Operation 4 completed, cancelled:<span class="subst">\(operation4.cancelled)</span>"</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      queue.addOperation(operation4)</span><br><span class="line">      </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>按下start按钮后点击取消按钮. 这些operation将被取消在operation #1完成之后。</p>
+<p>在这里发生了什么？</p>
+<ul>
+<li><p>1、当#1已经执行，cancel不执行任何事情。第一张图片任然显示</p>
+</li>
+<li><p>2、点击cancel按钮足够快，#2被取消. <code>cancelAllOperations()</code>阻止#2执行，所以image2没有显示</p>
+</li>
+<li><p>3、#3依赖#2完成，因为#2取消了，所以#2也不能被执行</p>
+</li>
+<li><p>4、#4没有依赖，并发执行，所以下载了图片.</p>
+</li>
+</ul>
+<p><img src="http://www.appcoda.com/wp-content/uploads/2015/10/ios-concurrency-cancel-demo.png" alt="http://www.appcoda.com/wp-content/uploads/2015/10/ios-concurrency-cancel-demo.png"></p>
+<h2 id="总结">总结</h2><p>1、了解并发的概念、解释了GCD、创建串行和并发队列</p>
+<p>2、检验了NSOperationQueues的执行顺序</p>
+<p>3、学习了NSOperationQueues和GCD的优缺点</p>
+<h2 id="参考">参考</h2><p>完整的<a href="https://github.com/appcoda/NSOperation-Demo" target="_blank" rel="external">Demo</a></p>
+<p>深入了解: <a href="https://developer.apple.com/library/ios/documentation/General/Conceptual/ConcurrencyProgrammingGuide/Introduction/Introduction.html" target="_blank" rel="external">https://developer.apple.com/library/ios/documentation/General/Conceptual/ConcurrencyProgrammingGuide/Introduction/Introduction.html</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>翻译了一篇appcoda的文章，通俗易懂，理清了并发的相关知识点。</p>
+<p>原文链接: <a href="http://www.appcoda.com/ios-concurrency/">http://www.appcoda.com/ios-concurrency/</a></p>]]>
+    
+    </summary>
+    
+      <category term="GCD" scheme="http://www.liuchendi.com/tags/GCD/"/>
+    
+      <category term="NSOperation" scheme="http://www.liuchendi.com/tags/NSOperation/"/>
+    
+      <category term="Swift" scheme="http://www.liuchendi.com/tags/Swift/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/tags/iOS/"/>
+    
+      <category term="翻译" scheme="http://www.liuchendi.com/categories/%E7%BF%BB%E8%AF%91/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[iOS-RunLoop]]></title>
@@ -1343,53 +1509,6 @@ NSBlockOperation *operation2 = [NSBlockOperation blockOperationWithBlock:^(){
       <category term="dispatch_semaphore" scheme="http://www.liuchendi.com/tags/dispatch-semaphore/"/>
     
       <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Git的用法总结]]></title>
-    <link href="http://www.liuchendi.com/2015/03/16/iOS/10_Git%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93/"/>
-    <id>http://www.liuchendi.com/2015/03/16/iOS/10_Git用法总结/</id>
-    <published>2015-03-16T03:30:56.000Z</published>
-    <updated>2015-11-10T09:46:07.000Z</updated>
-    <content type="html"><![CDATA[<p>git简单命令记录<br><a id="more"></a></p>
-<p>##初始化<br>git init 初始化一个仓库</p>
-<p>git add 添加一个文件到仓库里面</p>
-<p>git commit -m “commit a file”   提交文件</p>
-<p>git status 查看文件的状态</p>
-<p>git diff  查看文件修改的不同</p>
-<p> git log 查看提交的日志  //只能查看3次的日志</p>
-<p>##版本回退</p>
-<p>用<code>HEAD</code>表示当前版本，上一个版本是<code>HEAD^</code> ，上上一个版本是<code>HEAD^^</code></p>
-<p>git reset –hard HEAD^   //回退到上一个版本</p>
-<p>git reflog  //记录使用命令</p>
-<p>##工作区和版本库</p>
-<p>git add是把工作区的文件添加到版本库的暂存区</p>
-<p>git commit再把暂存区的文件提交到分支</p>
-<p>创建版本库的时候，git为我们自动创建了一个master分区</p>
-<p>Untracked files:未提交的文件，新的</p>
-<p>##工作区和版本库最新版本区别</p>
-<p>##撤销修改<br>git checkout – file      <code>--</code>很重要表示撤回,丢弃工作区的修改 没有的话则表示创建一个新的分支</p>
-<p>git reset HEAD file  可以把暂存区的修改撤销掉（unstage），重新放回工作区：:</p>
-<p>##删除<br>git rm        从版本库里面删除</p>
-<p>##切换分支<br>git checkout命令加上-b参数表示创建并切换，</p>
-<p>git branch命令会列出所有分支，当前分支前面会标一个*号</p>
-<p>git merge命令用于合并指定分支到当前分支</p>
-<p>git log –graph –pretty=oneline –abbrev-commit 查看分支合并情况</p>
-<p>git branch -d 删除分支</p>
-<p>git stash 存储当前现场</p>
-<p>git stash list 查看当前的现场</p>
-<p>git stash apply恢复现场但是恢复后，stash内容并不删除，你需要用git stash drop来删除；</p>
-<p>另一种方式是用git stash pop，恢复的同时把stash内容也删了：</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[简单来说, 就是一个分布式版本控制系统]]>
-    
-    </summary>
-    
-      <category term="Git" scheme="http://www.liuchendi.com/tags/Git/"/>
-    
-      <category term="Git" scheme="http://www.liuchendi.com/categories/Git/"/>
     
   </entry>
   

@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.liuchendi.com/2016/01/05/iOS/29_GCD_Operation/</loc>
+    <lastmod>2016-01-05T10:55:43.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://www.liuchendi.com/2016/01/04/iOS/28_Runloop/</loc>
     <lastmod>2016-01-04T08:58:25.000Z</lastmod>
   </url>

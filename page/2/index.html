@@ -115,7 +115,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 15px;">Swift</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+						<a href="/tags/GCD/" style="font-size: 10px;">GCD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 15px;">Swift</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
 					</div>
 				</section>
 				
@@ -186,6 +186,73 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-iOS/21_Tweak" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/18/iOS/21_Tweak/" class="article-date">
+  	<time datetime="2015-12-18T03:22:49.000Z" itemprop="datePublished">2015-12-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/18/iOS/21_Tweak/">iOS逆向 - 使用Tweak</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>创建第一个Tweak工程. Tweak是用Theos越狱工具开发包创建的.需要提前安装下面的工具</p>
+<p>1、Xcoed 和 Command Line Tools 这个下载完Xcode就有</p>
+<p>2、<a href="https://github.com/DHowett/theos">Theos</a></p>
+<p>3、配置<a href="http://joedj.net/ldid">ldid</a></p>
+<p>4、配置CydiaSubstrate. 后面有介绍。</p>
+<p>5、配置dpkg-deb.后面有介绍<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS逆向/">iOS逆向</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/18/iOS/21_Tweak/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-iOS/20_Reveal" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -763,68 +830,6 @@
       
         <p class="article-more-link">
           <a  href="/2015/11/10/iOS/2_dispatch_semaphore和NSOperationQueue并发/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-iOS/10_Git用法总结" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/03/16/iOS/10_Git用法总结/" class="article-date">
-  	<time datetime="2015-03-16T03:30:56.000Z" itemprop="datePublished">2015-03-16</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/16/iOS/10_Git用法总结/">Git的用法总结</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>git简单命令记录<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Git/">Git</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Git/">Git</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/03/16/iOS/10_Git用法总结/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
