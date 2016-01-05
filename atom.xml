@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2016-01-05T11:16:09.000Z</updated>
+  <updated>2016-01-05T11:23:33.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -18,12 +18,13 @@
     <title><![CDATA[iOS-你真的了解并发吗?]]></title>
     <link href="http://www.liuchendi.com/2016/01/05/iOS/29_GCD_Operation/"/>
     <id>http://www.liuchendi.com/2016/01/05/iOS/29_GCD_Operation/</id>
-    <published>2016-01-05T11:16:09.000Z</published>
-    <updated>2016-01-05T11:16:09.000Z</updated>
+    <published>2016-01-05T11:23:33.000Z</published>
+    <updated>2016-01-05T11:23:33.000Z</updated>
     <content type="html"><![CDATA[<p>翻译了一篇appcoda的文章，通俗易懂，理清了并发的相关知识点。</p>
+<p>为了防止被墙，已把把图片和demo下载的连接全部改成国内存储。</p>
 <p>原文链接: <a href="http://www.appcoda.com/ios-concurrency/" target="_blank" rel="external">http://www.appcoda.com/ios-concurrency/</a></p>
 <a id="more"></a>
-<p><img src="http://www.appcoda.com/wp-content/uploads/2015/10/ios-concurrency-featured-1024x683.jpg" alt=""><br>并发一直被认为是iOS开发中的比较奇特的一部分。它被认为是危险的所以许多开发者尽可能避免使用。还有传言说尽可能避免使用多线程。如果你不能很好的理解多线程，多线程的确是危险的。猜想一下人们的生活中有多少危险的行为和活动，很多是吧？只有当我们掌握它，才能运用自如。并发是一个双刃剑，所以你必须掌握如何使用它。它帮助你写出高效、快速执行、响应迅速的app，但与此同时，如果误用则会毫不留情的毁坏你的app。这就是我们在写并发代码之前，首先考虑为什么需要并发，哪个API才能解决问题的原因。 在iOS里面我们有许多API可以使用，在这个教程里面，我们来谈谈最常用的 - <code>NSOperation</code> 和 <code>Dispatch Queues</code></p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_1.jpg" alt="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_1.jpg"><br>并发一直被认为是iOS开发中的比较奇特的一部分。它被认为是危险的所以许多开发者尽可能避免使用。还有传言说尽可能避免使用多线程。如果你不能很好的理解多线程，多线程的确是危险的。猜想一下人们的生活中有多少危险的行为和活动，很多是吧？只有当我们掌握它，才能运用自如。并发是一个双刃剑，所以你必须掌握如何使用它。它帮助你写出高效、快速执行、响应迅速的app，但与此同时，如果误用则会毫不留情的毁坏你的app。这就是我们在写并发代码之前，首先考虑为什么需要并发，哪个API才能解决问题的原因。 在iOS里面我们有许多API可以使用，在这个教程里面，我们来谈谈最常用的 - <code>NSOperation</code> 和 <code>Dispatch Queues</code></p>
 <h3 id="为什么需要并发？">为什么需要并发？</h3><p>我知道你是一个很棒的iOS开发者。无论你打算创造什么类型的app，你都需要知道并发能让你的app能够响应更迅速并且运行更快。这里总结了使用并发的几个优点</p>
 <ul>
 <li><p>利用iOS设备硬件：现在全部iOS设备有多核处理器允许开发者并发执行多个任务。你应该利用这个特性发挥硬件的优势。</p>
@@ -35,7 +36,7 @@
 </ul>
 <h3 id="关于并发你需要知道什么?">关于并发你需要知道什么?</h3><p>这这个教程里，我们将向你解释需要了解的并发知识，减轻你的恐惧。首先我们推荐先了解一些<code>blocks</code>（Swift中的闭包）,因为并发的API里面大量的使用这些知识。然后我们将谈谈<code>dispatch queues</code>和<code>NSOperationQueues</code>,我们将引导你了解并发的知识点、不同点、如何去使用。</p>
 <h3 id="Part_1:_GCD_(Grand_Central_Dispatch)">Part 1: GCD (Grand Central Dispatch)</h3><p>GCD 是最常用的API用来管理并发和执行异步操作在Unix底层系统中。GCD提供管理任务的队列。首先我们来看看队列(queue)是什么?</p>
-<h3 id="什么是Queues">什么是Queues</h3><p>队列是一个数据结构，管理对象的先进先出(FIFO)。 队列非常像电影院售票窗口排队情况。 谁先来舍就能买到票。在计算机科学中，第一个添加进队列的对象也是第一个被移除的。<br><img src="http://www.appcoda.com/wp-content/uploads/2015/10/queue-line-2-1166050-1280x960.jpg" alt="http://www.appcoda.com/wp-content/uploads/2015/10/queue-line-2-1166050-1280x960.jpg"></p>
+<h3 id="什么是Queues">什么是Queues</h3><p>队列是一个数据结构，管理对象的先进先出(FIFO)。 队列非常像电影院售票窗口排队情况。 谁先来舍就能买到票。在计算机科学中，第一个添加进队列的对象也是第一个被移除的。<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_2.jpg" alt="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_2.jpg"></p>
 <h3 id="Dispatch_Queues">Dispatch Queues</h3><p><code>Dispatch queues</code>能够非常容易在你的应用中异步的并发执行任务。任务以<code>blocks</code>的形式提交到队列中。有两种类型的队列： </p>
 <ul>
 <li>(1) 串行队列(serial queues)</li>
@@ -64,11 +65,11 @@
 </ul>
 <p>这些队列类型代表着执行的优先级。<code>DISPATCH_QUEUE_PRIORITY_HIGH</code>优先级最高,<code>DISPATCH_QUEUE_PRIORITY_BACKGROUND</code>优先级最低。所以你可以基于任务的优先级来使用这些队列。请注意，Apple的API也在使用这些队列，所以你的任务并不是唯一的在这些队列中。</p>
 <p>最后，你可以创建任意数量的串行和并行队列。尽管你可以自己创建并发队列，但我强烈建议使用这4个全局的并发队列。</p>
-<h2 id="GCD_备忘录">GCD 备忘录</h2><p>现在，你已经基本了解了 <code>dispatch queues</code>，我打算给你一个简单的备忘录，这个图非常简单，包含了所有你需要知道的GCD知识点。<br><img src="http://www.appcoda.com/wp-content/uploads/2015/10/gcd-cheatsheet.png" alt="http://www.appcoda.com/wp-content/uploads/2015/10/gcd-cheatsheet.png"></p>
+<h2 id="GCD_备忘录">GCD 备忘录</h2><p>现在，你已经基本了解了 <code>dispatch queues</code>，我打算给你一个简单的备忘录，这个图非常简单，包含了所有你需要知道的GCD知识点。<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_3.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_3.png"></p>
 <p>很棒是吧？现在让我们来写一个demo来看看如何使用dispatch queues。我讲向你展示如何利用dispatch queues完善app的展示，让它更快的响应。</p>
 <h2 id="Demo_Project">Demo Project</h2><p>这个demo非常简单，展示4张图片,每一个需要请求网络。这个图片在主线程请求。为了展示给你UI是如何响应的，我添加了一个slider在image下面。<a href="http://7i7ht3.com1.z0.glb.clouddn.com/ConcurrencyDemoStarter.zip" target="_blank" rel="external">下载Demo</a></p>
 <p>点击start按钮下载图片,与此同时拖动slider在下载期间，你会发现你不能拖动他。</p>
-<p><img src="http://www.appcoda.com/wp-content/uploads/2015/10/concurrency-demo.png" alt="http://www.appcoda.com/wp-content/uploads/2015/10/concurrency-demo.png"></p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_4.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_4.png"></p>
 <p>当你点击开始按钮，图片开始被加载在主线程。很明显，这个方法非常糟糕，让UI没有反应。不幸的是现在还有好多APP在加载这样的任务的时候还放在主线程。现在我们用dispatch queues修改它。</p>
 <p>首先我们将使用并发队列然后再使用串行队列</p>
 <h2 id="使用并发队列">使用并发队列</h2><p>打开<code>ViewController.swift</code>，在<code>didClickOnStart</code>方法是处理图片的下载。</p>
@@ -105,7 +106,7 @@
 </ul>
 <p>那么，NSOperation的有点是什么？</p>
 <ul>
-<li><p>1、首先，他们支持依赖关系，通过使用<code>addDependency</code>方法.当你需要开始一个operation依赖于另外一个operation执行完成时候，会使用NSOperation。<br><img src="http://www.appcoda.com/wp-content/uploads/2015/10/NSOperation-Fig2.png" alt="http://www.appcoda.com/wp-content/uploads/2015/10/NSOperation-Fig2.png"></p>
+<li><p>1、首先，他们支持依赖关系，通过使用<code>addDependency</code>方法.当你需要开始一个operation依赖于另外一个operation执行完成时候，会使用NSOperation。<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_5.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_5.png"></p>
 </li>
 <li><p>2、可以改变执行的优先级,设置<code>queuePriority</code>属性为下面的值，高优先级的会先执行。</p>
 </li>
@@ -156,7 +157,7 @@
 <li><p>4、<code>#4</code>没有依赖，并发执行，所以下载了图片.</p>
 </li>
 </ul>
-<p><img src="http://www.appcoda.com/wp-content/uploads/2015/10/ios-concurrency-cancel-demo.png" alt="http://www.appcoda.com/wp-content/uploads/2015/10/ios-concurrency-cancel-demo.png"></p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_6.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/29_GCD_NSOperation_6.png"></p>
 <h2 id="总结">总结</h2><p>1、了解并发的概念、解释了GCD、创建串行和并发队列</p>
 <p>2、检验了NSOperationQueues的执行顺序</p>
 <p>3、学习了NSOperationQueues和GCD的优缺点</p>
@@ -165,6 +166,7 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<p>翻译了一篇appcoda的文章，通俗易懂，理清了并发的相关知识点。</p>
+<p>为了防止被墙，已把把图片和demo下载的连接全部改成国内存储。</p>
 <p>原文链接: <a href="http://www.appcoda.com/ios-concurrency/">http://www.appcoda.com/ios-concurrency/</a></p>]]>
     
     </summary>
