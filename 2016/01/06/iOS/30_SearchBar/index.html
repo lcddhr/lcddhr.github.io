@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS翻译-如何自定义SearchBar | 小木头</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="翻译了一篇appcoda的文章，介绍如何自定义SearchBar的文章
+原文链接: http://www.appcoda.com/custom-search-bar-tutorial/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS翻译-如何自定义SearchBar">
+<meta property="og:url" content="http://www.liuchendi.com/2016/01/06/iOS/30_SearchBar/index.html">
+<meta property="og:site_name" content="小木头">
+<meta property="og:description" content="翻译了一篇appcoda的文章，介绍如何自定义SearchBar的文章
+原文链接: http://www.appcoda.com/custom-search-bar-tutorial/">
+<meta property="og:image" content="http://www.appcoda.com/wp-content/uploads/2015/08/custom-search-bar-featured-1024x690.jpg">
+<meta property="og:image" content="http://www.appcoda.com/wp-content/uploads/2015/08/search-bar-demo-app-1024x672.png">
+<meta property="og:image" content="http://www.appcoda.com/wp-content/uploads/2015/08/t41_1_default_search_sample.png">
+<meta property="og:image" content="http://www.appcoda.com/wp-content/uploads/2015/08/t41_5_search_bar_subviews.png">
+<meta property="og:image" content="http://www.appcoda.com/wp-content/uploads/2015/08/custom_search_bar.png">
+<meta property="og:updated_time" content="2016-01-06T07:31:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS翻译-如何自定义SearchBar">
+<meta name="twitter:description" content="翻译了一篇appcoda的文章，介绍如何自定义SearchBar的文章
+原文链接: http://www.appcoda.com/custom-search-bar-tutorial/">
+  
+    <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7i7ht3.com1.z0.glb.clouddn.com/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">小木头</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心中无敌则无敌于天下</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/about">关于我</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/lcddhr" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/329096966" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="http://lcddhr.github.io/atom.xml" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/GCD/" style="font-size: 10px;">GCD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 15px;">Swift</a> <a href="/tags/UISearchbar/" style="font-size: 10px;">UISearchbar</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://xiaoxuetu.github.io/">小学徒的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">小木头   iOS开发者</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">小木头</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7i7ht3.com1.z0.glb.clouddn.com/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">小木头</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心中无敌则无敌于天下</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/about">关于我</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/lcddhr" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/329096966" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="http://lcddhr.github.io/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-iOS/30_SearchBar" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/06/iOS/30_SearchBar/" class="article-date">
+  	<time datetime="2016-01-06T07:31:49.000Z" itemprop="datePublished">2016-01-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS翻译-如何自定义SearchBar
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Swift/">Swift</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UISearchbar/">UISearchbar</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/翻译/">翻译</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>翻译了一篇appcoda的文章，介绍如何自定义SearchBar的文章</p>
+<p>原文链接: <a href="http://www.appcoda.com/custom-search-bar-tutorial/" target="_blank" rel="external">http://www.appcoda.com/custom-search-bar-tutorial/</a></p>
+<a id="more"></a>
+<p>app里面经常需要展示一些搜索的数据显示到tableview上。不幸的是，大部分开发者使用原生的控件。在iOS8里，苹果提供了一个特殊的控件<code>UISearchDisplayController</code>。这个控件结合了<code>UISeachBar</code>,很轻松的添加搜索的功能。不过，现在已经成为了历史。</p>
+<p><code>UISearchController</code>在iOS8里面已经取代了<code>UISearchDisplayController</code>. 尽管这虽然改变，但是在IB里面没有继承可视化控件，它必须用代码去初始化配置，不过非常简单。</p>
+<p><img src="http://www.appcoda.com/wp-content/uploads/2015/08/custom-search-bar-featured-1024x690.jpg" alt="http://www.appcoda.com/wp-content/uploads/2015/08/custom-search-bar-featured-1024x690.jpg"></p>
+<p>除了上面所说的，有一个有趣的关于tableview datasource搜索的地方。iOS提供了一个searchbar预设的外观，这个bar适用于大多数情况。 然而，当UI需要高度自定义，这个searchbar看起来与我们的不是那么搭。在这种情况下，我们的searchbar必须适当的定制。</p>
+<p>在这个教程里面，会展示<code>UISearchController</code>在iOS8里面是如何搜索和过滤数据的，使用默认的searchbar。</p>
+<p>接着如何重写默认的searchbar的外观，实现自定义。所以我们设置了<code>UISearchController</code>和<code>UISearchBar</code>的子类，里面的代码通俗易懂，并且控件非常通用，可以复用。</p>
+<h2 id="Demo_App_Overview">Demo App Overview</h2><p>我们将实现下面两个界面<br><img src="http://www.appcoda.com/wp-content/uploads/2015/08/search-bar-demo-app-1024x672.png" alt="http://www.appcoda.com/wp-content/uploads/2015/08/search-bar-demo-app-1024x672.png"></p>
+<p>第一张在<code>UISearchController</code>使用默认<code>searchbar</code>。第二张是自定义的searchbar.</p>
+<p>首先下载工程的:<a href="http://7i7ht3.com1.z0.glb.clouddn.com/CustomSearchBarStarter.zip" target="_blank" rel="external">Demo</a></p>
+<h2 id="加载和展示数据">加载和展示数据</h2><p>首先加载<code>countries.txt</code>文件里面的数据,然后我们再通过列表的方式展示。</p>
+<p>打开<code>ViewController.swift</code>文件，声明下面的属性</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var dataArray = [<span class="link_label">String</span>](<span class="link_url"></span>)	//countries.txt文件里面的内容，tableview展示的数据</span><br><span class="line"> </span><br><span class="line">var filteredArray = [<span class="link_label">String</span>](<span class="link_url"></span>)//搜索匹配的内容</span><br><span class="line"> </span><br><span class="line">var shouldShowSearchResults = false //控制是否需要展示数据</span><br></pre></td></tr></table></figure>
+<p>加载tableView所需要的数据数据</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">	<span class="func"><span class="keyword">func</span> <span class="title">loadListOfCountries</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// Specify the path to the countries list file.</span></span><br><span class="line">    <span class="keyword">let</span> pathToFile = <span class="type">NSBundle</span>.mainBundle().pathForResource(<span class="string">"countries"</span>, ofType: <span class="string">"txt"</span>)</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> path = pathToFile &#123;</span><br><span class="line">        <span class="comment">// Load the file contents as a string.</span></span><br><span class="line">        <span class="keyword">let</span> countriesString = <span class="type">String</span>(contentsOfFile: path, encoding: <span class="type">NSUTF8StringEncoding</span>, error: <span class="literal">nil</span>)!</span><br><span class="line"> </span><br><span class="line">        <span class="comment">// Append the countries from the string to the dataArray array by breaking them using the line change character.</span></span><br><span class="line">        dataArray = countriesString.componentsSeparatedByString(<span class="string">"\n"</span>)</span><br><span class="line"> </span><br><span class="line">        <span class="comment">// Reload the tableview.</span></span><br><span class="line">        tblSearchResults.reloadData()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>viewDidLoad()</code>里面调用它</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">override</span> <span class="tag">func</span> <span class="tag">viewDidLoad</span>() &#123;</span><br><span class="line">    ...</span><br><span class="line"> </span><br><span class="line">    <span class="tag">loadListOfCountries</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>更新数据，返回dataArray </p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">	<span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, numberOfRowsInSection section: Int)</span></span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> shouldShowSearchResults &#123;</span><br><span class="line">        <span class="keyword">return</span> filteredArray.<span class="built_in">count</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> dataArray.<span class="built_in">count</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>确定cell需要展示的内容</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> cell = tableView.dequeueReusableCellWithIdentifier(<span class="string">"idCell"</span>, forIndexPath: indexPath) <span class="keyword">as</span>! <span class="type">UITableViewCell</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> shouldShowSearchResults &#123;</span><br><span class="line">        cell.textLabel?.text = filteredArray[indexPath.row]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        cell.textLabel?.text = dataArray[indexPath.row]</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面我们来配置search controller 显示默认的search bar</p>
+<h2 id="配置UISearchController">配置UISearchController</h2><p>首先在<code>ViewController.swift</code>里面声明一个searchController</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">var</span> searchController</span>: UISearchController!</span><br></pre></td></tr></table></figure>
+<p>接下来我们来实现<code>configureSearchController()</code>方法。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">configureSearchController</span><span class="params">()</span></span> &#123;</span><br><span class="line">       <span class="comment">// Initialize and perform a minimum configuration to the search controller.</span></span><br><span class="line">       searchController = <span class="type">UISearchController</span>(searchResultsController: <span class="literal">nil</span>)</span><br><span class="line">       searchController.searchResultsUpdater = <span class="keyword">self</span></span><br><span class="line">       searchController.dimsBackgroundDuringPresentation = <span class="literal">false</span></span><br><span class="line">       searchController.searchBar.placeholder = <span class="string">"Search here..."</span></span><br><span class="line">       searchController.searchBar.delegate = <span class="keyword">self</span></span><br><span class="line">       searchController.searchBar.sizeToFit()</span><br><span class="line">       </span><br><span class="line">       <span class="comment">// Place the search bar view to the tableview headerview.</span></span><br><span class="line">       tblSearchResults.tableHeaderView = searchController.searchBar</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>这里有一个重要的知识点：在我们的demo中tableview显示搜索结果是在一个已经存在的controller中，然而还有一种情况是把搜索结果展示到另外一个ViewController中,所以需要知道把搜索结果展示到哪里. 当初始化的时候传<code>nil</code>，search controller 知道viewController已经存在,搜索数据回调到给这个viewController. 另外一种情况就是传指定的controller。</p>
+<p>在搜索的时候有两种方法更新我们的tableview，第一种是通过searchbar的delegate。第二种是在delegate对象的Viewcontroller里面设置<code>searchResultsUpdater</code>属性(bool)，稍后会在自定义控制器中看见这个是如何使用的。</p>
+<p>在这里我们通过实现<code>UISearchResultsUpdating</code>协议。这个是iOS8才有的.</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">updateSearchResultsForSearchController</span><span class="params">(searchController: UISearchController)</span></span> &#123;</span><br><span class="line">    <span class="keyword">let</span> searchString = searchController.searchBar.text</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// Filter the data array and get only those countries that match the search text.</span></span><br><span class="line">    filteredArray = dataArray.<span class="built_in">filter</span>(&#123; (country) -&gt; <span class="type">Bool</span> <span class="keyword">in</span></span><br><span class="line">        <span class="keyword">let</span> countryText: <span class="type">NSString</span> = country</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> (countryText.rangeOfString(searchString, options: <span class="type">NSStringCompareOptions</span>.<span class="type">CaseInsensitiveSearch</span>).location) != <span class="type">NSNotFound</span></span><br><span class="line">    &#125;)</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// Reload the tableview.</span></span><br><span class="line">    tblSearchResults.reloadData()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里用了<code>searchString</code>保存关键字，然后用filter过滤</p>
+<p>最后实现<code>UISearchbarDelegate</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="func"><span class="keyword">func</span> <span class="title">searchBarTextDidBeginEditing</span><span class="params">(searchBar: UISearchBar)</span></span> &#123;</span><br><span class="line">    shouldShowSearchResults = <span class="literal">true</span></span><br><span class="line">    tblSearchResults.reloadData()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">searchBarCancelButtonClicked</span><span class="params">(searchBar: UISearchBar)</span></span> &#123;</span><br><span class="line">    shouldShowSearchResults = <span class="literal">false</span></span><br><span class="line">    tblSearchResults.reloadData()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">searchBarSearchButtonClicked</span><span class="params">(searchBar: UISearchBar)</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> !shouldShowSearchResults &#123;</span><br><span class="line">        </span><br><span class="line">        shouldShowSearchResults = <span class="literal">true</span></span><br><span class="line">        tblSearchResults.reloadData()</span><br><span class="line">    &#125;</span><br><span class="line">    searchController.searchBar.resignFirstResponder()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后运行app</p>
+<p><img src="http://www.appcoda.com/wp-content/uploads/2015/08/t41_1_default_search_sample.png" alt="http://www.appcoda.com/wp-content/uploads/2015/08/t41_1_default_search_sample.png"></p>
+<h2 id="自定义Searchbar">自定义Searchbar</h2><p>创建一个UISearchBar的子类 <code>CustomSearchBar</code>.在这里，我们会创建一个自定义的初始化方法，传递<code>frame</code>,<code>font</code>,<code>text color</code>等参数,在此之前，先定义两个属性</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="variable"><span class="keyword">var</span> preferredFont</span>: UIFont!</span><br><span class="line"> </span><br><span class="line"><span class="variable"><span class="keyword">var</span> preferredTextColor</span>: UIColor!</span><br></pre></td></tr></table></figure>
+<p>创建一个初始化方法,并且改变了searchBar的类型。设置了<code>translucent</code>属性，背景是不透明的。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">init(frame</span>: <span class="string">CGRect, font: UIFont, textColor: UIColor) &#123;</span></span><br><span class="line">   <span class="attribute">super.init(frame</span>: <span class="string">frame)</span></span><br><span class="line"></span><br><span class="line"><span class="objectivec">   <span class="keyword">self</span><span class="variable">.frame</span> = frame</span><br><span class="line">   preferredFont = font</span><br><span class="line">   preferredTextColor = textColor</span><br><span class="line">   </span><br><span class="line">   searchBarStyle = <span class="built_in">UISearchBarStyle</span><span class="variable">.Prominent</span></span><br><span class="line">   translucent = <span class="literal">false</span></span><br><span class="line"> </span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>提示: searchbar 并不是单一的控件，textfield只是其中的一部分。另外searchbar有一个UIView作为子类，这个view里面包含textfield和一个backgroundView。 可以打印一下就知道了</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">print</span>(<span class="tag">searchController</span><span class="class">.searchBar</span><span class="class">.subviews</span><span class="attr_selector">[0]</span><span class="class">.subviews</span>)</span><br></pre></td></tr></table></figure>
+<p>将会输出<br><img src="http://www.appcoda.com/wp-content/uploads/2015/08/t41_5_search_bar_subviews.png" alt="http://www.appcoda.com/wp-content/uploads/2015/08/t41_5_search_bar_subviews.png"></p>
+<p>我测试的时候输出的是这样的：layer那里有一个null？</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">[&lt;UISearchBarBackground: 0x7fb771e8e7f0; frame = (0 0; 600 44); opaque = NO; userInteractionEnabled = NO; layer = &lt;CALayer: 0x7fb771e83cf0&gt;&gt; - (null), &lt;UISearchBarTextField: 0x7fb771e97b70; frame = (0 0; 0 0); text = ''; clipsToBounds = YES; opaque = NO; layer = &lt;CALayer: 0x7fb771e969f0&gt;&gt;]</span></span><br></pre></td></tr></table></figure>
+<p>为了找到<code>searField</code>，写一个找到子类的方法</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">	<span class="func"><span class="keyword">func</span> <span class="title">indexOfSearchFieldInSubviews</span><span class="params">()</span></span> -&gt; <span class="type">Int</span>! &#123;</span><br><span class="line">    <span class="keyword">var</span> index: <span class="type">Int</span>!</span><br><span class="line">    <span class="keyword">let</span> searchBarView = subviews[<span class="number">0</span>] <span class="keyword">as</span>! <span class="type">UIView</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span> <span class="keyword">var</span> i=<span class="number">0</span>; i&lt;searchBarView.subviews.<span class="built_in">count</span>; ++i &#123;</span><br><span class="line">        <span class="keyword">if</span> searchBarView.subviews[i].isKindOfClass(<span class="type">UITextField</span>) &#123;</span><br><span class="line">            index = i</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> index</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来实现<code>drawRect</code>方法。 修改了textfield的大小，在底部添加了一条线</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">override func drawRect(<span class="built_in">rect</span>: CGRect) &#123;</span><br><span class="line">       </span><br><span class="line">   </span><br><span class="line">       <span class="keyword">if</span> let index = indexOfSearchFieldInSubviews() &#123;</span><br><span class="line">           </span><br><span class="line">           let searchField : UITextField = (subviews[<span class="number">0</span>]).subviews[index] as! UITextField</span><br><span class="line">           </span><br><span class="line">           searchField.frame = CGRectMake(<span class="number">5.0</span>, <span class="number">5.0</span>, frame.<span class="built_in">size</span>.<span class="variable">width</span> - <span class="number">10.0</span>, frame.<span class="built_in">size</span>.<span class="variable">height</span> - <span class="number">10.0</span>)</span><br><span class="line">           searchField.font = preferredFont</span><br><span class="line">           searchField.textColor = preferredTextColor</span><br><span class="line">           </span><br><span class="line">           searchField.backgroundColor = barTintColor</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       let startPoint = CGPointMake(<span class="number">0.0</span>, frame.<span class="built_in">size</span>.<span class="variable">height</span>)</span><br><span class="line">       let endPoint = CGPointMake(frame.<span class="built_in">size</span>.<span class="variable">width</span>, frame.<span class="built_in">size</span>.<span class="variable">height</span>)</span><br><span class="line">       </span><br><span class="line">       let path = UIBezierPath()</span><br><span class="line">       path.moveToPoint(startPoint)</span><br><span class="line">       path.addLineToPoint(endPoint)</span><br><span class="line">       </span><br><span class="line">       let shapeLayer = CAShapeLayer()</span><br><span class="line">       shapeLayer.path = path.CGPath</span><br><span class="line">       shapeLayer.strokeColor = preferredTextColor.CGColor</span><br><span class="line">       shapeLayer.lineWidth = <span class="number">2.5</span></span><br><span class="line">       </span><br><span class="line">       layer.addSublayer(shapeLayer);</span><br><span class="line">       </span><br><span class="line">       <span class="keyword">super</span>.drawRect(<span class="built_in">rect</span>)</span><br><span class="line">       </span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="自定义SearchController">自定义SearchController</h2><p>创建一个子类<code>CustomSearchController</code>,并且在里面增加<code>CustomSearchBar</code>的引用</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">var</span> customSearchBar</span>: CustomSearchBar!</span><br></pre></td></tr></table></figure>
+<p>自定义初始化方法</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">init(<span class="string">searchResultsController:</span> UIViewController!, <span class="string">searchBarFrame:</span> CGRect, <span class="string">searchBarFont:</span> UIFont, <span class="string">searchBarTextColor:</span> UIColor, <span class="string">searchBarTintColor:</span> UIColor) &#123;</span><br><span class="line">    <span class="keyword">super</span>.init(<span class="string">searchResultsController:</span> searchResultsController)</span><br><span class="line"> </span><br><span class="line">    configureSearchBar(searchBarFrame, <span class="string">font:</span> searchBarFont, <span class="string">textColor:</span> searchBarTextColor, <span class="string">bgColor:</span> searchBarTintColor)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要添加两个方法</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>(nibName nibNameOrNil: <span class="type">String</span>?, bundle nibBundleOrNil: <span class="type">NSBundle</span>?) &#123;</span><br><span class="line">    <span class="keyword">super</span>.<span class="keyword">init</span>(nibName: nibNameOrNil, bundle: nibBundleOrNil)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">    <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>configureSearchBar()</code>方法</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">	func configureSearchBar(<span class="string">frame:</span> CGRect, <span class="string">font:</span> UIFont, <span class="string">textColor:</span> UIColor, <span class="string">bgColor:</span> UIColor) &#123;</span><br><span class="line">    customSearchBar = CustomSearchBar(<span class="string">frame:</span> frame, <span class="string">font:</span> font , <span class="string">textColor:</span> textColor)</span><br><span class="line"> </span><br><span class="line">    customSearchBar.barTintColor = bgColor</span><br><span class="line">    customSearchBar.tintColor = textColor</span><br><span class="line">    customSearchBar.showsBookmarkButton = <span class="literal">false</span></span><br><span class="line">    customSearchBar.showsCancelButton = <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>viewController</code>里面初始化</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">	func configureCustomSearchController() &#123;</span><br><span class="line">    customSearchController = CustomSearchController(<span class="string">searchResultsController:</span> self, <span class="string">searchBarFrame:</span> CGRectMake(<span class="number">0.0</span>, <span class="number">0.0</span>, tblSearchResults.frame.size.width, <span class="number">50.0</span>), <span class="string">searchBarFont:</span> UIFont(<span class="string">name:</span> <span class="string">"Futura"</span>, <span class="string">size:</span> <span class="number">16.0</span>)!, <span class="string">searchBarTextColor:</span> UIColor.orangeColor(), <span class="string">searchBarTintColor:</span> UIColor.blackColor())</span><br><span class="line"> </span><br><span class="line">    customSearchController.customSearchBar.placeholder = <span class="string">"Search in this awesome bar..."</span></span><br><span class="line">    tblSearchResults.tableHeaderView = customSearchController.customSearchBar</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后实现的效果<br><img src="http://www.appcoda.com/wp-content/uploads/2015/08/custom_search_bar.png" alt="http://www.appcoda.com/wp-content/uploads/2015/08/custom_search_bar.png"></p>
+<h2 id="完整的demo下载">完整的demo下载</h2><p><a href="http://7i7ht3.com1.z0.glb.clouddn.com/CustomSearchBarFinal.zip" target="_blank" rel="external">参考demo</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/01/05/iOS/29_GCD_Operation/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS翻译-你真的了解并发吗?</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS/30_SearchBar" data-title="iOS翻译-如何自定义SearchBar" data-url="http://www.liuchendi.com/2016/01/06/iOS/30_SearchBar/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"liuchendi"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 小木头
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256997755'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1256997755%26online%3D1%26show%3Dline' type='text/javascript'%3E%3C/script%3E"));</script>
+>
+
+</footer>
+
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
