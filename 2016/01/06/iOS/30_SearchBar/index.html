@@ -13,12 +13,12 @@
 <meta property="og:site_name" content="小木头">
 <meta property="og:description" content="翻译了一篇appcoda的文章，介绍如何自定义SearchBar的文章
 原文链接: http://www.appcoda.com/custom-search-bar-tutorial/">
-<meta property="og:image" content="http://www.appcoda.com/wp-content/uploads/2015/08/custom-search-bar-featured-1024x690.jpg">
-<meta property="og:image" content="http://www.appcoda.com/wp-content/uploads/2015/08/search-bar-demo-app-1024x672.png">
-<meta property="og:image" content="http://www.appcoda.com/wp-content/uploads/2015/08/t41_1_default_search_sample.png">
-<meta property="og:image" content="http://www.appcoda.com/wp-content/uploads/2015/08/t41_5_search_bar_subviews.png">
-<meta property="og:image" content="http://www.appcoda.com/wp-content/uploads/2015/08/custom_search_bar.png">
-<meta property="og:updated_time" content="2016-01-06T07:31:49.000Z">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_1.jpg">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_2.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_3.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_4.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_5.png">
+<meta property="og:updated_time" content="2016-01-06T07:43:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS翻译-如何自定义SearchBar">
 <meta name="twitter:description" content="翻译了一篇appcoda的文章，介绍如何自定义SearchBar的文章
@@ -198,7 +198,7 @@
   
     <div class="article-meta">
       <a href="/2016/01/06/iOS/30_SearchBar/" class="article-date">
-  	<time datetime="2016-01-06T07:31:49.000Z" itemprop="datePublished">2016-01-06</time>
+  	<time datetime="2016-01-06T07:43:53.000Z" itemprop="datePublished">2016-01-06</time>
 </a>
     </div>
   
@@ -240,11 +240,11 @@
 <a id="more"></a>
 <p>app里面经常需要展示一些搜索的数据显示到tableview上。不幸的是，大部分开发者使用原生的控件。在iOS8里，苹果提供了一个特殊的控件<code>UISearchDisplayController</code>。这个控件结合了<code>UISeachBar</code>,很轻松的添加搜索的功能。不过，现在已经成为了历史。</p>
 <p><code>UISearchController</code>在iOS8里面已经取代了<code>UISearchDisplayController</code>. 尽管这虽然改变，但是在IB里面没有继承可视化控件，它必须用代码去初始化配置，不过非常简单。</p>
-<p><img src="http://www.appcoda.com/wp-content/uploads/2015/08/custom-search-bar-featured-1024x690.jpg" alt="http://www.appcoda.com/wp-content/uploads/2015/08/custom-search-bar-featured-1024x690.jpg"></p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_1.jpg" alt="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_1.jpg"></p>
 <p>除了上面所说的，有一个有趣的关于tableview datasource搜索的地方。iOS提供了一个searchbar预设的外观，这个bar适用于大多数情况。 然而，当UI需要高度自定义，这个searchbar看起来与我们的不是那么搭。在这种情况下，我们的searchbar必须适当的定制。</p>
 <p>在这个教程里面，会展示<code>UISearchController</code>在iOS8里面是如何搜索和过滤数据的，使用默认的searchbar。</p>
 <p>接着如何重写默认的searchbar的外观，实现自定义。所以我们设置了<code>UISearchController</code>和<code>UISearchBar</code>的子类，里面的代码通俗易懂，并且控件非常通用，可以复用。</p>
-<h2 id="Demo_App_Overview">Demo App Overview</h2><p>我们将实现下面两个界面<br><img src="http://www.appcoda.com/wp-content/uploads/2015/08/search-bar-demo-app-1024x672.png" alt="http://www.appcoda.com/wp-content/uploads/2015/08/search-bar-demo-app-1024x672.png"></p>
+<h2 id="Demo_App_Overview">Demo App Overview</h2><p>我们将实现下面两个界面<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_2.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_2.png"></p>
 <p>第一张在<code>UISearchController</code>使用默认<code>searchbar</code>。第二张是自定义的searchbar.</p>
 <p>首先下载工程的:<a href="http://7i7ht3.com1.z0.glb.clouddn.com/CustomSearchBarStarter.zip" target="_blank" rel="external">Demo</a></p>
 <h2 id="加载和展示数据">加载和展示数据</h2><p>首先加载<code>countries.txt</code>文件里面的数据,然后我们再通过列表的方式展示。</p>
@@ -271,14 +271,14 @@
 <p>最后实现<code>UISearchbarDelegate</code></p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="func"><span class="keyword">func</span> <span class="title">searchBarTextDidBeginEditing</span><span class="params">(searchBar: UISearchBar)</span></span> &#123;</span><br><span class="line">    shouldShowSearchResults = <span class="literal">true</span></span><br><span class="line">    tblSearchResults.reloadData()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">searchBarCancelButtonClicked</span><span class="params">(searchBar: UISearchBar)</span></span> &#123;</span><br><span class="line">    shouldShowSearchResults = <span class="literal">false</span></span><br><span class="line">    tblSearchResults.reloadData()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">searchBarSearchButtonClicked</span><span class="params">(searchBar: UISearchBar)</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> !shouldShowSearchResults &#123;</span><br><span class="line">        </span><br><span class="line">        shouldShowSearchResults = <span class="literal">true</span></span><br><span class="line">        tblSearchResults.reloadData()</span><br><span class="line">    &#125;</span><br><span class="line">    searchController.searchBar.resignFirstResponder()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>最后运行app</p>
-<p><img src="http://www.appcoda.com/wp-content/uploads/2015/08/t41_1_default_search_sample.png" alt="http://www.appcoda.com/wp-content/uploads/2015/08/t41_1_default_search_sample.png"></p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_3.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_3.png"></p>
 <h2 id="自定义Searchbar">自定义Searchbar</h2><p>创建一个UISearchBar的子类 <code>CustomSearchBar</code>.在这里，我们会创建一个自定义的初始化方法，传递<code>frame</code>,<code>font</code>,<code>text color</code>等参数,在此之前，先定义两个属性</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="variable"><span class="keyword">var</span> preferredFont</span>: UIFont!</span><br><span class="line"> </span><br><span class="line"><span class="variable"><span class="keyword">var</span> preferredTextColor</span>: UIColor!</span><br></pre></td></tr></table></figure>
 <p>创建一个初始化方法,并且改变了searchBar的类型。设置了<code>translucent</code>属性，背景是不透明的。</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">init(frame</span>: <span class="string">CGRect, font: UIFont, textColor: UIColor) &#123;</span></span><br><span class="line">   <span class="attribute">super.init(frame</span>: <span class="string">frame)</span></span><br><span class="line"></span><br><span class="line"><span class="objectivec">   <span class="keyword">self</span><span class="variable">.frame</span> = frame</span><br><span class="line">   preferredFont = font</span><br><span class="line">   preferredTextColor = textColor</span><br><span class="line">   </span><br><span class="line">   searchBarStyle = <span class="built_in">UISearchBarStyle</span><span class="variable">.Prominent</span></span><br><span class="line">   translucent = <span class="literal">false</span></span><br><span class="line"> </span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
 <p>提示: searchbar 并不是单一的控件，textfield只是其中的一部分。另外searchbar有一个UIView作为子类，这个view里面包含textfield和一个backgroundView。 可以打印一下就知道了</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">print</span>(<span class="tag">searchController</span><span class="class">.searchBar</span><span class="class">.subviews</span><span class="attr_selector">[0]</span><span class="class">.subviews</span>)</span><br></pre></td></tr></table></figure>
-<p>将会输出<br><img src="http://www.appcoda.com/wp-content/uploads/2015/08/t41_5_search_bar_subviews.png" alt="http://www.appcoda.com/wp-content/uploads/2015/08/t41_5_search_bar_subviews.png"></p>
+<p>将会输出<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_4.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_4.png"></p>
 <p>我测试的时候输出的是这样的：layer那里有一个null？</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">[&lt;UISearchBarBackground: 0x7fb771e8e7f0; frame = (0 0; 600 44); opaque = NO; userInteractionEnabled = NO; layer = &lt;CALayer: 0x7fb771e83cf0&gt;&gt; - (null), &lt;UISearchBarTextField: 0x7fb771e97b70; frame = (0 0; 0 0); text = ''; clipsToBounds = YES; opaque = NO; layer = &lt;CALayer: 0x7fb771e969f0&gt;&gt;]</span></span><br></pre></td></tr></table></figure>
 <p>为了找到<code>searField</code>，写一个找到子类的方法</p>
@@ -295,7 +295,7 @@
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">	func configureSearchBar(<span class="string">frame:</span> CGRect, <span class="string">font:</span> UIFont, <span class="string">textColor:</span> UIColor, <span class="string">bgColor:</span> UIColor) &#123;</span><br><span class="line">    customSearchBar = CustomSearchBar(<span class="string">frame:</span> frame, <span class="string">font:</span> font , <span class="string">textColor:</span> textColor)</span><br><span class="line"> </span><br><span class="line">    customSearchBar.barTintColor = bgColor</span><br><span class="line">    customSearchBar.tintColor = textColor</span><br><span class="line">    customSearchBar.showsBookmarkButton = <span class="literal">false</span></span><br><span class="line">    customSearchBar.showsCancelButton = <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在<code>viewController</code>里面初始化</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">	func configureCustomSearchController() &#123;</span><br><span class="line">    customSearchController = CustomSearchController(<span class="string">searchResultsController:</span> self, <span class="string">searchBarFrame:</span> CGRectMake(<span class="number">0.0</span>, <span class="number">0.0</span>, tblSearchResults.frame.size.width, <span class="number">50.0</span>), <span class="string">searchBarFont:</span> UIFont(<span class="string">name:</span> <span class="string">"Futura"</span>, <span class="string">size:</span> <span class="number">16.0</span>)!, <span class="string">searchBarTextColor:</span> UIColor.orangeColor(), <span class="string">searchBarTintColor:</span> UIColor.blackColor())</span><br><span class="line"> </span><br><span class="line">    customSearchController.customSearchBar.placeholder = <span class="string">"Search in this awesome bar..."</span></span><br><span class="line">    tblSearchResults.tableHeaderView = customSearchController.customSearchBar</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>最后实现的效果<br><img src="http://www.appcoda.com/wp-content/uploads/2015/08/custom_search_bar.png" alt="http://www.appcoda.com/wp-content/uploads/2015/08/custom_search_bar.png"></p>
+<p>最后实现的效果<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_5.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/searchbar_5.png"></p>
 <h2 id="完整的demo下载">完整的demo下载</h2><p><a href="http://7i7ht3.com1.z0.glb.clouddn.com/CustomSearchBarFinal.zip" target="_blank" rel="external">参考demo</a></p>
 
       
