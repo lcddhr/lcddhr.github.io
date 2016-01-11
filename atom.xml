@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2016-01-07T08:43:29.000Z</updated>
+  <updated>2016-01-11T06:24:13.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -15,11 +15,70 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[谈谈iOS中的View和动画]]></title>
+    <link href="http://www.liuchendi.com/2016/01/11/iOS/32_TalkAboutView/"/>
+    <id>http://www.liuchendi.com/2016/01/11/iOS/32_TalkAboutView/</id>
+    <published>2016-01-11T06:24:13.000Z</published>
+    <updated>2016-01-11T06:24:13.000Z</updated>
+    <content type="html"><![CDATA[<p>做iOS开发也有一段时间了，几乎每天都得和各种各样的View打交道，熟练使用View是做好iOS的基本功，正所谓知其然跟要知其所以然,所以今天就来学习视图到底是怎么工作的。</p>
+<a id="more"></a>
+<h2 id="渲染机制">渲染机制</h2><p>这张图是苹果官方<code>Core Animation</code>里面的截图、可以看出渲染视图的流程是</p>
+<p>GPU -&gt; OpenGL / Core Graphics -&gt; CA -&gt; UIKit/AppKit</p>
+<p><img src="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/ca_architecture_2x.png" alt="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/ca_architecture_2x.png"></p>
+<p>详细的过程如图：<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/talkAboutView.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/talkAboutView.png"></p>
+<p>1、设置Layer的属性. frame, alpha, backgroundColor等</p>
+<p>2、创建backing image: 无论是通过setContents将一个image传给layer,还是通过<code>drawRect</code>或<code>drawLayer:inContext</code>画出来的，<code>drawRect：</code>等函数在这个阶段被调用</p>
+<p>3、准备工作： CA准备渲染layer各种属性数据，准备传递给render server. 同时解压渲染的image. (除了<code>imageName：</code>方法从bundle加载的image会立刻解压之外，其他的比如直接从硬盘读入，或者网上下载的image不会立刻解压，在真正渲染的时候才解压)</p>
+<p>4、提交：CA打包layer信息及动画参数,通过IPC(进程间通信)传递给render server。</p>
+<p>5、数据到达render server后，会被反序列化成render tree。然后render server会根据layer属性，用OpenGL准备渲染</p>
+<p>6、渲染到屏幕。</p>
+<p>上面这些内容参考来自<a href="http://bugly.qq.com/bbs/forum.php?mod=viewthread&amp;tid=297" target="_blank" rel="external">这里</a>，里面有更详细的解释。对性能优化有非常大的帮助。</p>
+<h2 id="交互方式">交互方式</h2><p><img src="https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Art/drawing_model.jpg" alt="https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Art/drawing_model.jpg"></p>
+<p>这是苹果官方文档里面的一个截图，解释了视图的工作原理，如何去响应事件。</p>
+<ul>
+<li>UIKit把事件打包成<code>UIEvent</code>对象，并分发到相对应的视图。</li>
+<li>在事件回调的代码里可以处理视图的相关问题。<ul>
+<li>改变视图或者子类属性(frame, bounds, alpha)</li>
+<li>调用<code>setNeedsLayout</code>方法更新视图布局</li>
+<li>调用<code>setNeedsDisplay</code>或者<code>setNeedsDisplayInRect:</code>方法重绘视图</li>
+<li>通知控制器改变数据</li>
+</ul>
+</li>
+<li>如果视图有几何上的改变，UIKit会根据下面的规则来更新子视图:<ul>
+<li>如果使用了<code>Autoresizing</code>,则会根据这些规则来调整视图</li>
+<li>如果实现了layoutSubView方法，则UIKit会调用它。</li>
+</ul>
+</li>
+<li>任何已经更新了的视图会和已可见的视图混合一起，提交给图形硬件去显示。</li>
+<li>渲染到屏幕上。</li>
+</ul>
+<h2 id="UIView和CALayer关系">UIView和CALayer关系</h2><p><code>CALayer</code>是QuartzCore库内的类。是iOS基本的绘制单元。 UIView是CALayer的上层封装，增加了事件的处理。UIView里面好多属性都是和CALayer里面一一对应的。</p>
+<p>UIView好比一个容器，用来管理视图，显示视图、处理事件；CALayer则着重视图的绘制</p>
+<p>更详细的资料可以参考<a href="http://www.jianshu.com/p/079e5cf0f014" target="_blank" rel="external">这里</a></p>
+<h2 id="Offscreen_Render（离屏渲染）">Offscreen Render（离屏渲染）</h2><p>1、有些效果不能直接会知道屏幕上，必须先会知道一个offscreen的image contentext上，这种操作会引入而外的内存和CPU消耗。（<code>rounded corners</code>,<code>layer masks</code>,<code>drop shadows</code>,<code>layer rasterization</code>）</p>
+<p>2、实现了<code>drawRect</code>或者<code>drawLayer:inContext</code>,为了支持任意的绘制，<code>Core Graphic</code>会创建一个大小跟需要画得view一样的backing image。并且画完后传输到render渲染。</p>
+<p>更详细的资料可以参考<a href="http://foggry.com/blog/2015/05/06/chi-ping-xuan-ran-xue-xi-bi-ji/?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="external">这里</a></p>
+<h2 id="参考资料">参考资料</h2><p><a href="http://foggry.com/blog/2015/05/06/chi-ping-xuan-ran-xue-xi-bi-ji/?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="external">http://foggry.com/blog/2015/05/06/chi-ping-xuan-ran-xue-xi-bi-ji/?utm_source=tuicool&amp;utm_medium=referral</a></p>
+<p><a href="http://bugly.qq.com/bbs/forum.php?mod=viewthread&amp;tid=297" target="_blank" rel="external">http://bugly.qq.com/bbs/forum.php?mod=viewthread&amp;tid=297</a></p>
+<p><a href="http://oncenote.com/2015/12/08/How-to-build-UI/" target="_blank" rel="external">http://oncenote.com/2015/12/08/How-to-build-UI/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>做iOS开发也有一段时间了，几乎每天都得和各种各样的View打交道，熟练使用View是做好iOS的基本功，正所谓知其然跟要知其所以然,所以今天就来学习视图到底是怎么工作的。</p>]]>
+    
+    </summary>
+    
+      <category term="视图架构、渲染" scheme="http://www.liuchendi.com/tags/%E8%A7%86%E5%9B%BE%E6%9E%B6%E6%9E%84%E3%80%81%E6%B8%B2%E6%9F%93/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[iOS翻译-Core Graphics教程1：入门]]></title>
     <link href="http://www.liuchendi.com/2016/01/07/iOS/31_CoreGraphics_1/"/>
     <id>http://www.liuchendi.com/2016/01/07/iOS/31_CoreGraphics_1/</id>
-    <published>2016-01-07T08:43:29.000Z</published>
-    <updated>2016-01-07T08:43:29.000Z</updated>
+    <published>2016-01-07T08:45:46.000Z</published>
+    <updated>2016-01-07T08:45:46.000Z</updated>
     <content type="html"><![CDATA[<p>翻译了一篇raywenderlich的文章，Core Graphics的入门教程。（有部分省略，剩下的都是主要过程。）</p>
 <p>原文链接: <a href="http://www.raywenderlich.com/90690/modern-core-graphics-with-swift-part-1" target="_blank" rel="external">http://www.raywenderlich.com/90690/modern-core-graphics-with-swift-part-1</a></p>
 <a id="more"></a>
@@ -28,7 +87,7 @@
 <p><code>Core Graphics</code>是Apple的矢量绘图框架。它非常强大，API功能齐全，里面有许多需要学习的知识。但不用害怕，这里三部分可以引导你入门，最后你将在app里面创建一个好看的图形。</p>
 <p>这是一个全新的系列，用先进的方法来教开发者使用<code>Core Graphice</code>。这个系列全部在Xcode6用Swift写(现在Xcode7了，测试可以通过),包含了新的功能，例如<code>@IBDesignable</code>和<code>@IBInspectable</code>，可以让<code>Core Graphics</code>学起来更加有趣和容易。</p>
 <p>带着你最喜欢的饮料，让我们开始吧！</p>
-<h2 id="介绍Flo_-_每次喝一杯">介绍Flo - 每次喝一杯</h2><p>你将创建一个完整的app来记录你喝水的习惯。</p>
+<h2 id="介绍Flo">介绍Flo</h2><p>你将创建一个完整的app来记录你喝水的习惯。</p>
 <p>这个app很容易记录你喝了多少水。 它会告诉我们一天喝8杯水是健康的，但很容易在记录几杯后就忘记了。这就是写Flo的原因。每次你干完一杯新鲜的水，点击计数器。你也可以在里面看见7天的记录。</p>
 <p><img src="http://cdn4.raywenderlich.com/wp-content/uploads/2014/12/1-CompletedApp.gif" alt="http://cdn4.raywenderlich.com/wp-content/uploads/2014/12/1-CompletedApp.gif"></p>
 <p>在这部分里面，你将使用<code>UIKit</code>的绘制方法创建3个控件。</p>
@@ -1444,201 +1503,6 @@ git push -<span class="keyword">u</span> origin master
     </summary>
     
       <category term="cocospod" scheme="http://www.liuchendi.com/tags/cocospod/"/>
-    
-      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Swift语法知识点笔记]]></title>
-    <link href="http://www.liuchendi.com/2015/11/10/iOS/12_Swift_1/"/>
-    <id>http://www.liuchendi.com/2015/11/10/iOS/12_Swift_1/</id>
-    <published>2015-11-10T10:03:51.000Z</published>
-    <updated>2015-11-10T10:03:51.000Z</updated>
-    <content type="html"><![CDATA[<p>记录学习Swift语法知识点<br><a id="more"></a></p>
-<h2 id="常量和变量">常量和变量</h2><p>常量的值一旦确定就不能修改。</p>
-<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> helloWorld = <span class="string">"Hello world"</span></span><br><span class="line"></span><br><span class="line">helloWorld = <span class="string">"h"</span> <span class="comment">//编译报错</span></span><br></pre></td></tr></table></figure>
-<h2 id="类型安全和类型检查">类型安全和类型检查</h2><p>类型安全：就是可以清楚知道代码要处理的值的类型</p>
-<p>类型检查：编译时进行类型检查，尽早发现错误</p>
-<p>类型推断：自动推断出表达式的类型</p>
-<h2 id="数值型字面量">数值型字面量</h2><p>点字面量还有一个可选的指数（exponent），在十进制浮点数中通过大写或者小写的<code>e</code>来指定，在十六进制浮点数中通过大写或者小写的<code>p</code>来指定。</p>
-<h2 id="类型别名">类型别名</h2><p>typealias</p>
-<h2 id="布尔类型">布尔类型</h2><p>true和false</p>
-<h2 id="元组">元组</h2><p>定义：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">let</span> http404Error = (<span class="number">404</span>, <span class="string">"Not Found"</span>)</span><br></pre></td></tr></table></figure>
-<p>分解的时候可以用下划线<code>_</code>代替忽略部分</p>
-<p>可以通过下标来访问元组的元素</p>
-<p>可以给元组里面的元素命名</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let httpCode = (<span class="tag">code</span>:<span class="number">200</span>,description:<span class="string">"ok"</span>)</span><br><span class="line"><span class="function"><span class="title">println</span><span class="params">(<span class="string">"this is \(httpCode.code)"</span>)</span></span></span><br></pre></td></tr></table></figure>
-<h2 id="可选类型optionals">可选类型optionals</h2><p><code>？</code>表示可选类型，代表可能有值，也可能什么都没有</p>
-<p><code>??</code> 空合运算符(a ?? b)将对可选类型a进行空判断</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> defaultColorName = <span class="string">"red"</span></span><br><span class="line"><span class="keyword">var</span> userDefinedColorName:<span class="built_in">String</span>?   <span class="comment">//默认值为nil</span></span><br><span class="line"><span class="keyword">var</span> colorNameToUse = userDefinedColorName ?? defaultColorName</span><br><span class="line"><span class="comment">//userDefinedColorName的值为空 ，所以colorNameToUse的值为`red`</span></span><br></pre></td></tr></table></figure>
-<p><code>!</code> 确定可选类型包含值后，可以在可选的名字后面加一个<code>！</code>来获取这个值  (强制解析)</p>
-<p><code>nil</code> 你可以给可选变量赋值为nil来表示它没有值：</p>
-<ul>
-<li>注意：nil不能用于非可选的常量和变量。如果你的代码中有常量或者变量需要处理值缺失的情况，请把它们声明成对应的可选类型。</li>
-</ul>
-<h2 id="区间运算符">区间运算符</h2><p>闭区间运算符 :<code>a...b</code><br>半开区间 : <code>a..&lt;b</code></p>
-<h2 id="字符串">字符串</h2><p>Swift 的String类型是值类型。 如果您创建了一个新的字符串，那么当其进行常量、变量赋值操作或在函数/方法中传递时，会进行值拷贝。</p>
-<p>而cocoa中的NSString不同，当您在 Cocoa 中创建了一个NSString实例，并将其传递给一个函数/方法，或者赋值给一个变量，您传递或赋值的是该NSString实例的一个引用，除非您特别要求进行值拷贝，否则字符串不会生成新的副本来进行赋值操作。</p>
-<h2 id="控制流">控制流</h2><p><code>where</code>可以在switch里面的case分支中判断额外的条件</p>
-<p><code>fallthrough</code>可以在switch里面的分支中贯穿</p>
-<h2 id="函数">函数</h2><p><code>#</code>外部参数名，不用定义两次，根据局部参数名字自动生成</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">add</span><span class="params">(#num1:Int ,#num2:Int)</span></span> -&gt; <span class="type">Int</span>&#123;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">return</span> num1 + num2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">add(num1: <span class="number">1</span>, num2: <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-<p>函数定义的时候参数可以带有默认值，调用的时候可以忽略这个参数，如果默认参数被赋值，则使用最新的</p>
-<p><code>...</code>可变参数</p>
-<p><code>函数参数</code>默认是常量，如果想在函数里面修改这些常量，可以在函数定义的时候加上<code>var</code>关键字，从而避免了在函数内部重新定义变量。</p>
-<p><code>函数类型</code> ，可以定义一个类型为函数的常量或者变量，把函数赋值给它。</p>
-<ul>
-<li>函数类型可以作为参数、返回值</li>
-</ul>
-<h2 id="闭包">闭包</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">	（parameters） -&gt; <span class="built_in">return</span>Type <span class="keyword">in</span> </span><br><span class="line">		statements</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">//普通写法</span><br><span class="line"><span class="keyword">reversed </span>= sorted(names, &#123; (<span class="literal">s1</span>: <span class="keyword">String, </span><span class="literal">s2</span>: <span class="keyword">String) </span>-&gt; <span class="keyword">Bool </span>in return <span class="literal">s1</span> &gt; <span class="literal">s2</span> &#125; )</span><br><span class="line"></span><br><span class="line">//类型推断</span><br><span class="line"><span class="keyword">reversed </span>= sorted(names, &#123; <span class="literal">s1</span>, <span class="literal">s2</span> in return <span class="literal">s1</span> &gt; <span class="literal">s2</span> &#125; )</span><br><span class="line"></span><br><span class="line">//单表达式闭包隐式返回</span><br><span class="line"><span class="keyword">reversed </span>= sorted(names, &#123; <span class="literal">s1</span>, <span class="literal">s2</span> in <span class="literal">s1</span> &gt; <span class="literal">s2</span> &#125; )</span><br></pre></td></tr></table></figure>
-<p>运算符函数</p>
-<p>尾随闭包</p>
-<p>捕获值</p>
-<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">func makeIncrementor<span class="function"><span class="params">(forIncrement amount: Int)</span> -&gt;</span> <span class="function"><span class="params">()</span> -&gt;</span> Int &#123;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">var</span> runningTotal = <span class="number">0</span></span><br><span class="line">   </span><br><span class="line">   func incrementor<span class="function"><span class="params">()</span> -&gt;</span> Int &#123;</span><br><span class="line">       </span><br><span class="line">       runningTotal += amount</span><br><span class="line">       <span class="keyword">return</span> runningTotal;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> incrementor;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">因为没有修改amount变量的值，所以incrementor捕获了变量的一个副本，该副本随着incrementor一同被存储</span><br></pre></td></tr></table></figure>
-<h2 id="枚举">枚举</h2><p>rawValue获取枚举的原始值</p>
-<h2 id="集合类型的赋值和拷贝">集合类型的赋值和拷贝</h2><p>OC中NSString,NSArray,NSDictionary均以类形式出现，发生赋值或者传入函数时，不发生拷贝，而是传递实例的引用</p>
-<p>Swift<code>字符串String</code>,<code>数组Array</code>,<code>字典Directionary</code>类型均已结构体的形式实现。他们在传入或者赋值时候会发生拷贝行为</p>
-<h2 id="结构体">结构体</h2><p>创建了一个结构体的实例并且赋值给一个常量之后，无法修改任何属性。因为结构体属于值类型，当值类型的实例声明为常量的时候，它的所有属性也就成了常量</p>
-<h2 id="属性">属性</h2><p><code>lazy</code> 延迟存储属性</p>
-<p><code>setter</code>声明中可以使用默认名称newValue</p>
-<p>只读属性总是返回一个值，可以去掉<code>get</code>关键字和花括号</p>
-<p><code>属性观察器</code> </p>
-<ul>
-<li><code>willSet</code>在    设置新的值之前调用</li>
-<li><code>didSet</code> 在新的值被设置后立即调用</li>
-</ul>
-<h2 id="方法">方法</h2><p>结构体和枚举能够定义方法，OC中，类是唯一能定义方法的类型。</p>
-<p>在实例方法中修改值类型，用<code>mutating</code>,然后方法就可以从方法内部改变它的属性</p>
-<ul>
-<li>注意：不能在结构体类型常量上调用变异方法，因为常量的属性不能被改变，即使想改变的是常量的变量属性</li>
-</ul>
-<p>类型方法：</p>
-<ul>
-<li>声明类的类型方法，在方法前加上关键字<code>class</code></li>
-<li>声明结构体和枚举的类型方法，在方法前加上关键字<code>static</code></li>
-</ul>
-<p>下标脚本语法</p>
-<ul>
-<li><p><code>subscript</code></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">TimesTable</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">  		<span class="keyword">let</span> multiplier: <span class="type">Int</span></span><br><span class="line">    <span class="keyword">subscript</span>(index: <span class="type">Int</span>) -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> multiplier * index</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> threeTimesTable = <span class="type">TimesTable</span>(multiplier: <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(threeTimesTable[<span class="number">6</span>])</span>"</span>)  <span class="comment">// 3 * 6 = 18</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>重写方法</p>
-<ul>
-<li><code>override</code></li>
-</ul>
-<p>禁止重写 : <code>final</code></p>
-<ul>
-<li>也可以在关键字class前添加final特性,标记整个类都是final的，这样的类是不可被继承的</li>
-</ul>
-<h2 id="构造过程">构造过程</h2><ul>
-<li>init()</li>
-<li>如果定义了一个自定义的构造器，则无法访问默认的构造器</li>
-<li><p>子类不会默认继承父类的构造器，防止一个父类简单的构造器被一个更专业的子类继承，并错误的用来创建子类的实例。</p>
-</li>
-<li><p>指定构造器和便利构造器<code>convenience</code></p>
-</li>
-</ul>
-<h2 id="析构过程">析构过程</h2><ul>
-<li><code>deinit</code>每个类最多只能有一个析构函数，析构函数不能带任何参数，</li>
-<li>不能自己调用析构函数</li>
-<li>子类继承父类的析构函数，并且在子类析构函数实现的最后，父类的析构函数被自动调用。</li>
-</ul>
-<h2 id="ARC">ARC</h2><ul>
-<li>打破循环引用，用weak</li>
-<li>无主引用<code>unowned</code> ，无主引用是非可选类型，不需要在使用它的时候将它展开,可以被直接访问。<br> 不过ARC无法在实例被销毁后将无主引用设为nil，因为非可选类型的变量不允许被设为nil.</li>
-</ul>
-<h2 id="类型转换">类型转换</h2><ul>
-<li>可以判断实例的类型，也可以将实例看做是父类或者子类的实例</li>
-<li><p><code>is</code>和<code>as</code></p>
-<ul>
-<li><code>is</code> 来检查一个实例而是否属于特定的子类型。</li>
-<li><code>as</code> 向下转到它的子类型，向下转型可能会失败，所以类型操作符有两种不同形式。可选的<code>as?</code>和强制的<code>as</code></li>
-</ul>
-</li>
-<li><p>Any和AnyObject的转换</p>
-<ul>
-<li><code>AnyObject</code>可以代表任何class类型的实例</li>
-<li><code>Any</code>可以表示任何类型，除了方法类型</li>
-</ul>
-</li>
-</ul>
-<h2 id="扩展">扩展</h2><p><code>extend</code>扩展就是向一个已有的类、结构体或枚举类型添加新功能。</p>
-<ul>
-<li>添加计算型属性和计算静态属性</li>
-<li>定义实例方法和类型方法</li>
-<li>提供新的构造器</li>
-<li>定义下标</li>
-<li>定义和使用新的嵌套类型</li>
-<li><p>使一个已有的类型符合某个协议</p>
-</li>
-<li><p>扩展能向类中添加新的便利构造器，但是不能向类中添加新的指定构造器或析构函数</p>
-</li>
-</ul>
-<h2 id="协议">协议</h2><ul>
-<li>如果一个类在含有父类的同时使用了协议，应当把父类放在所有协议之前</li>
-<li>用<code>类</code>实现协议忠的mutating方法时，不用写mutating关键字；用<code>结构体</code>,<code>枚举</code>实现协议中的mutating方法时，必须写mutating关键字</li>
-<li><p>对构造器的规定</p>
-<ul>
-<li>协议里面不需要写花括号和构造器实体，实现里面要写required</li>
-</ul>
-</li>
-</ul>
-<pre><code>                protocol FullyNamed {
-
-<span class="label">                    init(someParameter:</span> Int)
-                }
-
-<span class="label">                class Persons:</span> FullyNamed {
-
-<span class="label">                    required init(someParameter:</span> Int) {
-
-                    }
-                }
-
-
-*    使用required修饰符可以保证：所有遵循该协议的子类，同样能为够沼气提供一个显示的实现或继承实现。
-
-*    如果一个子类重写了父类指定的够沼气，并且这个够沼气遵循了协议的规定，那么这个构造器的实现需要被同时标识<span class="escape">`r</span>equired<span class="escape">` </span>和<span class="escape">`o</span>verride<span class="escape">`修</span>饰符
-
-* 类专属协议，在协议的继承列表中，通过添加<span class="escape">`c</span>lass<span class="escape">` </span>   关键字，限制协议只能是配到类，该<span class="escape">`c</span>lass<span class="escape">`关</span>键字必须是第一个出现在继承列表中的
-*    协议合成<span class="escape">`&lt;</span>&gt;<span class="escape">`
-</span>
-*    检验协议的一致性
-
-    *    <span class="escape">`i</span>s<span class="escape">`操</span>作符用来检查实例是否遵循了某个协议
-    *    <span class="escape">`a</span>s?<span class="escape">`返</span>回一个可选值，当是咧遵循协议时，返回该协议的类型，否则返回nil
-    *     <span class="escape">`a</span>s<span class="escape">`墙</span>纸向下转型
-
-* 对可选协议的规定 <span class="escape">`@</span>optional`
-</code></pre><h2 id="泛型">泛型</h2><p><code>Equatable</code>协议：要求任何遵循类型实现等式符(==)和不等符(!=)对任何两个该类型进行比较。所有的Swift标准类型自动支持Equatable协议</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">findIndex</span><span class="generics">&lt;T: Equatable&gt;</span><span class="params">(array: [T], valueToFind: T)</span></span> -&gt; <span class="type">Int</span>? &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (index,value) <span class="keyword">in</span> <span class="built_in">enumerate</span>(array) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> value == valueToFind &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> index</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="权限控制">权限控制</h2><p><code>Public</code> 可以访问自己模块或应用中源文件里的任何实体，别人也可以访问引入该模块中源文件里的所有实体</p>
-<p><code>Internal</code>可以访问自己模块或应用中源文件的实体，但是别人不能访问</p>
-<p><code>Private</code>只能当前源文件中使用的实体，称为私有实体</p>
-<p><code>使用原则</code>：访问级别不能高于它的参数、返回类型的级别。如果定义为public而参数或者返回类型定义为internal或private，就有可能出现函数可以被任何人访问，但是它的参数和返回类型不可以。</p>
-<p><code>默认访问级别：</code>internal</p>
-<p>元组类型的访问级别遵循最低访问级别</p>
-<p>枚举中的成员的访问级别继承自枚举，不能为枚举成员指定访问级别</p>
-<p>子类的访问级别不能高于父类的访问级别。</p>
-<p>常量、变量、属性、下标不恩呢刚拥有比他们的类型更高的访问级别。</p>
-<p>Getter和Setter</p>
-<ul>
-<li>setter的访问级别可以低于对应的getter的访问级别，这样就可以控制变量、属性、或下标索引的读写权限</li>
-</ul>
-<p>协议继承：新协议拥有的访问级别最高也只能和被继承协议的访问级别相同。</p>
-<p>协议一致性：类可以采用比本身访问级别低的协议。比如定义了一个Public级别的类，可以采用一个internal级别的协议，并且只能在定义该协议的模块忠使用。</p>
-<p>如果采用了低级别的协议，那么这个类也遵循协议的级别。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>记录学习Swift语法知识点<br>]]>
-    
-    </summary>
-    
-      <category term="Swift" scheme="http://www.liuchendi.com/tags/Swift/"/>
     
       <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
     

@@ -3,18 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>谈谈iOS重构 | 小木头</title>
+  <title>谈谈iOS中的View和动画 | 小木头</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="重构是一个比较难的哲学问题,到底项目该不该重构">
+  <meta name="description" content="做iOS开发也有一段时间了，几乎每天都得和各种各样的View打交道，熟练使用View是做好iOS的基本功，正所谓知其然跟要知其所以然,所以今天就来学习视图到底是怎么工作的。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="谈谈iOS重构">
-<meta property="og:url" content="http://www.liuchendi.com/2015/11/10/iOS/9_Refactoring/index.html">
+<meta property="og:title" content="谈谈iOS中的View和动画">
+<meta property="og:url" content="http://www.liuchendi.com/2016/01/11/iOS/32_TalkAboutView/index.html">
 <meta property="og:site_name" content="小木头">
-<meta property="og:description" content="重构是一个比较难的哲学问题,到底项目该不该重构">
-<meta property="og:updated_time" content="2015-11-10T08:22:18.000Z">
+<meta property="og:description" content="做iOS开发也有一段时间了，几乎每天都得和各种各样的View打交道，熟练使用View是做好iOS的基本功，正所谓知其然跟要知其所以然,所以今天就来学习视图到底是怎么工作的。">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/ca_architecture_2x.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/talkAboutView.png">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Art/drawing_model.jpg">
+<meta property="og:updated_time" content="2016-01-11T06:24:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="谈谈iOS重构">
-<meta name="twitter:description" content="重构是一个比较难的哲学问题,到底项目该不该重构">
+<meta name="twitter:title" content="谈谈iOS中的View和动画">
+<meta name="twitter:description" content="做iOS开发也有一段时间了，几乎每天都得和各种各样的View打交道，熟练使用View是做好iOS的基本功，正所谓知其然跟要知其所以然,所以今天就来学习视图到底是怎么工作的。">
   
     <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
   
@@ -186,11 +189,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-iOS/9_Refactoring" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-iOS/32_TalkAboutView" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/11/10/iOS/9_Refactoring/" class="article-date">
-  	<time datetime="2015-11-10T08:22:18.000Z" itemprop="datePublished">2015-11-10</time>
+      <a href="/2016/01/11/iOS/32_TalkAboutView/" class="article-date">
+  	<time datetime="2016-01-11T06:24:13.000Z" itemprop="datePublished">2016-01-11</time>
 </a>
     </div>
   
@@ -203,7 +206,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      谈谈iOS重构
+      谈谈iOS中的View和动画
     </h1>
   
 
@@ -211,6 +214,10 @@
       
       <div class="article-info article-info-post">
         
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/视图架构、渲染/">视图架构、渲染</a></li></ul>
+	</div>
+
         
 	<div class="article-category tagcloud">
 	<a class="article-category-link" href="/categories/iOS/">iOS</a>
@@ -223,21 +230,47 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>重构是一个比较难的哲学问题,到底项目该不该重构<br><a id="more"></a></p>
-<p>花了一天半的时间，把公司旧版本的代码重构了，想吐槽一句，一个类里面有3600+行代码改起来真头大，本以为500行已经很多了，问了一下安卓开发那边，他们也有一个类里面有3000多行代码，我勒个去。。</p>
-<p>重构无非就是分离可复用的代码，按照职责分离不同的逻辑，就拿这个项目来说，MVC就不用说了，是程序员都知道，存储、网络处理都是需要分离的，但是这里又可以再细分一下，综合考虑项目的难以程度，如果是简单的小项目，这样分职责完全没问题，但是如果大项目的话还是会让MVC当中的<code>C控制器</code>非常庞大，不利于后期的维护和升级。那到底该如何重构，怎么样的做法才是正确的做法，其实我也不知道，只有最合适的做法，并没有最好的做法，每一种做法都有利弊，职责过度分离的话会导致可读性差，所以重构应该把握一个度，这个度取决于你对程序开发的理解。。。。</p>
-<h3 id="重构成本">重构成本</h3><p>重构是需要一定成本的，虽然代码凌乱不堪，但是可以运行，能够满足现在的功能需要。重构一不小心修改错了就会让原本完好的产品遍体鳞伤，因为往往凌乱的代码出错了修改bug的时间可能会比你重构的时间多更多，所以重构之前，掂量掂量自己的代码值不值得重构.</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1</span>)重构后的开发成本</span><br><span class="line">(<span class="number">2</span>)重构后修改bug成本</span><br><span class="line">(<span class="number">3</span>)重构能否让整体架构有性能上的提升</span><br></pre></td></tr></table></figure>
-<p>就拿项目来说，从昨天上午计划重构方案到重构完成，并且修改完bug,最终实现与原来版本无差异化，总共整整用了2天的时间。我认为这两天的时间对于后面的开发效率带来指数级的提升，虽然当前耽误了两天的时间，但这却能让后面的开发时间大大减少，所以在<code>开发时间成本</code>整体上来说是有利的。</p>
-<p>对于<code>重构后修改bug成本</code>我也心中有数，因为三个月的时间已经对这些3000多行代码有了一定的了解，即使出错了我也能够快速定位代码。</p>
-<p>至于<code>性能</code>来说，没有太大的提高，解决了一些内存泄露的问题，遗留了解一些可以读写优化的问题，这些在后面的开发会慢慢完善.</p>
-<p>###重构目的<br>没有目的的重构不是好重构，没有做到心中有数的重构也不是好重构。</p>
-<p>如果只是想快速的完成产品功能并且上线的话，这种情况下是以完成功能和上线为目的，所以重构并不是主要的。在这里可能有人会反问，代码没架构好，产品后期升级和维护是噩梦。上面也说过，<code>重构应该把握一个度</code>,在产品开发前期重构不是主要的不代表不重构，小部分重构还是需要的，比如写完两天的代码可以花上一个小时review一下，抽离复用的代码，但不要花太多时间重构，没必要也不值得，开发前期的目的就是上线产品。</p>
-<p>对于大型的项目来说，可能每秒的请求都是几十万几百万的，<code>重构与开发同等重要</code>，因为大型项目对性能的要求比较高，如果没有一个好的架构，严重影响程序的运行速度，这样的产品迟早完蛋，到后期就会变得臃肿不堪.</p>
-<p>###如何重构<br>首先，要对程序的一般架构烂熟于心，尤其是MVC，这是基本。还有就是分离存储和网络请求的逻辑。</p>
-<p>对于一些常用的控件尽量分离复用，设置开关函数，适当的时候开启，不要的时候关闭，有必要的话还可以<code>延迟加载</code></p>
-<p>对于一些高频率控件，比如风格统一的按钮，尽量使用<code>工厂方法</code>创建，尽量达到牵一发动全身的效果</p>
-<p>有效利用常量。例如：<code>宏定义</code>、<code>枚举</code> 尽量用这些常量表示一些状态。接下来会总结一些常用的一些宏。</p>
+        <p>做iOS开发也有一段时间了，几乎每天都得和各种各样的View打交道，熟练使用View是做好iOS的基本功，正所谓知其然跟要知其所以然,所以今天就来学习视图到底是怎么工作的。</p>
+<a id="more"></a>
+<h2 id="渲染机制">渲染机制</h2><p>这张图是苹果官方<code>Core Animation</code>里面的截图、可以看出渲染视图的流程是</p>
+<p>GPU -&gt; OpenGL / Core Graphics -&gt; CA -&gt; UIKit/AppKit</p>
+<p><img src="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/ca_architecture_2x.png" alt="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/ca_architecture_2x.png"></p>
+<p>详细的过程如图：<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/talkAboutView.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/talkAboutView.png"></p>
+<p>1、设置Layer的属性. frame, alpha, backgroundColor等</p>
+<p>2、创建backing image: 无论是通过setContents将一个image传给layer,还是通过<code>drawRect</code>或<code>drawLayer:inContext</code>画出来的，<code>drawRect：</code>等函数在这个阶段被调用</p>
+<p>3、准备工作： CA准备渲染layer各种属性数据，准备传递给render server. 同时解压渲染的image. (除了<code>imageName：</code>方法从bundle加载的image会立刻解压之外，其他的比如直接从硬盘读入，或者网上下载的image不会立刻解压，在真正渲染的时候才解压)</p>
+<p>4、提交：CA打包layer信息及动画参数,通过IPC(进程间通信)传递给render server。</p>
+<p>5、数据到达render server后，会被反序列化成render tree。然后render server会根据layer属性，用OpenGL准备渲染</p>
+<p>6、渲染到屏幕。</p>
+<p>上面这些内容参考来自<a href="http://bugly.qq.com/bbs/forum.php?mod=viewthread&amp;tid=297" target="_blank" rel="external">这里</a>，里面有更详细的解释。对性能优化有非常大的帮助。</p>
+<h2 id="交互方式">交互方式</h2><p><img src="https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Art/drawing_model.jpg" alt="https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Art/drawing_model.jpg"></p>
+<p>这是苹果官方文档里面的一个截图，解释了视图的工作原理，如何去响应事件。</p>
+<ul>
+<li>UIKit把事件打包成<code>UIEvent</code>对象，并分发到相对应的视图。</li>
+<li>在事件回调的代码里可以处理视图的相关问题。<ul>
+<li>改变视图或者子类属性(frame, bounds, alpha)</li>
+<li>调用<code>setNeedsLayout</code>方法更新视图布局</li>
+<li>调用<code>setNeedsDisplay</code>或者<code>setNeedsDisplayInRect:</code>方法重绘视图</li>
+<li>通知控制器改变数据</li>
+</ul>
+</li>
+<li>如果视图有几何上的改变，UIKit会根据下面的规则来更新子视图:<ul>
+<li>如果使用了<code>Autoresizing</code>,则会根据这些规则来调整视图</li>
+<li>如果实现了layoutSubView方法，则UIKit会调用它。</li>
+</ul>
+</li>
+<li>任何已经更新了的视图会和已可见的视图混合一起，提交给图形硬件去显示。</li>
+<li>渲染到屏幕上。</li>
+</ul>
+<h2 id="UIView和CALayer关系">UIView和CALayer关系</h2><p><code>CALayer</code>是QuartzCore库内的类。是iOS基本的绘制单元。 UIView是CALayer的上层封装，增加了事件的处理。UIView里面好多属性都是和CALayer里面一一对应的。</p>
+<p>UIView好比一个容器，用来管理视图，显示视图、处理事件；CALayer则着重视图的绘制</p>
+<p>更详细的资料可以参考<a href="http://www.jianshu.com/p/079e5cf0f014" target="_blank" rel="external">这里</a></p>
+<h2 id="Offscreen_Render（离屏渲染）">Offscreen Render（离屏渲染）</h2><p>1、有些效果不能直接会知道屏幕上，必须先会知道一个offscreen的image contentext上，这种操作会引入而外的内存和CPU消耗。（<code>rounded corners</code>,<code>layer masks</code>,<code>drop shadows</code>,<code>layer rasterization</code>）</p>
+<p>2、实现了<code>drawRect</code>或者<code>drawLayer:inContext</code>,为了支持任意的绘制，<code>Core Graphic</code>会创建一个大小跟需要画得view一样的backing image。并且画完后传输到render渲染。</p>
+<p>更详细的资料可以参考<a href="http://foggry.com/blog/2015/05/06/chi-ping-xuan-ran-xue-xi-bi-ji/?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="external">这里</a></p>
+<h2 id="参考资料">参考资料</h2><p><a href="http://foggry.com/blog/2015/05/06/chi-ping-xuan-ran-xue-xi-bi-ji/?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="external">http://foggry.com/blog/2015/05/06/chi-ping-xuan-ran-xue-xi-bi-ji/?utm_source=tuicool&amp;utm_medium=referral</a></p>
+<p><a href="http://bugly.qq.com/bbs/forum.php?mod=viewthread&amp;tid=297" target="_blank" rel="external">http://bugly.qq.com/bbs/forum.php?mod=viewthread&amp;tid=297</a></p>
+<p><a href="http://oncenote.com/2015/12/08/How-to-build-UI/" target="_blank" rel="external">http://oncenote.com/2015/12/08/How-to-build-UI/</a></p>
 
       
     </div>
@@ -247,18 +280,9 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/11/10/iOS/12_Swift_1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          Swift语法知识点笔记
-        
-      </div>
-    </a>
   
-  
-    <a href="/2015/11/10/iOS/2_dispatch_semaphore和NSOperationQueue并发/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">dispatch_semaphore和NSOperationQueue并发</div>
+    <a href="/2016/01/07/iOS/31_CoreGraphics_1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS翻译-Core Graphics教程1：入门</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -287,7 +311,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="iOS/9_Refactoring" data-title="谈谈iOS重构" data-url="http://www.liuchendi.com/2015/11/10/iOS/9_Refactoring/"></div>
+	<div class="ds-thread" data-thread-key="iOS/32_TalkAboutView" data-title="谈谈iOS中的View和动画" data-url="http://www.liuchendi.com/2016/01/11/iOS/32_TalkAboutView/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

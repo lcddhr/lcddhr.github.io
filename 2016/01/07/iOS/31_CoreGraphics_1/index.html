@@ -41,7 +41,7 @@
 <meta property="og:image" content="http://cdn2.raywenderlich.com/wp-content/uploads/2014/12/1-LabelAttributes.png">
 <meta property="og:image" content="http://cdn3.raywenderlich.com/wp-content/uploads/2014/12/1-ConnectingOutlets2.gif">
 <meta property="og:image" content="http://cdn5.raywenderlich.com/wp-content/uploads/2014/12/1-Part1Finished-299x500.png">
-<meta property="og:updated_time" content="2016-01-07T08:43:29.000Z">
+<meta property="og:updated_time" content="2016-01-07T08:45:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS翻译-Core Graphics教程1：入门">
 <meta name="twitter:description" content="翻译了一篇raywenderlich的文章，Core Graphics的入门教程。（有部分省略，剩下的都是主要过程。）
@@ -147,7 +147,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Core-Graphics/" style="font-size: 10px;">Core Graphics</a> <a href="/tags/GCD/" style="font-size: 10px;">GCD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 15px;">Swift</a> <a href="/tags/UISearchbar/" style="font-size: 10px;">UISearchbar</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+						<a href="/tags/Core-Graphics/" style="font-size: 10px;">Core Graphics</a> <a href="/tags/GCD/" style="font-size: 10px;">GCD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 15px;">Swift</a> <a href="/tags/UISearchbar/" style="font-size: 10px;">UISearchbar</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/视图架构、渲染/" style="font-size: 10px;">视图架构、渲染</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
 					</div>
 				</section>
 				
@@ -221,7 +221,7 @@
   
     <div class="article-meta">
       <a href="/2016/01/07/iOS/31_CoreGraphics_1/" class="article-date">
-  	<time datetime="2016-01-07T08:43:29.000Z" itemprop="datePublished">2016-01-07</time>
+  	<time datetime="2016-01-07T08:45:46.000Z" itemprop="datePublished">2016-01-07</time>
 </a>
     </div>
   
@@ -266,7 +266,7 @@
 <p><code>Core Graphics</code>是Apple的矢量绘图框架。它非常强大，API功能齐全，里面有许多需要学习的知识。但不用害怕，这里三部分可以引导你入门，最后你将在app里面创建一个好看的图形。</p>
 <p>这是一个全新的系列，用先进的方法来教开发者使用<code>Core Graphice</code>。这个系列全部在Xcode6用Swift写(现在Xcode7了，测试可以通过),包含了新的功能，例如<code>@IBDesignable</code>和<code>@IBInspectable</code>，可以让<code>Core Graphics</code>学起来更加有趣和容易。</p>
 <p>带着你最喜欢的饮料，让我们开始吧！</p>
-<h2 id="介绍Flo_-_每次喝一杯">介绍Flo - 每次喝一杯</h2><p>你将创建一个完整的app来记录你喝水的习惯。</p>
+<h2 id="介绍Flo">介绍Flo</h2><p>你将创建一个完整的app来记录你喝水的习惯。</p>
 <p>这个app很容易记录你喝了多少水。 它会告诉我们一天喝8杯水是健康的，但很容易在记录几杯后就忘记了。这就是写Flo的原因。每次你干完一杯新鲜的水，点击计数器。你也可以在里面看见7天的记录。</p>
 <p><img src="http://cdn4.raywenderlich.com/wp-content/uploads/2014/12/1-CompletedApp.gif" alt="http://cdn4.raywenderlich.com/wp-content/uploads/2014/12/1-CompletedApp.gif"></p>
 <p>在这部分里面，你将使用<code>UIKit</code>的绘制方法创建3个控件。</p>
@@ -422,6 +422,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2016/01/11/iOS/32_TalkAboutView/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          谈谈iOS中的View和动画
+        
+      </div>
+    </a>
   
   
     <a href="/2016/01/06/iOS/30_SearchBar/" id="article-nav-older" class="article-nav-link-wrap">
