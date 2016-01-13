@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2016-01-11T06:24:13.000Z</updated>
+  <updated>2016-01-13T02:02:54.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -13,6 +13,40 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[对象同步-@synchronized, NSLock, pthread, OSSpinLock性能比较]]></title>
+    <link href="http://www.liuchendi.com/2016/01/13/iOS/33_Lock/"/>
+    <id>http://www.liuchendi.com/2016/01/13/iOS/33_Lock/</id>
+    <published>2016-01-13T02:02:54.000Z</published>
+    <updated>2016-01-13T02:02:54.000Z</updated>
+    <content type="html"><![CDATA[<p>起因是看到这篇<a href="http://music4kid.github.io//ios/2016/01/07/push/" target="_blank" rel="external">iOS中级面试题</a>，说得比较中肯。很多知识点都接触过、也用过，但如果要答得好，还是得有系统的学习和总结。好记性不如烂笔头，所以就总结一下多线程中加锁的方法以及他们之间性能的比较。</p>
+<p>原文地址:<a href="http://perpendiculo.us/2009/09/synchronized-nslock-pthread-osspinlock-showdown-done-right/" target="_blank" rel="external">http://perpendiculo.us/2009/09/synchronized-nslock-pthread-osspinlock-showdown-done-right/</a></p>
+<p>可能需要翻墙</p>
+<a id="more"></a>
+<p>稍微修改了原文的代码，因为文章是09年的，在Xcode7上面会报错。测试环境是非ARC</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#import &lt;Foundation/Foundation.h&gt;</span></span><br><span class="line"><span class="preprocessor">#import &lt;objc/runtime.h&gt;</span></span><br><span class="line"><span class="preprocessor">#import &lt;objc/message.h&gt;</span></span><br><span class="line"><span class="preprocessor">#import &lt;libkern/OSAtomic.h&gt;</span></span><br><span class="line"><span class="preprocessor">#import &lt;pthread.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#define ITERATIONS (1024*1024*32)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> unsigned long long disp=<span class="number">0</span>, land=<span class="number">0</span><span class="comment">;</span></span><br><span class="line"></span><br><span class="line">typedef id(*_IMP) (id, SEL, ...)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span> main(<span class="built_in">int</span> argc, <span class="keyword">const</span> char * argv[]) &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    double <span class="keyword">then</span>, <span class="built_in">now</span><span class="comment">;</span></span><br><span class="line">    unsigned <span class="built_in">int</span> i, count<span class="comment">;</span></span><br><span class="line">    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER<span class="comment">;</span></span><br><span class="line">    OSSpinLock spinlock = OS_SPINLOCK_INIT<span class="comment">;</span></span><br><span class="line">    </span><br><span class="line">    NSAutoreleasePool *pool = [NSAutoreleasePool new]<span class="comment">;</span></span><br><span class="line">    </span><br><span class="line">    NSLock *lock = [NSLock new]<span class="comment">;</span></span><br><span class="line">    <span class="keyword">then</span> = CFAbsoluteTimeGetCurrent()<span class="comment">;</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span><span class="comment">;i&lt;ITERATIONS;++i)</span></span><br><span class="line">    &#123;</span><br><span class="line">        [lock lock]<span class="comment">;</span></span><br><span class="line">        [lock unlock]<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">now</span> = CFAbsoluteTimeGetCurrent()<span class="comment">;</span></span><br><span class="line">    printf(<span class="string">"NSLock: %f sec\n"</span>, <span class="built_in">now</span>-<span class="keyword">then</span>)<span class="comment">;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">then</span> = CFAbsoluteTimeGetCurrent()<span class="comment">;</span></span><br><span class="line">    _IMP lockLock = (_IMP)[lock methodForSelector:<span class="constant">@selector</span>(lock)]<span class="comment">;</span></span><br><span class="line">    _IMP unlockLock = (_IMP)[lock methodForSelector:<span class="constant">@selector</span>(unlock)]<span class="comment">;</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span><span class="comment">;i&lt;ITERATIONS;++i)</span></span><br><span class="line">    &#123;</span><br><span class="line">        lockLock(lock,<span class="constant">@selector</span>(lock))<span class="comment">;</span></span><br><span class="line">        unlockLock(lock,<span class="constant">@selector</span>(unlock))<span class="comment">;</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">now</span> = CFAbsoluteTimeGetCurrent()<span class="comment">;</span></span><br><span class="line">    printf(<span class="string">"NSLock+IMP Cache: %f sec\n"</span>, <span class="built_in">now</span>-<span class="keyword">then</span>)<span class="comment">;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">then</span> = CFAbsoluteTimeGetCurrent()<span class="comment">;</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span><span class="comment">;i&lt;ITERATIONS;++i)</span></span><br><span class="line">    &#123;</span><br><span class="line">        pthread_mutex_lock(&amp;mutex)<span class="comment">;</span></span><br><span class="line">        pthread_mutex_unlock(&amp;mutex)<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">now</span> = CFAbsoluteTimeGetCurrent()<span class="comment">;</span></span><br><span class="line">    printf(<span class="string">"pthread_mutex: %f sec\n"</span>, <span class="built_in">now</span>-<span class="keyword">then</span>)<span class="comment">;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">then</span> = CFAbsoluteTimeGetCurrent()<span class="comment">;</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span><span class="comment">;i&lt;ITERATIONS;++i)</span></span><br><span class="line">    &#123;</span><br><span class="line">        OSSpinLockLock(&amp;spinlock)<span class="comment">;</span></span><br><span class="line">        OSSpinLockUnlock(&amp;spinlock)<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">now</span> = CFAbsoluteTimeGetCurrent()<span class="comment">;</span></span><br><span class="line">    printf(<span class="string">"OSSpinlock: %f sec\n"</span>, <span class="built_in">now</span>-<span class="keyword">then</span>)<span class="comment">;</span></span><br><span class="line">    </span><br><span class="line">    id obj = [NSObject new]<span class="comment">;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">then</span> = CFAbsoluteTimeGetCurrent()<span class="comment">;</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span><span class="comment">;i&lt;ITERATIONS;++i)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="constant">@synchronized</span>(obj)</span><br><span class="line">        &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">now</span> = CFAbsoluteTimeGetCurrent()<span class="comment">;</span></span><br><span class="line">    printf(<span class="string">"@synchronized: %f sec\n"</span>, <span class="built_in">now</span>-<span class="keyword">then</span>)<span class="comment">;</span></span><br><span class="line">    [pool release]<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span><span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>耗时结果比较：<br><code>OSSpinlock</code> &lt; <code>pthread_mutex</code> &lt; <code>NSLock+IMP</code> &lt;  <code>NSLock</code> &lt; <code>@synchronized</code> </p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">NSLock</span>: <span class="number">1.437285</span> sec</span><br><span class="line">NSLock+IMP <span class="attribute">Cache</span>: <span class="number">1.359244</span> sec</span><br><span class="line"><span class="attribute">pthread_mutex</span>: <span class="number">0.972748</span> sec</span><br><span class="line"><span class="attribute">OSSpinlock</span>: <span class="number">0.311700</span> sec</span><br><span class="line"><span class="variable">@synchronized</span>: <span class="number">2.888747</span> sec</span><br></pre></td></tr></table></figure>
+<p>##分析：</p>
+<p>####1、@synchronized<br>内部会创建一个异常捕获的handler和其他内部使用的锁。所以会消耗大量的时间</p>
+<h4 id="2、NSLock_和_NSLock+IMP">2、NSLock 和 NSLock+IMP</h4><p>两个时间非常接近。他们是<code>pthread mutexes</code>封装的，但是创建对象的时候需要额外的开销。</p>
+<h4 id="3、pthread_mutex">3、pthread_mutex</h4><p>底层的API，性能比较高。</p>
+<h4 id="4、OSSpinLock">4、OSSpinLock</h4><p>自旋锁不进入内核，仅仅是重新加载。如果自旋锁占用的时间是极少的（通常是纳秒级别的）性能还是比较高的，减少了系统的直接调用和上下文的切换。</p>
+<p>但是，如果有资源竞争的时候，会占用更多的cpu，耗电严重。这个时候，使用<code>pthread_mutex</code>可以避免电量的消耗，虽然耗时多一些。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>起因是看到这篇<a href="http://music4kid.github.io//ios/2016/01/07/push/">iOS中级面试题</a>，说得比较中肯。很多知识点都接触过、也用过，但如果要答得好，还是得有系统的学习和总结。好记性不如烂笔头，所以就总结一下多线程中加锁的方法以及他们之间性能的比较。</p>
+<p>原文地址:<a href="http://perpendiculo.us/2009/09/synchronized-nslock-pthread-osspinlock-showdown-done-right/">http://perpendiculo.us/2009/09/synchronized-nslock-pthread-osspinlock-showdown-done-right/</a></p>
+<p>可能需要翻墙</p>]]>
+    
+    </summary>
+    
+      <category term="NSLock、OSSpinLock、多线程同步、锁" scheme="http://www.liuchendi.com/tags/NSLock%E3%80%81OSSpinLock%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E3%80%81%E9%94%81/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[谈谈iOS中的View和动画]]></title>
@@ -1462,47 +1496,6 @@
     </summary>
     
       <category term="对象、runtime" scheme="http://www.liuchendi.com/tags/%E5%AF%B9%E8%B1%A1%E3%80%81runtime/"/>
-    
-      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[制作cocospod库的过程总结]]></title>
-    <link href="http://www.liuchendi.com/2015/11/10/iOS/13_cocospodLib/"/>
-    <id>http://www.liuchendi.com/2015/11/10/iOS/13_cocospodLib/</id>
-    <published>2015-11-10T11:59:25.000Z</published>
-    <updated>2015-11-10T11:59:25.000Z</updated>
-    <content type="html"><![CDATA[<p>制作cocospod库需要注意的地方<br><a id="more"></a></p>
-<h2 id="1、打tag">1、打tag</h2><pre><code>git tag <span class="string">'v1.0.0'</span>
-
-git <span class="keyword">push</span> --tags
-
-git <span class="keyword">push</span> origin master
-</code></pre><h2 id="2、生成podspec文件">2、生成podspec文件</h2><p>pod spec create <a href="https://github.com/xx" target="_blank" rel="external">https://github.com/xx</a></p>
-<ul>
-<li><p>注意需要配置的地方是，这三个一定要写清楚，不然会报错</p>
-<ul>
-<li>s.source:需要制作成库的文件,后面跟的是版本号</li>
-<li>s.framework: 需要连接的framework</li>
-<li>s.platform:版本</li>
-</ul>
-</li>
-</ul>
-<h2 id="3、把文件发送到仓库">3、把文件发送到仓库</h2><pre><code>git add <span class="keyword">Test</span>.podspec
-
-git commit -am "add <span class="keyword">Test</span>.podspec <span class="keyword">file</span>”
-
-git push -<span class="keyword">u</span> origin master
-</code></pre><h2 id="4、如果需要发送的Cocospod库">4、如果需要发送的Cocospod库</h2><pre><code><span class="label">pod</span> trunk <span class="keyword">push </span>
-</code></pre><p>这个命令会检查本地的<code>podspec</code>文件是否有错，没错的话会上传这个文件到<code>trunk</code>,然后将文件转换成json文件。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>制作cocospod库需要注意的地方<br>]]>
-    
-    </summary>
-    
-      <category term="cocospod" scheme="http://www.liuchendi.com/tags/cocospod/"/>
     
       <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
     
