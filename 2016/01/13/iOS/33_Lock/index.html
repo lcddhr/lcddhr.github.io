@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>对象同步-@synchronized, NSLock, pthread, OSSpinLock性能比较 | 小木头</title>
+  <title>同步-@synchronized, NSLock, pthread, OSSpinLock性能比较 | 小木头</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="起因是看到这篇iOS中级面试题，说得比较中肯。很多知识点都接触过、也用过，但如果要答得好，还是得有系统的学习和总结。好记性不如烂笔头，所以就总结一下多线程中加锁的方法以及他们之间性能的比较。
 原文地址:http://perpendiculo.us/2009/09/synchronized-nslock-pthread-osspinlock-showdown-done-right/
 可能需要翻墙">
 <meta property="og:type" content="article">
-<meta property="og:title" content="对象同步-@synchronized, NSLock, pthread, OSSpinLock性能比较">
+<meta property="og:title" content="同步-@synchronized, NSLock, pthread, OSSpinLock性能比较">
 <meta property="og:url" content="http://www.liuchendi.com/2016/01/13/iOS/33_Lock/index.html">
 <meta property="og:site_name" content="小木头">
 <meta property="og:description" content="起因是看到这篇iOS中级面试题，说得比较中肯。很多知识点都接触过、也用过，但如果要答得好，还是得有系统的学习和总结。好记性不如烂笔头，所以就总结一下多线程中加锁的方法以及他们之间性能的比较。
 原文地址:http://perpendiculo.us/2009/09/synchronized-nslock-pthread-osspinlock-showdown-done-right/
 可能需要翻墙">
-<meta property="og:updated_time" content="2016-01-13T02:02:54.000Z">
+<meta property="og:updated_time" content="2016-01-13T02:04:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="对象同步-@synchronized, NSLock, pthread, OSSpinLock性能比较">
+<meta name="twitter:title" content="同步-@synchronized, NSLock, pthread, OSSpinLock性能比较">
 <meta name="twitter:description" content="起因是看到这篇iOS中级面试题，说得比较中肯。很多知识点都接触过、也用过，但如果要答得好，还是得有系统的学习和总结。好记性不如烂笔头，所以就总结一下多线程中加锁的方法以及他们之间性能的比较。
 原文地址:http://perpendiculo.us/2009/09/synchronized-nslock-pthread-osspinlock-showdown-done-right/
 可能需要翻墙">
@@ -196,7 +196,7 @@
   
     <div class="article-meta">
       <a href="/2016/01/13/iOS/33_Lock/" class="article-date">
-  	<time datetime="2016-01-13T02:02:54.000Z" itemprop="datePublished">2016-01-13</time>
+  	<time datetime="2016-01-13T02:04:11.000Z" itemprop="datePublished">2016-01-13</time>
 </a>
     </div>
   
@@ -209,7 +209,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      对象同步-@synchronized, NSLock, pthread, OSSpinLock性能比较
+      同步-@synchronized, NSLock, pthread, OSSpinLock性能比较
     </h1>
   
 
@@ -287,7 +287,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="iOS/33_Lock" data-title="对象同步-@synchronized, NSLock, pthread, OSSpinLock性能比较" data-url="http://www.liuchendi.com/2016/01/13/iOS/33_Lock/"></div>
+	<div class="ds-thread" data-thread-key="iOS/33_Lock" data-title="同步-@synchronized, NSLock, pthread, OSSpinLock性能比较" data-url="http://www.liuchendi.com/2016/01/13/iOS/33_Lock/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

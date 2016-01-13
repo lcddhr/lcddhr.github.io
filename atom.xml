@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2016-01-13T02:02:54.000Z</updated>
+  <updated>2016-01-13T02:04:11.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -15,11 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[对象同步-@synchronized, NSLock, pthread, OSSpinLock性能比较]]></title>
+    <title><![CDATA[同步-@synchronized, NSLock, pthread, OSSpinLock性能比较]]></title>
     <link href="http://www.liuchendi.com/2016/01/13/iOS/33_Lock/"/>
     <id>http://www.liuchendi.com/2016/01/13/iOS/33_Lock/</id>
-    <published>2016-01-13T02:02:54.000Z</published>
-    <updated>2016-01-13T02:02:54.000Z</updated>
+    <published>2016-01-13T02:04:11.000Z</published>
+    <updated>2016-01-13T02:04:11.000Z</updated>
     <content type="html"><![CDATA[<p>起因是看到这篇<a href="http://music4kid.github.io//ios/2016/01/07/push/" target="_blank" rel="external">iOS中级面试题</a>，说得比较中肯。很多知识点都接触过、也用过，但如果要答得好，还是得有系统的学习和总结。好记性不如烂笔头，所以就总结一下多线程中加锁的方法以及他们之间性能的比较。</p>
 <p>原文地址:<a href="http://perpendiculo.us/2009/09/synchronized-nslock-pthread-osspinlock-showdown-done-right/" target="_blank" rel="external">http://perpendiculo.us/2009/09/synchronized-nslock-pthread-osspinlock-showdown-done-right/</a></p>
 <p>可能需要翻墙</p>
