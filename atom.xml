@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2016-01-22T10:06:36.000Z</updated>
+  <updated>2016-01-22T10:27:35.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -18,9 +18,9 @@
     <title><![CDATA[多个Target版本制作方法]]></title>
     <link href="http://www.liuchendi.com/2016/01/22/iOS/34_%E5%A4%9A%E4%B8%AATarget%E7%89%88%E6%9C%AC%E5%88%B6%E4%BD%9C/"/>
     <id>http://www.liuchendi.com/2016/01/22/iOS/34_多个Target版本制作/</id>
-    <published>2016-01-22T10:06:36.000Z</published>
-    <updated>2016-01-22T10:06:36.000Z</updated>
-    <content type="html"><![CDATA[<p>之前一直都有功能相同,但是有多个不同的版本，icon也不一样，无奈没有找到合适的方法，只能手动替换icon，修改<code>bundle id</code>，各种一系列的修改，然后再手动打包.. （=、=）</p>
+    <published>2016-01-22T10:27:35.000Z</published>
+    <updated>2016-01-22T10:27:35.000Z</updated>
+    <content type="html"><![CDATA[<p>之前一直都有功能相同,但是有多个不同的版本，icon也不一样的需求，无奈没有找到合适的方法，只能手动替换icon，修改<code>bundle id</code>，各种一系列的修改，然后再手动打包.. （=、=）</p>
 <p>后来好了一点点，用脚本去替换icon，可是还是要做很多配置</p>
 <p>今天终于解决了，看了appcoda的文章，地址是<a href="http://www.appcoda.com/using-xcode-targets/" target="_blank" rel="external">这里</a>。</p>
 <p>实现了多个版本分别打包、icon单独配置、每个target都用不同的info.plist文件。那个激动呀。。。。。</p>
@@ -32,7 +32,7 @@
 <h2 id="4、修改info-plist内容">4、修改info.plist内容</h2><p>在这里可以修改版本号呀、程序的名字子类的</p>
 <h2 id="5、最后修改bundle_id_设置好打包的参数">5、最后修改bundle id 设置好打包的参数</h2>]]></content>
     <summary type="html">
-    <![CDATA[<p>之前一直都有功能相同,但是有多个不同的版本，icon也不一样，无奈没有找到合适的方法，只能手动替换icon，修改<code>bundle id</code>，各种一系列的修改，然后再手动打包.. （=、=）</p>
+    <![CDATA[<p>之前一直都有功能相同,但是有多个不同的版本，icon也不一样的需求，无奈没有找到合适的方法，只能手动替换icon，修改<code>bundle id</code>，各种一系列的修改，然后再手动打包.. （=、=）</p>
 <p>后来好了一点点，用脚本去替换icon，可是还是要做很多配置</p>
 <p>今天终于解决了，看了appcoda的文章，地址是<a href="http://www.appcoda.com/using-xcode-targets/">这里</a>。</p>
 <p>实现了多个版本分别打包、icon单独配置、每个target都用不同的info.plist文件。那个激动呀。。。。。</p>]]>
