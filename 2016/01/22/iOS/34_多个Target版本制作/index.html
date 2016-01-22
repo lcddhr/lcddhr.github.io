@@ -3,17 +3,28 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: 对象、runtime | 小木头</title>
+  <title>多个Target版本制作方法 | 小木头</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="hexo搭建的博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="小木头">
-<meta property="og:url" content="http://www.liuchendi.com/tags/对象、runtime/index.html">
+  <meta name="description" content="之前一直都有功能相同,但是有多个不同的版本，icon也不一样，无奈没有找到合适的方法，只能手动替换icon，修改bundle id，各种一系列的修改，然后再手动打包.. （=、=）
+后来好了一点点，用脚本去替换icon，可是还是要做很多配置
+今天终于解决了，看了appcoda的文章，地址是这里。
+实现了多个版本分别打包、icon单独配置、每个target都用不同的info.plist文件。那个激动">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多个Target版本制作方法">
+<meta property="og:url" content="http://www.liuchendi.com/2016/01/22/iOS/34_多个Target版本制作/index.html">
 <meta property="og:site_name" content="小木头">
-<meta property="og:description" content="hexo搭建的博客">
+<meta property="og:description" content="之前一直都有功能相同,但是有多个不同的版本，icon也不一样，无奈没有找到合适的方法，只能手动替换icon，修改bundle id，各种一系列的修改，然后再手动打包.. （=、=）
+后来好了一点点，用脚本去替换icon，可是还是要做很多配置
+今天终于解决了，看了appcoda的文章，地址是这里。
+实现了多个版本分别打包、icon单独配置、每个target都用不同的info.plist文件。那个激动">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/31_target_1.png">
+<meta property="og:updated_time" content="2016-01-22T10:06:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="小木头">
-<meta name="twitter:description" content="hexo搭建的博客">
+<meta name="twitter:title" content="多个Target版本制作方法">
+<meta name="twitter:description" content="之前一直都有功能相同,但是有多个不同的版本，icon也不一样，无奈没有找到合适的方法，只能手动替换icon，修改bundle id，各种一系列的修改，然后再手动打包.. （=、=）
+后来好了一点点，用脚本去替换icon，可是还是要做很多配置
+今天终于解决了，看了appcoda的文章，地址是这里。
+实现了多个版本分别打包、icon单独配置、每个target都用不同的info.plist文件。那个激动">
   
     <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
   
@@ -185,57 +196,116 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-iOS/34_多个Target版本制作" class="article article-type-post" itemscope itemprop="blogPost">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/12/03/iOS/14_object_memory_topic/" class="archive-article-date">
-  	<time datetime="2015-12-03T09:17:08.000Z" itemprop="datePublished">12月 3</time>
+    <div class="article-meta">
+      <a href="/2016/01/22/iOS/34_多个Target版本制作/" class="article-date">
+  	<time datetime="2016-01-22T10:06:36.000Z" itemprop="datePublished">2016-01-22</time>
 </a>
-        </div>
-    	 
+    </div>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/03/iOS/14_object_memory_topic/">记一次关于对象占用内存的讨论</a>
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      多个Target版本制作方法
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+      </header>
+      
+      <div class="article-info article-info-post">
+        
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/对象、runtime/">对象、runtime</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/target/">target</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/多版本/">多版本</a></li></ul>
 	</div>
 
-          
+        
 	<div class="article-category tagcloud">
 	<a class="article-category-link" href="/categories/iOS/">iOS</a>
 	</div>
 
 
-        </div>
         <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
+      </div>
+      
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前一直都有功能相同,但是有多个不同的版本，icon也不一样，无奈没有找到合适的方法，只能手动替换icon，修改<code>bundle id</code>，各种一系列的修改，然后再手动打包.. （=、=）</p>
+<p>后来好了一点点，用脚本去替换icon，可是还是要做很多配置</p>
+<p>今天终于解决了，看了appcoda的文章，地址是<a href="http://www.appcoda.com/using-xcode-targets/" target="_blank" rel="external">这里</a>。</p>
+<p>实现了多个版本分别打包、icon单独配置、每个target都用不同的info.plist文件。那个激动呀。。。。。</p>
+<a id="more"></a>
+<h2 id="1、创建Target">1、创建Target</h2><p>在项目配置里面创建target,并修改成独立的名字。Xcode也会自动帮我们创建对应Info.plist文件，记得在对应的Target配置里面 在<code>Info.plist File</code>修改为刚刚自己写的名字。如下图</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_target_1.png" alt="31_target_1.png"></p>
+<h2 id="2、修改Manage_Scheme">2、修改Manage Scheme</h2><p>同理，在里面修改项目的名字</p>
+<h2 id="3、修改Icon">3、修改Icon</h2><p>先在<code>xcassets</code>里面创建相对应的icon文件。然后在<code>General</code>里面修改成对应的App Icon文件</p>
+<h2 id="4、修改info-plist内容">4、修改info.plist内容</h2><p>在这里可以修改版本号呀、程序的名字子类的</p>
+<h2 id="5、最后修改bundle_id_设置好打包的参数">5、最后修改bundle id 设置好打包的参数</h2>
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/01/13/iOS/33_Lock/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">同步-@synchronized, NSLock, pthread, OSSpinLock性能比较</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS/34_多个Target版本制作" data-title="多个Target版本制作方法" data-url="http://www.liuchendi.com/2016/01/22/iOS/34_多个Target版本制作/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"liuchendi"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
 
 </div>
       <footer id="footer">
@@ -266,9 +336,9 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: true
 	}
