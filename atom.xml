@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2016-01-22T10:27:35.000Z</updated>
+  <updated>2016-01-29T08:47:22.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -13,6 +13,69 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[AutoLayout魔法 - Hugging 和 Compression]]></title>
+    <link href="http://www.liuchendi.com/2016/01/29/iOS/35_hugging-and-compression-resistance/"/>
+    <id>http://www.liuchendi.com/2016/01/29/iOS/35_hugging-and-compression-resistance/</id>
+    <published>2016-01-29T08:47:22.000Z</published>
+    <updated>2016-01-29T08:47:22.000Z</updated>
+    <content type="html"><![CDATA[<p>用AutoLayout也有一段时间了, 之前一直都不是很理解 <code>Content Hugging</code>和 <code>Content Compression</code>的优先级。今天就把这个问题给解决了，到底这两个东西要怎么用？这篇文章算是学习笔记吧</p>
+<a id="more"></a>
+<h2 id="Intrinsic_Content_Size">Intrinsic Content Size</h2><p>在学习者两个东西前，首先得明白<code>Intrinsic Content Size</code>的概念，字面上的意思就是固定大小，也就是控件自身内置的大小。像<code>UIView</code>、<code>UILabel</code>、<code>UIButton</code>等控件，这些控件的内置大小是根据控件本身内容决定的。 我们应该都做过Cell动态高度的计算，Label的高可以根据内容的大小来计算。</p>
+<h2 id="优先级">优先级</h2><p>首先在Storyboard里面拉一个UILabel，可以看到默认的<code>Hugging</code>优先级是251，<code>Compression</code>优先级是750。并且提供了水平和垂直两个方向的设置</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_ContentPriority.png" alt="31_ContentPriority.png"></p>
+<p>优先级的取值范围在1-1000。提供了默认的优先级选项</p>
+<ul>
+<li>Low： 优先级是1</li>
+<li>High: 优先级是750</li>
+<li>Required： 优先级是1000</li>
+</ul>
+<h2 id="Content_Hugging_和_Content_Compression_区别">Content Hugging 和 Content Compression 区别</h2><p>借用网上的一张图片来说明两者的不同，图片出自<a href="http://krakendev.io/blog/autolayout-magic-like-harry-potter-but-real" target="_blank" rel="external">这里</a><br><img src="http://static1.squarespace.com/static/5592eb03e4b051859f0b377f/t/55f86137e4b075b26c33cc17/1442341176554/?format=750w" alt="http://static1.squarespace.com/static/5592eb03e4b051859f0b377f/t/55f86137e4b075b26c33cc17/1442341176554/?format=750w"></p>
+<font color="red">Content Hugging : 代表的是拉伸难易程度，优先级越高，越难拉伸</font>
+
+<font color="red">Content Compression： 代表的是压缩难易程度，优先级越高，越难压缩</font>
+
+
+<h2 id="练习例子">练习例子</h2><p>1、水平放置三个Label，彼此间有间距。第一个Label会根据屏幕宽度的不同自动拉伸，另外两个不受影响。</p>
+<p>首先不受影响的话，后面两个Label的优先级应该是一样的，并且要大于第一个的优先级，这样才能保证不容易拉伸。 </p>
+<p>布局是这个样子的</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1.png"></p>
+<p>竖屏结果是：</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1_answer.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1_answer.png"></p>
+<p>横屏结果是：</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1_answer2.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1_answer2.png"></p>
+<p>2、水平放置两个Label，第一个Label的Compression优先级比第二个低。</p>
+<p>布局是这个样子的<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2.png" alt="31_question2"></p>
+<p>竖屏结果是：</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2_answer1.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2_answer1.png"></p>
+<p>横屏结果是：</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2_answer2.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2_answer2.png"></p>
+<p>因为压缩优先级低于第二个，所以第一个在竖屏的时候被压缩了</p>
+<p>3、那接上一个的练习，如果第一个Label的优先级大于第二个，结果又会是怎么样呢？</p>
+<p>竖屏的结果是</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question3_answer1.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question3_answer1.png"></p>
+<p>横屏的结果是</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question3_answer2.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question3_answer2.png"></p>
+<p>可以看到因为第一个Label的优先级比较高，所以难以压缩，把第二个Label直接挤没了。在横屏的时候才可以显示完全</p>
+<h2 id="参考资料">参考资料</h2><p>1、<a href="http://krakendev.io/blog/autolayout-magic-like-harry-potter-but-real" target="_blank" rel="external">http://krakendev.io/blog/autolayout-magic-like-harry-potter-but-real</a></p>
+<p>2、<a href="https://www.mgenware.com/blog/?p=491" target="_blank" rel="external">https://www.mgenware.com/blog/?p=491</a></p>
+<p>3、<a href="http://c0ming.me/content-hugging-and-compression-resistance/" target="_blank" rel="external">http://c0ming.me/content-hugging-and-compression-resistance/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>用AutoLayout也有一段时间了, 之前一直都不是很理解 <code>Content Hugging</code>和 <code>Content Compression</code>的优先级。今天就把这个问题给解决了，到底这两个东西要怎么用？这篇文章算是学习笔记吧</p>]]>
+    
+    </summary>
+    
+      <category term="AutoLayout" scheme="http://www.liuchendi.com/tags/AutoLayout/"/>
+    
+      <category term="Content Compression" scheme="http://www.liuchendi.com/tags/Content-Compression/"/>
+    
+      <category term="Content Hugging" scheme="http://www.liuchendi.com/tags/Content-Hugging/"/>
+    
+      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[多个Target版本制作方法]]></title>
@@ -1446,30 +1509,6 @@
     </summary>
     
       <category term="源码" scheme="http://www.liuchendi.com/tags/%E6%BA%90%E7%A0%81/"/>
-    
-      <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[自己写的开源框架]]></title>
-    <link href="http://www.liuchendi.com/2015/12/03/iOS/15_my_opensource/"/>
-    <id>http://www.liuchendi.com/2015/12/03/iOS/15_my_opensource/</id>
-    <published>2015-12-03T09:26:19.000Z</published>
-    <updated>2015-12-03T09:26:19.000Z</updated>
-    <content type="html"><![CDATA[<p>记录自己写的第三方开源框架<br><a id="more"></a></p>
-<p>1、二维码扫描(防微信)。<a href="https://github.com/lcddhr/QRWeiXinDemo" target="_blank" rel="external">https://github.com/lcddhr/QRWeiXinDemo</a></p>
-<p>2、防闲鱼App。<br><a href="https://github.com/lcddhr/FleaMarket" target="_blank" rel="external">https://github.com/lcddhr/FleaMarket</a></p>
-<p>3、键盘表情。<a href="https://github.com/lcddhr/DDEmotionView" target="_blank" rel="external">https://github.com/lcddhr/DDEmotionView</a> </p>
-<p>4、图片加载动画。<a href="https://github.com/lcddhr/DDRevelImage" target="_blank" rel="external">https://github.com/lcddhr/DDRevelImage</a>  </p>
-<p>5、Masonry的例子。<a href="https://github.com/lcddhr/DDMasonryTest" target="_blank" rel="external">https://github.com/lcddhr/DDMasonryTest</a>  </p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>记录自己写的第三方开源框架<br>]]>
-    
-    </summary>
-    
-      <category term="开源框架" scheme="http://www.liuchendi.com/tags/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
       <category term="iOS" scheme="http://www.liuchendi.com/categories/iOS/"/>
     

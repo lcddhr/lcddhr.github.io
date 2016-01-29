@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>AutoLayout魔法 - Hugging 和 Compression | 小木头</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="用AutoLayout也有一段时间了, 之前一直都不是很理解 Content Hugging和 Content Compression的优先级。今天就把这个问题给解决了，到底这两个东西要怎么用？这篇文章算是学习笔记吧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AutoLayout魔法 - Hugging 和 Compression">
+<meta property="og:url" content="http://www.liuchendi.com/2016/01/29/iOS/35_hugging-and-compression-resistance/index.html">
+<meta property="og:site_name" content="小木头">
+<meta property="og:description" content="用AutoLayout也有一段时间了, 之前一直都不是很理解 Content Hugging和 Content Compression的优先级。今天就把这个问题给解决了，到底这两个东西要怎么用？这篇文章算是学习笔记吧">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/31_ContentPriority.png">
+<meta property="og:image" content="http://static1.squarespace.com/static/5592eb03e4b051859f0b377f/t/55f86137e4b075b26c33cc17/1442341176554/?format=750w">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1_answer.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1_answer2.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2_answer1.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2_answer2.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/31_question3_answer1.png">
+<meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/31_question3_answer2.png">
+<meta property="og:updated_time" content="2016-01-29T08:47:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AutoLayout魔法 - Hugging 和 Compression">
+<meta name="twitter:description" content="用AutoLayout也有一段时间了, 之前一直都不是很理解 Content Hugging和 Content Compression的优先级。今天就把这个问题给解决了，到底这两个东西要怎么用？这篇文章算是学习笔记吧">
+  
+    <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7i7ht3.com1.z0.glb.clouddn.com/avatar.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">小木头</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心中无敌则无敌于天下</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/about">关于我</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/lcddhr" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/329096966" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="http://lcddhr.github.io/atom.xml" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/AutoLayout/" style="font-size: 10px;">AutoLayout</a> <a href="/tags/Content-Compression/" style="font-size: 10px;">Content Compression</a> <a href="/tags/Content-Hugging/" style="font-size: 10px;">Content Hugging</a> <a href="/tags/Core-Graphics/" style="font-size: 10px;">Core Graphics</a> <a href="/tags/GCD/" style="font-size: 10px;">GCD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSLock、OSSpinLock、多线程同步、锁/" style="font-size: 10px;">NSLock、OSSpinLock、多线程同步、锁</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 15px;">Swift</a> <a href="/tags/UISearchbar/" style="font-size: 10px;">UISearchbar</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/target/" style="font-size: 10px;">target</a> <a href="/tags/多版本/" style="font-size: 10px;">多版本</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/视图架构、渲染/" style="font-size: 10px;">视图架构、渲染</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://xiaoxuetu.github.io/">小学徒的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">小木头   iOS开发者</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">小木头</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7i7ht3.com1.z0.glb.clouddn.com/avatar.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">小木头</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心中无敌则无敌于天下</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/about">关于我</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/lcddhr" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/329096966" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="http://lcddhr.github.io/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-iOS/35_hugging-and-compression-resistance" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/29/iOS/35_hugging-and-compression-resistance/" class="article-date">
+  	<time datetime="2016-01-29T08:47:22.000Z" itemprop="datePublished">2016-01-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      AutoLayout魔法 - Hugging 和 Compression
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AutoLayout/">AutoLayout</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Content-Compression/">Content Compression</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Content-Hugging/">Content Hugging</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS/">iOS</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>用AutoLayout也有一段时间了, 之前一直都不是很理解 <code>Content Hugging</code>和 <code>Content Compression</code>的优先级。今天就把这个问题给解决了，到底这两个东西要怎么用？这篇文章算是学习笔记吧</p>
+<a id="more"></a>
+<h2 id="Intrinsic_Content_Size">Intrinsic Content Size</h2><p>在学习者两个东西前，首先得明白<code>Intrinsic Content Size</code>的概念，字面上的意思就是固定大小，也就是控件自身内置的大小。像<code>UIView</code>、<code>UILabel</code>、<code>UIButton</code>等控件，这些控件的内置大小是根据控件本身内容决定的。 我们应该都做过Cell动态高度的计算，Label的高可以根据内容的大小来计算。</p>
+<h2 id="优先级">优先级</h2><p>首先在Storyboard里面拉一个UILabel，可以看到默认的<code>Hugging</code>优先级是251，<code>Compression</code>优先级是750。并且提供了水平和垂直两个方向的设置</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_ContentPriority.png" alt="31_ContentPriority.png"></p>
+<p>优先级的取值范围在1-1000。提供了默认的优先级选项</p>
+<ul>
+<li>Low： 优先级是1</li>
+<li>High: 优先级是750</li>
+<li>Required： 优先级是1000</li>
+</ul>
+<h2 id="Content_Hugging_和_Content_Compression_区别">Content Hugging 和 Content Compression 区别</h2><p>借用网上的一张图片来说明两者的不同，图片出自<a href="http://krakendev.io/blog/autolayout-magic-like-harry-potter-but-real" target="_blank" rel="external">这里</a><br><img src="http://static1.squarespace.com/static/5592eb03e4b051859f0b377f/t/55f86137e4b075b26c33cc17/1442341176554/?format=750w" alt="http://static1.squarespace.com/static/5592eb03e4b051859f0b377f/t/55f86137e4b075b26c33cc17/1442341176554/?format=750w"></p>
+<font color="red">Content Hugging : 代表的是拉伸难易程度，优先级越高，越难拉伸</font>
+
+<font color="red">Content Compression： 代表的是压缩难易程度，优先级越高，越难压缩</font>
+
+
+<h2 id="练习例子">练习例子</h2><p>1、水平放置三个Label，彼此间有间距。第一个Label会根据屏幕宽度的不同自动拉伸，另外两个不受影响。</p>
+<p>首先不受影响的话，后面两个Label的优先级应该是一样的，并且要大于第一个的优先级，这样才能保证不容易拉伸。 </p>
+<p>布局是这个样子的</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1.png"></p>
+<p>竖屏结果是：</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1_answer.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1_answer.png"></p>
+<p>横屏结果是：</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1_answer2.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question1_answer2.png"></p>
+<p>2、水平放置两个Label，第一个Label的Compression优先级比第二个低。</p>
+<p>布局是这个样子的<br><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2.png" alt="31_question2"></p>
+<p>竖屏结果是：</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2_answer1.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2_answer1.png"></p>
+<p>横屏结果是：</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2_answer2.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question2_answer2.png"></p>
+<p>因为压缩优先级低于第二个，所以第一个在竖屏的时候被压缩了</p>
+<p>3、那接上一个的练习，如果第一个Label的优先级大于第二个，结果又会是怎么样呢？</p>
+<p>竖屏的结果是</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question3_answer1.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question3_answer1.png"></p>
+<p>横屏的结果是</p>
+<p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_question3_answer2.png" alt="http://7i7ht3.com1.z0.glb.clouddn.com/31_question3_answer2.png"></p>
+<p>可以看到因为第一个Label的优先级比较高，所以难以压缩，把第二个Label直接挤没了。在横屏的时候才可以显示完全</p>
+<h2 id="参考资料">参考资料</h2><p>1、<a href="http://krakendev.io/blog/autolayout-magic-like-harry-potter-but-real" target="_blank" rel="external">http://krakendev.io/blog/autolayout-magic-like-harry-potter-but-real</a></p>
+<p>2、<a href="https://www.mgenware.com/blog/?p=491" target="_blank" rel="external">https://www.mgenware.com/blog/?p=491</a></p>
+<p>3、<a href="http://c0ming.me/content-hugging-and-compression-resistance/" target="_blank" rel="external">http://c0ming.me/content-hugging-and-compression-resistance/</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/01/22/iOS/34_多个Target版本制作/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">多个Target版本制作方法</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS/35_hugging-and-compression-resistance" data-title="AutoLayout魔法 - Hugging 和 Compression" data-url="http://www.liuchendi.com/2016/01/29/iOS/35_hugging-and-compression-resistance/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"liuchendi"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 小木头
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256997755'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1256997755%26online%3D1%26show%3Dline' type='text/javascript'%3E%3C/script%3E"));</script>
+>
+
+</footer>
+
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
