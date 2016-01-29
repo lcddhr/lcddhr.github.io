@@ -4,7 +4,7 @@
   <subtitle><![CDATA[心中无敌则无敌于天下]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.liuchendi.com/"/>
-  <updated>2016-01-29T08:47:22.000Z</updated>
+  <updated>2016-01-29T08:50:55.000Z</updated>
   <id>http://www.liuchendi.com/</id>
   
   <author>
@@ -18,11 +18,11 @@
     <title><![CDATA[AutoLayout魔法 - Hugging 和 Compression]]></title>
     <link href="http://www.liuchendi.com/2016/01/29/iOS/35_hugging-and-compression-resistance/"/>
     <id>http://www.liuchendi.com/2016/01/29/iOS/35_hugging-and-compression-resistance/</id>
-    <published>2016-01-29T08:47:22.000Z</published>
-    <updated>2016-01-29T08:47:22.000Z</updated>
+    <published>2016-01-29T08:50:55.000Z</published>
+    <updated>2016-01-29T08:50:55.000Z</updated>
     <content type="html"><![CDATA[<p>用AutoLayout也有一段时间了, 之前一直都不是很理解 <code>Content Hugging</code>和 <code>Content Compression</code>的优先级。今天就把这个问题给解决了，到底这两个东西要怎么用？这篇文章算是学习笔记吧</p>
 <a id="more"></a>
-<h2 id="Intrinsic_Content_Size">Intrinsic Content Size</h2><p>在学习者两个东西前，首先得明白<code>Intrinsic Content Size</code>的概念，字面上的意思就是固定大小，也就是控件自身内置的大小。像<code>UIView</code>、<code>UILabel</code>、<code>UIButton</code>等控件，这些控件的内置大小是根据控件本身内容决定的。 我们应该都做过Cell动态高度的计算，Label的高可以根据内容的大小来计算。</p>
+<h2 id="Intrinsic_Content_Size">Intrinsic Content Size</h2><p>在学习这两个东西前，首先得明白<code>Intrinsic Content Size</code>的概念，字面上的意思就是固定大小，也就是控件自身内置的大小。像<code>UIView</code>、<code>UILabel</code>、<code>UIButton</code>等控件，这些控件的内置大小是根据控件本身内容决定的。 我们应该都做过Cell动态高度的计算，Label的高可以根据内容的大小来计算。</p>
 <h2 id="优先级">优先级</h2><p>首先在Storyboard里面拉一个UILabel，可以看到默认的<code>Hugging</code>优先级是251，<code>Compression</code>优先级是750。并且提供了水平和垂直两个方向的设置</p>
 <p><img src="http://7i7ht3.com1.z0.glb.clouddn.com/31_ContentPriority.png" alt="31_ContentPriority.png"></p>
 <p>优先级的取值范围在1-1000。提供了默认的优先级选项</p>
@@ -34,6 +34,7 @@
 <h2 id="Content_Hugging_和_Content_Compression_区别">Content Hugging 和 Content Compression 区别</h2><p>借用网上的一张图片来说明两者的不同，图片出自<a href="http://krakendev.io/blog/autolayout-magic-like-harry-potter-but-real" target="_blank" rel="external">这里</a><br><img src="http://static1.squarespace.com/static/5592eb03e4b051859f0b377f/t/55f86137e4b075b26c33cc17/1442341176554/?format=750w" alt="http://static1.squarespace.com/static/5592eb03e4b051859f0b377f/t/55f86137e4b075b26c33cc17/1442341176554/?format=750w"></p>
 <font color="red">Content Hugging : 代表的是拉伸难易程度，优先级越高，越难拉伸</font>
 
+<p><br><br></p>
 <font color="red">Content Compression： 代表的是压缩难易程度，优先级越高，越难压缩</font>
 
 
