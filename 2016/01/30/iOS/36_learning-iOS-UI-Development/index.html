@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="小木头">
 <meta property="og:description" content="《Learning iOS UI Development》的读书笔记">
 <meta property="og:image" content="http://www.allitebooks.com/wp-content/uploads/1452/505698bb6cbfbe3.jpeg">
-<meta property="og:updated_time" content="2016-01-30T09:36:40.000Z">
+<meta property="og:updated_time" content="2016-01-30T09:41:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Learning iOS UI Development》- 读书笔记">
 <meta name="twitter:description" content="《Learning iOS UI Development》的读书笔记">
@@ -191,7 +191,7 @@
   
     <div class="article-meta">
       <a href="/2016/01/30/iOS/36_learning-iOS-UI-Development/" class="article-date">
-  	<time datetime="2016-01-30T09:36:41.000Z" itemprop="datePublished">2016-01-30</time>
+  	<time datetime="2016-01-30T09:41:13.000Z" itemprop="datePublished">2016-01-30</time>
 </a>
     </div>
   
@@ -232,7 +232,7 @@
 <a id="more"></a>
 <p>今天无意间看到了这本书:<a href="http://www.allitebooks.com/learning-ios-ui-development/" target="_blank" rel="external">《Learning iOS UI Development》</a></p>
 <p><img src="http://www.allitebooks.com/wp-content/uploads/1452/505698bb6cbfbe3.jpeg" alt="http://www.allitebooks.com/wp-content/uploads/1452/505698bb6cbfbe3.jpeg"></p>
-<p>翻看了一下觉得还行，虽然只有奖金200页，基本上都是概括的东西，所以就当做查缺补漏吧，顺便记录一些阅读的笔记，可能会简单了点。知识点有个索引印象比较好，到时候真的遇见了查找起来也比较快。就像<code>HashMap</code>.</p>
+<p>翻看了一下觉得还行，虽然只有将近200页，基本上都是概括的东西，所以就当做查缺补漏吧，顺便记录一些阅读的笔记，可能会简单了点。知识点有个索引印象比较好，到时候真的遇见了查找起来也比较快。就像<code>HashMap</code>.</p>
 <h2 id="一、UI_Fundamentals">一、UI Fundamentals</h2><p>1、当一个视图添加到父视图上面的时候，会调用<code>didMoveToSuperview</code>，父视图的方法会被拦截<code>didAddSubview</code></p>
 <p>2、<code>layoutSubviews</code>在子视图添加或者移除、控件的大小被改变的时候被调用。</p>
 <p>3、iOS在屏幕显示视图上面做了重要的优化。View不是连续的绘制。系统会为每一个显示的视图元素创建一个快照，直到视图不需要更新前，当前的快照会一直显示。 视图然后被重绘，更新新的视图快照。这样就用了非常巧妙的方式避免智能手机上资源的浪费，达到最优化</p>
@@ -252,14 +252,14 @@
 </ul>
 <h2 id="三、AutoLayout">三、AutoLayout</h2><p>1、修改控件的约束值后，需要调用<code>setNeedsUpdateConstraints</code>方法</p>
 <h2 id="四、Layer_and_Animation">四、Layer and Animation</h2><h4 id="隐式动画">隐式动画</h4><p>最简单的方法是改变<code>animatable</code>属性，在runtime的时候改变值。 创建了animation附属在layer,在下一次重绘的时候执行</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CATransaction.<span class="function"><span class="title">begin</span><span class="params">()</span></span>  CATransaction.setValue(kCFBooleanTrue, forKey:  kCATransactionDisableActions)  layer<span class="class">.backgroundColor</span> = UIColor.<span class="function"><span class="title">redColor</span><span class="params">()</span></span><span class="class">.CGColor</span>  CATransaction.<span class="function"><span class="title">commit</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CATransaction.<span class="function"><span class="title">begin</span><span class="params">()</span></span>CATransaction.setValue(kCFBooleanTrue, forKey:kCATransactionDisableActions)layer<span class="class">.backgroundColor</span> = UIColor.<span class="function"><span class="title">redColor</span><span class="params">()</span></span><span class="class">.CGColor</span>CATransaction.<span class="function"><span class="title">commit</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
 <p>这些自动的行为是core graphics 的实现，CAAction的协议，允许layer改变之后自动触发这些行为。</p>
 <h4 id="属性动画">属性动画</h4><p>隐式动画可以用几行代码很快有效的解决动画，但是复杂的自定义动画他们没办法完成</p>
 <p><code>CAAnimation</code>是一个动画的抽象类，提供了可以动画的layer属性。</p>
 <h4 id="保持动画结束的状态">保持动画结束的状态</h4><p>当动画结束的时候， layer会返回初始状态。 这种行为跟展现layer和模型layer有关系。</p>
 <p>在动画工程中，展示layer的值已经改变，但是layer的数据并没有改变，所以动画结束的时候，展示层清除掉，然后原来的图层就返回到初始位置</p>
 <p>可以设置fillMode属性的值为<code>kCAFillModeForwards</code> . removedOnCompletion 的为false</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">animation</span><span class="class">.fillMode</span> = kCAFillModeForwards   <span class="attribute">animation</span><span class="class">.removedOnCompletion</span> = false</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="attribute">animation</span><span class="class">.fillMode</span> = kCAFillModeForwards   <span class="attribute">animation</span><span class="class">.removedOnCompletion</span> = false</span><br></pre></td></tr></table></figure>
 <p>这样动画结束之后，layer将保持最后的位置。</p>
 <p>需要重复重复说明的一点是： 你在屏幕上看到的一切都是展示层的layer. 计入你想尝试改变layer的position 属性数据， </p>
 <p>另外一种不同寻常的解决办法是，在执行动画前，先把最后的结果赋值给layer属性，然后再执行动画。例如</p>
