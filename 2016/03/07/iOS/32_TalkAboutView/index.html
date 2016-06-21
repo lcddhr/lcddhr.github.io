@@ -8,13 +8,13 @@
   <meta name="description" content="做iOS开发也有一段时间了，几乎每天都得和各种各样的View打交道，熟练使用View是做好iOS的基本功，正所谓知其然跟要知其所以然,所以今天就来学习视图到底是怎么工作的。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="谈谈iOS中的View和动画">
-<meta property="og:url" content="http://www.liuchendi.com/2016/01/11/iOS/32_TalkAboutView/index.html">
+<meta property="og:url" content="http://www.liuchendi.com/2016/03/07/iOS/32_TalkAboutView/index.html">
 <meta property="og:site_name" content="小木头">
 <meta property="og:description" content="做iOS开发也有一段时间了，几乎每天都得和各种各样的View打交道，熟练使用View是做好iOS的基本功，正所谓知其然跟要知其所以然,所以今天就来学习视图到底是怎么工作的。">
 <meta property="og:image" content="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/CoreAnimation_guide/Art/ca_architecture_2x.png">
 <meta property="og:image" content="http://7i7ht3.com1.z0.glb.clouddn.com/talkAboutView.png">
 <meta property="og:image" content="https://developer.apple.com/library/ios/documentation/WindowsViews/Conceptual/ViewPG_iPhoneOS/Art/drawing_model.jpg">
-<meta property="og:updated_time" content="2016-01-11T06:24:13.000Z">
+<meta property="og:updated_time" content="2016-03-07T07:46:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="谈谈iOS中的View和动画">
 <meta name="twitter:description" content="做iOS开发也有一段时间了，几乎每天都得和各种各样的View打交道，熟练使用View是做好iOS的基本功，正所谓知其然跟要知其所以然,所以今天就来学习视图到底是怎么工作的。">
@@ -119,7 +119,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/AutoLayout/" style="font-size: 10px;">AutoLayout</a> <a href="/tags/Content-Compression/" style="font-size: 10px;">Content Compression</a> <a href="/tags/Content-Hugging/" style="font-size: 10px;">Content Hugging</a> <a href="/tags/Core-Graphics/" style="font-size: 10px;">Core Graphics</a> <a href="/tags/GCD/" style="font-size: 10px;">GCD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSLock、OSSpinLock、多线程同步、锁/" style="font-size: 10px;">NSLock、OSSpinLock、多线程同步、锁</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 15px;">Swift</a> <a href="/tags/UISearchbar/" style="font-size: 10px;">UISearchbar</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/target/" style="font-size: 10px;">target</a> <a href="/tags/多版本/" style="font-size: 10px;">多版本</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/视图架构、渲染/" style="font-size: 10px;">视图架构、渲染</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+						<a href="/tags/AutoLayout/" style="font-size: 10px;">AutoLayout</a> <a href="/tags/Content-Compression/" style="font-size: 10px;">Content Compression</a> <a href="/tags/Content-Hugging/" style="font-size: 10px;">Content Hugging</a> <a href="/tags/Core-Graphics/" style="font-size: 10px;">Core Graphics</a> <a href="/tags/GCD/" style="font-size: 10px;">GCD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSLock、OSSpinLock、多线程同步、锁/" style="font-size: 10px;">NSLock、OSSpinLock、多线程同步、锁</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 16.67px;">Swift</a> <a href="/tags/UISearchbar/" style="font-size: 10px;">UISearchbar</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/target/" style="font-size: 10px;">target</a> <a href="/tags/多版本/" style="font-size: 10px;">多版本</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/视图架构、渲染/" style="font-size: 10px;">视图架构、渲染</a> <a href="/tags/读书笔记/" style="font-size: 13.33px;">读书笔记</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
 					</div>
 				</section>
 				
@@ -192,8 +192,8 @@
       <div class="body-wrap"><article id="post-iOS/32_TalkAboutView" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/11/iOS/32_TalkAboutView/" class="article-date">
-  	<time datetime="2016-01-11T06:24:13.000Z" itemprop="datePublished">2016-01-11</time>
+      <a href="/2016/03/07/iOS/32_TalkAboutView/" class="article-date">
+  	<time datetime="2016-03-07T07:46:30.000Z" itemprop="datePublished">2016-03-07</time>
 </a>
     </div>
   
@@ -280,18 +280,18 @@
     
 <nav id="article-nav">
   
-    <a href="/2016/01/13/iOS/33_Lock/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/03/07/iOS/16_SDWebImage_opence/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          同步-@synchronized, NSLock, pthread, OSSpinLock性能比较
+          SDWebImage源码学习
         
       </div>
     </a>
   
   
-    <a href="/2016/01/07/iOS/31_CoreGraphics_1/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">iOS翻译-Core Graphics教程1：入门</div>
+    <a href="/2016/03/07/iOS/19_chisel/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">初探LLDB插件工具-Chisel</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -320,7 +320,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="iOS/32_TalkAboutView" data-title="谈谈iOS中的View和动画" data-url="http://www.liuchendi.com/2016/01/11/iOS/32_TalkAboutView/"></div>
+	<div class="ds-thread" data-thread-key="iOS/32_TalkAboutView" data-title="谈谈iOS中的View和动画" data-url="http://www.liuchendi.com/2016/03/07/iOS/32_TalkAboutView/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

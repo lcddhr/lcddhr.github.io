@@ -3,17 +3,48 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives: 2015/12 | 小木头</title>
+  <title>iOS小Tips总结 | 小木头</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="hexo搭建的博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="小木头">
-<meta property="og:url" content="http://www.liuchendi.com/archives/2015/12/page/2/index.html">
+  <meta name="description" content="挺久没有写博客了,有一些总结的东西都放到Github上了。
+这里做个记录
+一些iOS的小Tips:  这里
+包含的内容有:
+
+小tips
+博客文章收集
+第三方库收集
+Git
+lldb
+…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS小Tips总结">
+<meta property="og:url" content="http://www.liuchendi.com/2016/06/21/iOS/37_iOS_tips/index.html">
 <meta property="og:site_name" content="小木头">
-<meta property="og:description" content="hexo搭建的博客">
+<meta property="og:description" content="挺久没有写博客了,有一些总结的东西都放到Github上了。
+这里做个记录
+一些iOS的小Tips:  这里
+包含的内容有:
+
+小tips
+博客文章收集
+第三方库收集
+Git
+lldb
+…">
+<meta property="og:updated_time" content="2016-06-21T13:38:03.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="小木头">
-<meta name="twitter:description" content="hexo搭建的博客">
+<meta name="twitter:title" content="iOS小Tips总结">
+<meta name="twitter:description" content="挺久没有写博客了,有一些总结的东西都放到Github上了。
+这里做个记录
+一些iOS的小Tips:  这里
+包含的内容有:
+
+小tips
+博客文章收集
+第三方库收集
+Git
+lldb
+…">
   
     <link rel="alternative" href="/atom.xml" title="小木头" type="application/atom+xml">
   
@@ -115,7 +146,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/AutoLayout/" style="font-size: 10px;">AutoLayout</a> <a href="/tags/Content-Compression/" style="font-size: 10px;">Content Compression</a> <a href="/tags/Content-Hugging/" style="font-size: 10px;">Content Hugging</a> <a href="/tags/Core-Graphics/" style="font-size: 10px;">Core Graphics</a> <a href="/tags/GCD/" style="font-size: 10px;">GCD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSLock、OSSpinLock、多线程同步、锁/" style="font-size: 10px;">NSLock、OSSpinLock、多线程同步、锁</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 15px;">Swift</a> <a href="/tags/UISearchbar/" style="font-size: 10px;">UISearchbar</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/target/" style="font-size: 10px;">target</a> <a href="/tags/多版本/" style="font-size: 10px;">多版本</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/视图架构、渲染/" style="font-size: 10px;">视图架构、渲染</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
+						<a href="/tags/AutoLayout/" style="font-size: 10px;">AutoLayout</a> <a href="/tags/Content-Compression/" style="font-size: 10px;">Content Compression</a> <a href="/tags/Content-Hugging/" style="font-size: 10px;">Content Hugging</a> <a href="/tags/Core-Graphics/" style="font-size: 10px;">Core Graphics</a> <a href="/tags/GCD/" style="font-size: 10px;">GCD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/NSLock、OSSpinLock、多线程同步、锁/" style="font-size: 10px;">NSLock、OSSpinLock、多线程同步、锁</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSOperationQueue/" style="font-size: 10px;">NSOperationQueue</a> <a href="/tags/SDK开发/" style="font-size: 10px;">SDK开发</a> <a href="/tags/Swift/" style="font-size: 16.67px;">Swift</a> <a href="/tags/UISearchbar/" style="font-size: 10px;">UISearchbar</a> <a href="/tags/cocospod/" style="font-size: 10px;">cocospod</a> <a href="/tags/dispatch-semaphore/" style="font-size: 10px;">dispatch_semaphore</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/target/" style="font-size: 10px;">target</a> <a href="/tags/多版本/" style="font-size: 10px;">多版本</a> <a href="/tags/对象、runtime/" style="font-size: 10px;">对象、runtime</a> <a href="/tags/对象模型/" style="font-size: 10px;">对象模型</a> <a href="/tags/开源框架/" style="font-size: 10px;">开源框架</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/消息转发/" style="font-size: 10px;">消息转发</a> <a href="/tags/源码/" style="font-size: 10px;">源码</a> <a href="/tags/第三方库/" style="font-size: 10px;">第三方库</a> <a href="/tags/视图架构、渲染/" style="font-size: 10px;">视图架构、渲染</a> <a href="/tags/读书笔记/" style="font-size: 13.33px;">读书笔记</a> <a href="/tags/适配/" style="font-size: 10px;">适配</a>
 					</div>
 				</section>
 				
@@ -185,96 +216,118 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-iOS/37_iOS_tips" class="article article-type-post" itemscope itemprop="blogPost">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/12/03/iOS/15_my_opensource/" class="archive-article-date">
-  	<time datetime="2015-12-03T09:26:19.000Z" itemprop="datePublished">12月 3</time>
+    <div class="article-meta">
+      <a href="/2016/06/21/iOS/37_iOS_tips/" class="article-date">
+  	<time datetime="2016-06-21T13:38:03.000Z" itemprop="datePublished">2016-06-21</time>
 </a>
-        </div>
-    	 
+    </div>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/03/iOS/15_my_opensource/">自己写的开源框架</a>
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS小Tips总结
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+      </header>
+      
+      <div class="article-info article-info-post">
+        
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开源框架/">开源框架</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
 	</div>
 
-          
+        
 	<div class="article-category tagcloud">
 	<a class="article-category-link" href="/categories/iOS/">iOS</a>
 	</div>
 
 
-        </div>
         <div class="clearfix"></div>
-    </header>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>挺久没有写博客了,有一些总结的东西都放到Github上了。</p>
+<p>这里做个记录</p>
+<p>一些iOS的小Tips:  <a href="https://github.com/lcddhr/MyNotes" target="_blank" rel="external">这里</a></p>
+<p>包含的内容有:</p>
+<ul>
+<li>小tips</li>
+<li>博客文章收集</li>
+<li>第三方库收集</li>
+<li>Git</li>
+<li>lldb</li>
+<li>…</li>
+</ul>
+
+      
+    </div>
+    
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/03/07/iOS/16_SDWebImage_opence/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">SDWebImage源码学习</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/12/03/iOS/14_object_memory_topic/" class="archive-article-date">
-  	<time datetime="2015-12-03T09:17:08.000Z" itemprop="datePublished">12月 3</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/03/iOS/14_object_memory_topic/">记一次关于对象占用内存的讨论</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/对象、runtime/">对象、runtime</a></li></ul>
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/iOS/">iOS</a>
-	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/2015/12/">&laquo; Prev</a><a class="page-number" href="/archives/2015/12/">1</a><span class="page-number current">2</span>
-    </nav>
-  
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="iOS/37_iOS_tips" data-title="iOS小Tips总结" data-url="http://www.liuchendi.com/2016/06/21/iOS/37_iOS_tips/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"liuchendi"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
 
 </div>
       <footer id="footer">
@@ -305,8 +358,8 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: true
